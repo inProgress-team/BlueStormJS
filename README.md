@@ -2,6 +2,7 @@ NodeFramework
 =============
 NodeFramework is a NodeJS framework which provides : 
 
+*   MODULAR ARCHITECTURE : Everything is a module. Copy & paste and you are ready to go !
 *   Complete development and production ready environnements
 *   Made for complex apps but can be used for smaller ones
 *   User management
