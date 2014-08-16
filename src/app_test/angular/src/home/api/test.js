@@ -5,7 +5,5 @@ module.exports = function(app) {
     });
     app.get('/bb', function *(next) {
         this.body = 'connected';
-
     });
-
 };

@@ -4,8 +4,7 @@ var fs = require('co-fs'),
     koa = require('koa'),
     serve = require('koa-static');
 
-var logger = require(__dirname+'/../../logger/logger'),
-    configWebApp = require(process.cwd()+'/app/config');
+var logger = require(__dirname+'/../../logger/logger');
 
 module.exports = function(config) {
     var app = koa(),
@@ -14,7 +13,7 @@ module.exports = function(config) {
     //SERVE STATIC FILES
     app.use(serve(process.cwd()+'/app/'+config.name+'/public'));
 
-    if(configWebApp.debug) {
+    if(true) {
         //LOGGER FOR EVERY STATIC REQUEST
         app.use(function *loggerMiddleware(next){
             var start = new Date;

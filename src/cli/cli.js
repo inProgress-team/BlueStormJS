@@ -14,15 +14,18 @@ var argv = require('yargs')
     .alias('h', 'help')
     .describe('h', 'See help for a particular command.');
 
-
 var commands = ['dev', 'prod'];
 
+var tasks = require(__dirname+'/../tasks/tasks');
 
 module.exports = {
     command: function(commands) {
         switch(commands._[0]) {
             case "dev":
-                console.log('dev');
+                tasks.development();
+                break;
+            case "server-dev":
+                console.log('plouf');
                 break;
             case "prod":
                 console.log('prod');

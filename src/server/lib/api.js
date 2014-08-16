@@ -2,7 +2,6 @@ var koa = require('koa'),
     router = require('koa-router');
 
 var logger = require(__dirname+'/../../logger/logger'),
-    configWebApp = require(process.cwd()+'/app/config'),
     arborescence = require(__dirname+'/../../arborescence');
 
 module.exports = function(config) {
@@ -11,7 +10,7 @@ module.exports = function(config) {
     /**
      * Log everything if debug param is set to true in config
      */
-    if(configWebApp.debug) {
+    if(true) {
         //LOGGER FOR EVERY API REQUEST
         app.use(function *loggerMiddleware(next){
             var start = new Date;
@@ -25,7 +24,7 @@ module.exports = function(config) {
      * Include router and routes
      */
     app.use(router(app));
-    arborescence.getFiles('api', function(files) {
+    arborescence.getRequiredFiles('api', function(files) {
         arborescence.loadFiles(files, app);
     });
 

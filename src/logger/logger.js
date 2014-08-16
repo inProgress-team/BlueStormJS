@@ -1,22 +1,32 @@
 var clc = require('cli-color'),
-    errorC = clc.red.bold,
-    infoC = clc.cyan,
-    warnC = clc.magenta;
-
-var moment = require('moment'),
-    configWebApp = require(process.cwd()+'/app/config');
-moment.locale(configWebApp.lang);
+    moment = require('moment'),
+    clear = require("cli-clear");
 
 module.exports = {
-    error: function(from, error) {
-        console.error(errorC.underline.inverse('From '+from));
-        console.error(errorC(error.stack));
+    clear: function() {
+        clear();
+        console.log();
     },
-    info: function(message) {
-        console.log(this.getTime()+infoC(message));
+    error: function(from, error) {
+        console.error(clc.red.bold.underline.inverse('From '+from));
+        console.error(clc.red.bold(error.stack));
+    },
+    info: function(message, style) {
+        if(typeof style == 'string') style = clc[style];
+        else if(typeof style == 'object' && style.length>0){
+            var styles = style;
+            style = clc[styles[0]];
+            for(var i =1; i<styles.length; i++) {
+                style = style[styles[i]];
+            }
+        } else {
+            style = clc.green;
+        }
+
+        console.log(this.getTime()+style(message));
     },
     warn: function(message) {
-        console.log(this.getTime()+warnC(message));
+        console.warn(this.getTime()+clc.yellow("[WARNING] "+message));
     },
     getTime: function() {
         var m = moment(),
