@@ -2,11 +2,15 @@ var koa = require('koa'),
     router = require('koa-router');
 
 var logger = require(__dirname+'/../logger/logger'),
-    configWebApp = require(process.cwd()+'/app/config');
+    configWebApp = require(process.cwd()+'/app/config'),
+    arborescence = require(__dirname+'/../arborescence');
 
 module.exports = function(config) {
     var app = koa();
 
+    /**
+     * Log everything if debug param is set to true in config
+     */
     if(configWebApp.debug) {
         //LOGGER FOR EVERY API REQUEST
         app.use(function *loggerMiddleware(next){
@@ -17,13 +21,30 @@ module.exports = function(config) {
         });
     }
 
+    /**
+     * Include router and routes
+     */
     app.use(router(app));
+    var co = require('co');
+    console.log('p');
+    co(function * () {
+        console.log('a');
+        var files = yield arborescence.getFiles('api', {app: app});
+        console.log('plouf');
+        console.log(files);
+    })();
 
-    require(process.cwd()+"/src/home/api/test")(app);
 
+
+    /**
+     * Error handler
+     */
     app.on('error', function(err){
         logger.error('API'+':'+config.port, err);
     });
+    /**
+     * Set app on port defined in conf
+     */
     logger.info('API listening on port '+config.port);
     app.listen(config.port);
 };

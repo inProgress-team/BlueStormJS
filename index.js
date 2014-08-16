@@ -1,23 +1,23 @@
-var staticFiles = require(__dirname+'/src/server/static'),
+var statics = require(__dirname+'/src/server/statics'),
     api = require(__dirname+'/src/server/api'),
-    socket = require(__dirname+'/src/server/socket');
+    sockets = require(__dirname+'/src/server/sockets');
 
 var $this = module.exports;
 
 module.exports = {
     start: function (config) {
-        staticFiles({
+        statics({
             port: 8080,
             name: 'desktop'
         });
-        staticFiles({
+        statics({
             port: 2052,
             name: 'admin'
         });
         api({
             port: 3000
         });
-        socket({
+        sockets({
             port: 8888
         });
         console.log('-------------------- Enjoy your server ;) --------------------');
