@@ -4,7 +4,7 @@ var fs = require('co-fs'),
     koa = require('koa'),
     serve = require('koa-static');
 
-var logger = require(__dirname+'/../logger/logger'),
+var logger = require(__dirname+'/../../logger/logger'),
     configWebApp = require(process.cwd()+'/app/config');
 
 module.exports = function(config) {

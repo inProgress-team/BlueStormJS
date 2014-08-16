@@ -1,8 +1,8 @@
 var socket = require('socket.io'),
     domain = require('domain');
 
-var logger = require(__dirname+'/../logger/logger'),
-    arborescence = require(__dirname+'/../arborescence');
+var logger = require(__dirname+'/../../logger/logger'),
+    arborescence = require(__dirname+'/../../arborescence');
 
 module.exports = function(config) {
     var d = domain.create();

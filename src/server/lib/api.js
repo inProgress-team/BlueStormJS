@@ -2,9 +2,9 @@ var koa = require('koa'),
     router = require('koa-router'),
     co = require('co');
 
-var logger = require(__dirname+'/../logger/logger'),
+var logger = require(__dirname+'/../../logger/logger'),
     configWebApp = require(process.cwd()+'/app/config'),
-    arborescence = require(__dirname+'/../arborescence');
+    arborescence = require(__dirname+'/../../arborescence');
 
 module.exports = function(config) {
     var app = koa();
