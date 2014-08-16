@@ -1,5 +1,6 @@
 var koa = require('koa'),
-    router = require('koa-router');
+    router = require('koa-router'),
+    co = require('co');
 
 var logger = require(__dirname+'/../logger/logger'),
     configWebApp = require(process.cwd()+'/app/config'),
@@ -25,14 +26,9 @@ module.exports = function(config) {
      * Include router and routes
      */
     app.use(router(app));
-    var co = require('co');
-    console.log('p');
-    co(function * () {
-        console.log('a');
-        var files = yield arborescence.getFiles('api', {app: app});
-        console.log('plouf');
-        console.log(files);
-    })();
+    arborescence.getFiles('api', function(files) {
+        arborescence.loadFiles(files, app);
+    });
 
 
 

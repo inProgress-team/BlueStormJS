@@ -1,22 +1,27 @@
-var co = require('co'),
-    fs = require('co-fs');
+var fs = require('fs'),
+    async = require('async');
 
 var basePath = process.cwd()+'/src/';
 
 module.exports = {
-    getFiles: function *(type, params) {
+    getFiles: function (type, callback) {
         //get all modules;
-        var dirs = yield fs.readdir(basePath);
+        var dirs = fs.readdirSync(basePath),
+            files = [];
 
         //get all files of the good type and require them
-        var files = yield dirs.map(function * (dir) {
+        async.each(dirs, function (dir, cb) {
             var path = basePath+dir+'/'+type,
-                file = yield fs.readdir(path);
-            require(path+'/'+file)(params.app);
-            return path+'/'+file;
+                file = fs.readdirSync(path);
+            files.push(require(path+'/'+file));
+            cb();
+        }, function() {
+            callback(files);
         });
-        console.log('a');
-        console.log(files);
-        return files;
+    },
+    loadFiles: function(files, app) {
+        files.forEach(function(file) {
+            file(app);
+        });
     }
 };
