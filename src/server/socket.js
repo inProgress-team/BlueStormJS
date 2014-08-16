@@ -13,8 +13,7 @@ module.exports = function(config) {
     d.run(function() {
         var io = socket();
         io.on('connection', function(socket){
-            logger.warn('Connection Socket.IO started');
-            azeaze
+
         });
         logger.info('Socket.io started on port '+config.port);
         io.listen(config.port);

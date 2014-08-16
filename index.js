@@ -1,5 +1,5 @@
 var http = require(__dirname+'/src/server/http'),
-    rest = require(__dirname+'/src/server/rest'),
+    api = require(__dirname+'/src/server/api'),
     socket = require(__dirname+'/src/server/socket');
 
 var $this = module.exports;
@@ -10,7 +10,7 @@ module.exports = {
             port: 8080,
             name: 'desktop'
         });
-        rest({
+        api({
             port: 3000
         });
         socket({

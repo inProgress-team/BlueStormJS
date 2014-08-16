@@ -22,6 +22,8 @@
   "dependencies": {
     "cli-color": "^0.3.2",
     "koa": "^0.10.0",
-    "socket.io": "^1.0.6"
+    "socket.io": "^1.0.6",
+    "moment": "^2.8.1",
+    "koa-router": "^3.2.3"
   }
 }
