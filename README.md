@@ -1,6 +1,8 @@
 NodeFramework
 =============
 
+# DEVELOPERS
+
 ## INSTALL
 
 You need NodeJS 0.11.9 as KoaJS do.
@@ -15,7 +17,7 @@ You need NodeJS 0.11.9 as KoaJS do.
 
 ## TRY
 
-You can try any test project available in src/app_test
+You can try any test project available in src/app_test.
 
     $ cd src/app_test/{anyapp}
     $ node cli.js
