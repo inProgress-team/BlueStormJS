@@ -15,6 +15,7 @@ module.exports = function(config) {
     d.run(function() {
         var io = socket();
         io.on('connection', function(socket){
+            socket.emit('open');
             if(!cacheFiles) {
                 arborescence.getFiles('sockets', function(files) {
                     cacheFiles = files;

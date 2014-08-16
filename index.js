@@ -1,11 +1,10 @@
-
-
-var server = require(__dirname+'/src/server/server');
+var server = require(__dirname+'/src/server/server'),
+    cli = require(__dirname+'/src/cli/cli');
 
 module.exports = {
-    start: function() {
-        server.start();
-    }
-}
+    server: server,
+    cli: cli.command,
+    argv: cli.argv
+};
 
 

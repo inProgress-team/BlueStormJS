@@ -1,0 +1,75 @@
+<html>
+    <head>
+        <script src="//cdn.socket.io/socket.io-1.0.6.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.22/angular.min.js"></script>
+
+        <script type="text/javascript">
+        angular.module('app', [])
+            .controller('TestCtrl', function ($scope) {
+                var socket = io('http://dev.songpeek.com:8888');
+                socket.on('open', function(){
+                    console.log('Connection open');
+
+                });
+            })
+            .controller('UserCtrl', function ($scope, $http, $window) {
+                $scope.user = {username: 'john.doe', password: 'foobar'};
+                $scope.message = '';
+                $scope.submit = function () {
+                    $http
+                            .post('/authenticate', $scope.user)
+                            .success(function (data, status, headers, config) {
+                                $window.sessionStorage.token = data.token;
+                                $scope.message = 'Welcome';
+                            })
+                            .error(function (data, status, headers, config) {
+                                // Erase the token if the user fails to log in
+                                delete $window.sessionStorage.token;
+
+                                // Handle login errors here
+                                $scope.message = 'Error: Invalid user or password';
+                            });
+                };
+            })
+
+            .factory('authInterceptor', function ($rootScope, $q, $window) {
+                return {
+                    request: function (config) {
+                        config.headers = config.headers || {};
+                        if ($window.sessionStorage.token) {
+                            config.headers.Authorization = 'Bearer ' + $window.sessionStorage.token;
+                        }
+                        return config;
+                    },
+                    response: function (response) {
+                        if (response.status === 401) {
+                            // handle the case where the user is not authenticated
+                        }
+                        return response || $q.when(response);
+                    }
+                };
+            })
+
+            .config(function ($httpProvider) {
+                $httpProvider.interceptors.push('authInterceptor');
+            });
+
+        </script>
+    </head>
+    <body ng-app="app">
+        <div ng-controller="TestCtrl">
+
+        </div>
+
+
+
+        <div ng-controller="UserCtrl">
+            <span>{{message}}</span>
+            <form ng-submit="submit()">
+                <input ng-model="user.username" type="text" name="user" placeholder="Username" />
+                <input ng-model="user.password" type="password" name="pass" placeholder="Password" />
+                <input type="submit" value="Login" />
+            </form>
+        </div>
+    </body>
+</html>

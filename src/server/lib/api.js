@@ -1,6 +1,5 @@
 var koa = require('koa'),
-    router = require('koa-router'),
-    co = require('co');
+    router = require('koa-router');
 
 var logger = require(__dirname+'/../../logger/logger'),
     configWebApp = require(process.cwd()+'/app/config'),
