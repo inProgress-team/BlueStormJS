@@ -15,7 +15,7 @@ module.exports = function(config) {
         io.on('connection', function(socket){
 
         });
-        logger.info('Socket.io started on port '+config.port);
+        logger.info('Socket.io listening on port '+config.port);
         io.listen(config.port);
     });
 };

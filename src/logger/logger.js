@@ -3,8 +3,9 @@ var clc = require('cli-color'),
     infoC = clc.cyan,
     warnC = clc.magenta;
 
-var moment = require('moment');
-moment.locale('fr');
+var moment = require('moment'),
+    configWebApp = require(process.cwd()+'/app/config');
+moment.locale(configWebApp.lang);
 
 module.exports = {
     error: function(from, error) {
@@ -12,9 +13,17 @@ module.exports = {
         console.error(errorC(error.stack));
     },
     info: function(message) {
-        console.log(moment().format('LLL')+' '+infoC(message));
+        console.log(this.getTime()+infoC(message));
     },
     warn: function(message) {
-        console.log(moment().format('LLL')+' '+warnC(message));
+        console.log(this.getTime()+warnC(message));
+    },
+    getTime: function() {
+        var m = moment(),
+            seconds = m.seconds();
+        if(seconds<10) {
+            seconds = "0"+seconds;
+        }
+        return m.format('LL')+ m.format(', h:mm:ss a') +' ';
     }
 }
