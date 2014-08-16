@@ -1,6 +1,17 @@
 NodeFramework
 =============
 
+NodeFramework is a NodeJS framework which provides : 
+*   Complete development and production ready environnements
+*   Configurable logging handler
+*   Easy deploy
+*   And more...
+
+# WARNING
+
+This module is not stable. DO NOT use this in production. It is currently under development.
+
+
 # DEVELOPERS
 
 ## INSTALL
