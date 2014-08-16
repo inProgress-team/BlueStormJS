@@ -1,21 +1,20 @@
 NodeFramework
 =============
-
 NodeFramework is a NodeJS framework which provides : 
+
 *   Complete development and production ready environnements
+*   Made for complex apps but can be used for smaller ones
+*   User management
 *   Configurable logging handler
 *   Easy deploy
 *   And more...
 
 # WARNING
-
 This module is not stable. DO NOT use this in production. It is currently under development.
 
 
-# DEVELOPERS
-
-## INSTALL
-
+# Developers
+## Installation
 You need NodeJS 0.11.9 as KoaJS do.
 
     $ (install NVM)
@@ -26,12 +25,12 @@ You need NodeJS 0.11.9 as KoaJS do.
     
     $ npm install # install dependencies
 
-## TRY
-
+## Try
 You can try any test project available in src/app_test.
 
     $ cd src/app_test/{anyapp}
     $ node cli.js
 
 
-
+## License
+[The MIT License](http://opensource.org/licenses/MIT)
