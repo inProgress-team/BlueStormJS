@@ -25,10 +25,6 @@
     "socket.io": "^1.0.6",
     "moment": "^2.8.1",
     "koa-router": "^3.2.3",
-    "co-fs-plus": "^0.3.1",
-    "co": "^3.1.0",
-    "thunkify": "^2.1.2",
-    "galaxy": "^0.1.8",
     "async": "^0.9.0"
   }
 }
