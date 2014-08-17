@@ -1,12 +1,18 @@
-var server = require(__dirname+'/../server/server')
+var server = require(__dirname+'/../server/server'),
+    frontend = require(__dirname+'/frontend/frontend');
 
 
 module.exports = {
     development: function() {
-        this.buildProd();
-        //server.devStart();
+        this.buildDev(function() {
+            console.log('done');
+            //server.devStart();
+        });
+
     },
-    buildProd: function() {
-        console.log('a');
+    buildDev: function(cb) {
+        frontend.buildDev(function() {
+            cb();
+        });
     }
 };
