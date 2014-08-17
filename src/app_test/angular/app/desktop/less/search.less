@@ -1,0 +1,65 @@
+#search-popover {
+	top: @navbar-height; 
+	left: -115px; 
+	display: block;
+	z-index:2500;
+
+	.popover-content {
+		padding: 0;
+
+		input {
+			width: 240px;
+			margin: 5px 15px;
+		}
+		#search-history {
+			.title {
+				height: 28px;
+				line-height: 28px;
+				padding-left: 20px;
+
+				i {
+					margin-right: 10px;
+				}
+			}
+			.res {
+				height: 30px;
+				line-height: 30px;
+				padding-left: 35px;
+
+				&:hover {
+					background-color: #AAA;
+					cursor: pointer;
+				}
+			}
+		}
+
+		#search-results {
+			.active, .activable:hover {
+				background-color: #AAA;
+				cursor: pointer;
+			}
+		}
+
+		#search-results > div {
+			&:first-child {
+				text-align: center;
+			}
+			&:first-child, &.res > div {
+				height: 34px;
+				line-height: 34px;
+				.text-overflow();
+			}
+			&.title {
+				background-color: @brand-primary;
+				color:white;
+				height: 28px;
+				line-height: 28px;
+				padding-left: 20px;
+
+				i {
+					margin-right: 10px;
+				}
+			}
+		}
+	}
+}

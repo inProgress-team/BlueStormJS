@@ -9,29 +9,21 @@ module.exports = {
     escapeContent: function(content) {
         return content.replace(/\\/g, '\\\\').replace(/'/g, '\\\'').replace(/\r?\n/g, '\\n\' +\n    \'');
     },
-    processFile: function(path, params, cb) {
-        if(cb===undefined) {
-            cb = params;
-            params = {};
-        }
+    processFile: function(env, path, cb) {
         fs.readFile(path, function(err, content) {
             if(err) return cb(err);
             content = content.toString();
-            if(params.prod) {//if prod, minify
+            if(env=='production') {//if prod, minify
                 content = minifier.compress(content)
             }
             var res = util.format(TEMPLATE, path, process.escapeContent(content));
             cb(null, res);
         });
     },
-    appendTemplates: function(files, params, cb) {
-        if(cb===undefined) {
-            cb = params;
-            params = {};
-        }
+    appendTemplates: function(env, files, cb) {
         var content = "";
         async.each(files, function(path, cb) {
-            process.processFile(path, params, function(err, file) {
+            process.processFile(env, path, function(err, file) {
                 if(err) return cb(err)
                 content+=file;
                 cb();

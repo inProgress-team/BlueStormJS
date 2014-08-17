@@ -22,10 +22,10 @@ module.exports = {
     command: function(commands) {
         switch(commands._[0]) {
             case "dev":
-                tasks.development();
+                tasks.loadEnvironment('development');
                 break;
             case "prod":
-                tasks.production();
+                tasks.loadEnvironment('production');
                 break;
         }
     },

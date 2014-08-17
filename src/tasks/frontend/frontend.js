@@ -1,17 +1,16 @@
-var html2js = require(__dirname+'/angular/html2js/html2js'),
+var less = require(__dirname+'/less/less'),
+    angular = require(__dirname+'/angular/angular')
     async = require('async');
 
 module.exports = {
-    buildDev: function(cb) {
+    build: function(env, cb) {
         async.parallel([
-            html2js.buildDev
-
-        ], cb);
-    },
-    buildProd: function(cb) {
-        async.parallel([
-            html2js.buildProd
-
+            function(cb) {
+                angular.build(env, cb);
+            },
+            function(cb) {
+                less.build(env, cb);
+            }
         ], cb);
     }
 };

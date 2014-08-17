@@ -1,0 +1,19 @@
+/*
+* MCUSTOMSCROLLBAR
+*/
+.mCSB_outside + .mCSB_scrollTools {
+	right: 0;
+}
+
+/*
+* HTML5-SORTABLE
+*/
+body.dragging, body.dragging * {
+	cursor: move !important;
+}
+ul > li.dragged {
+	position: absolute;
+	top: 0;
+	opacity: .8;
+	z-index: 2600;
+}

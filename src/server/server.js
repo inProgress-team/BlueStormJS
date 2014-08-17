@@ -17,46 +17,49 @@ module.exports = {
         logger.info('Forever started.', {level: 2});
         logger.info('Webapp is online ('+env+').', {level: 1, color: 'blue'});
     },
-    devStart: function() {
-        server.supervisor({
-            max: 3,
-            command: 'node --harmony',
-            watch: true,
-            watchDirectory: process.cwd(),
-            watchIgnoreDotFiles: true,
-            watchIgnorePatterns: ['node_modules/**']
-        });
+    supervisor: {
+        development: function() {
+            server.supervisor.load({
+                max: 3,
+                command: 'node --harmony',
+                env: {'NODE_ENV': 'development'},
+                watch: true,
+                watchDirectory: process.cwd(),
+                watchIgnoreDotFiles: true,
+                watchIgnorePatterns: ['node_modules/**']
+            });
+        },
+        production: function() {
+            server.supervisor.load({
+                max: 3,
+                command: 'node --harmony',
+                env: {'NODE_ENV': 'production'},
+                watch: false
+            });
+        },
+        load: function(options) {
+            var child = new (forever.Monitor)('server.js', options);
+
+            child.on('error', function (err) {
+                logger.error('Forever', err);
+            });
+            child.on('start', function () {
+                logger.info('Forever starting...', {level: 2});
+            });
+            child.on('stop', function () {
+                logger.info('Forever stopped.', {level: 2});
+            });
+
+            child.on('restart', function () {
+                logger.info('Forever restarting...', {level: 2});
+            });
+
+            child.on('exit', function () {
+                logger.error('Forever', new Error('server.js has exited after 3 restarts'));
+            });
+
+            child.start();
+        }
     },
-    prodStart: function() {
-        server.supervisor({
-            max: 3,
-            command: 'node --harmony',
-            watch: false,
-            env: {'NODE_ENV': 'production'}
-        });
-    },
-    supervisor: function(options) {
-        var child = new (forever.Monitor)('server.js', options);
-
-        child.on('error', function (err) {
-            logger.error('Forever', err);
-        });
-        child.on('start', function () {
-            logger.info('Forever starting...', {level: 2});
-        });
-        child.on('stop', function () {
-            logger.info('Forever stopped.', {level: 2});
-        });
-
-        child.on('restart', function () {
-            logger.info('Forever restarting...', {level: 2});
-        });
-
-        child.on('exit', function () {
-            logger.error('Forever', new Error('server.js has exited after 3 restarts'));
-        });
-
-        child.start();
-    }
 };
 var server = module.exports;

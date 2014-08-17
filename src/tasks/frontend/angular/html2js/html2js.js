@@ -16,29 +16,18 @@ var apps = ['desktop', 'admin'];
 
 
 module.exports = {
-    buildDev: function(cb) {
-        var dir ='build',
-            file = 'dist/'+dir+'/app/templates.js';
+    build: function(env, cb) {
+        var dir ='build';
+        if(env=='production') {
+            dir = 'bin';
+        }
 
         async.each(apps, function(app, cb) {
-            html2js.build(app, file, function() {
+            html2js.buildFile(env, app, 'dist/'+dir+'/'+app+'/public/templates.js', function() {
                 logger.info('HTML2JS done ('+app+').', {level: 3});
                 cb();
             });
         }, cb);
-
-    },
-    buildProd: function(cb) {
-        var dir ='bin',
-            file = 'dist/'+dir+'/app/templates';
-
-        async.each(apps, function(app, cb) {
-            html2js.build(app, file, {prod:true}, function() {
-                logger.info('HTML2JS done ('+app+').', {level: 3});
-                cb();
-            });
-        }, cb);
-
 
     },
     getTemplatesFilename: function(appName, cb) {
@@ -51,15 +40,9 @@ module.exports = {
             cb(null, files);
         });
     },
-    build: function(appName, file, params, cb) {
-        var files = [];
-        file = file+"-"+appName+".js";
-
-        if(cb===undefined) {
-            cb = params;
-            params = {};
-        }
-        var path = file.substring(0, file.lastIndexOf('/'));
+    buildFile: function(env, appName, file, cb) {
+        var files = [],
+            path = file.substring(0, file.lastIndexOf('/'));
 
 
         async.series([
@@ -85,7 +68,7 @@ module.exports = {
             },
             function(cb) {
                 //WRITE EACH FILE
-                process.appendTemplates(files, params, function(err, content) {
+                process.appendTemplates(env, files, function(err, content) {
                     if(err) throw err;
                     fs.appendFile(file, content, cb);
                 });

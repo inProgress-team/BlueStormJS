@@ -1,0 +1,32 @@
+{
+  "name": "angular",
+  "version": "0.0.1",
+  "homepage": "https://github.com/Bluestep/NodeFramework",
+  "authors": [
+    "Théo Mathieu <theo.mathieu1@gmail.com>"
+  ],
+  "description": "desc",
+  "main": "main",
+  "moduleType": [
+    "amd",
+    "es6",
+    "globals",
+    "node",
+    "yui"
+  ],
+  "keywords": [
+    "keywords"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.2.0"
+  }
+}
