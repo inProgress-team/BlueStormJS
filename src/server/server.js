@@ -24,7 +24,6 @@ module.exports = {
         logger.info('Enjoy your server ;)', ['blue', 'bold', 'inverse']);
     },
     devStart: function() {
-        logger.clear();
         var child = new (forever.Monitor)('server.js', {
             max: 3,
             command: 'node --harmony',
