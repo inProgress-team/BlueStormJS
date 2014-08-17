@@ -3,13 +3,15 @@
         <script src="//cdn.socket.io/socket.io-1.0.6.js"></script>
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.22/angular.min.js"></script>
 
+        <% include %>
+
+
         <script type="text/javascript">
         angular.module('app', [])
             .controller('TestCtrl', function ($scope) {
                 var socket = io('http://dev.songpeek.com:8888');
                 socket.on('open', function(){
                     console.log('Connection open');
-
                 });
             })
             .controller('UserCtrl', function ($scope, $http, $window) {

@@ -16,7 +16,10 @@ module.exports = {
     build: function(env, cb) {
         async.each(apps, function(app, cb) {
             service.buildFile(env, app, cb);
-        }, cb);
+        }, function() {
+            logger.info('LESS done.', {level:3});
+            cb();
+        });
     },
     buildFile: function(env, appName, cb) {
 
@@ -42,11 +45,7 @@ module.exports = {
             function(cb) {
 
                 parser.parse(fs.readFileSync('app/'+appName+'/less/main.less').toString(), function (e, tree) {
-                    fs.writeFile(basePath+'/main.css', tree.toCSS(paramsLess), function(err) {
-                        if(err) return cb(err);
-                        logger.info('LESS done ('+appName+').', {level:3});
-                        cb();
-                    });
+                    fs.writeFile(basePath+'/main.css', tree.toCSS(paramsLess), cb);
                 });
             }
         ], cb)

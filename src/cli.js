@@ -16,20 +16,21 @@ var argv = require('yargs')
 
 var commands = ['dev', 'prod'];
 
-var tasks = require(__dirname+'/../tasks/tasks');
+var tasks = require(__dirname+'/tasks');
 
 module.exports = {
     command: function(commands) {
-        switch(commands._[0]) {
+        var command = commands._[0];
+        switch(command) {
             case "dev":
-                tasks.loadEnvironment('development');
+                tasks.loadEnvironment({env: 'development'});
                 break;
             case "prod":
-                tasks.loadEnvironment('production');
+                tasks.loadEnvironment({env: 'production'});
                 break;
         }
     },
     argv: function() {
         return argv.argv;
     }
-}
+};

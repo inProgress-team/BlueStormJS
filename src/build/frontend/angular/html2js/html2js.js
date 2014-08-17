@@ -23,11 +23,11 @@ module.exports = {
         }
 
         async.each(apps, function(app, cb) {
-            html2js.buildFile(env, app, 'dist/'+dir+'/'+app+'/public/templates.js', function() {
-                logger.info('HTML2JS done ('+app+').', {level: 3});
-                cb();
-            });
-        }, cb);
+            html2js.buildFile(env, app, 'dist/'+dir+'/'+app+'/public/templates.js', cb);
+        }, function() {
+            logger.info('HTML2JS done.', {level: 3});
+            cb();
+        });
 
     },
     getTemplatesFilename: function(appName, cb) {
