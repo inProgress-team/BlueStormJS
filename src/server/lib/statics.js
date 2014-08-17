@@ -4,16 +4,17 @@ var fs = require('co-fs'),
     koa = require('koa'),
     serve = require('koa-static');
 
-var logger = require(__dirname+'/../../logger/logger');
+var logger = require(__dirname+'/../../logger/logger'),
+    configApps = require(__dirname+'/../../config/config');
 
 module.exports = function(config) {
     var app = koa(),
-        cacheIndex = null;
-
+        cacheIndex = null,
+        path = process.cwd()+'/dist/'+configApps.getDestDir()+'/'+config.name;
     //SERVE STATIC FILES
-    app.use(serve(process.cwd()+'/app/'+config.name+'/public'));
+    app.use(serve(path));
 
-    if(true) {
+    if(config.debug) {
         //LOGGER FOR EVERY STATIC REQUEST
         app.use(function *loggerMiddleware(next){
             var start = new Date;
@@ -25,8 +26,8 @@ module.exports = function(config) {
 
     app.use(function *htmlMiddleware(next){
         this.type = 'html';
-        if(!cacheIndex) {
-            cacheIndex = yield fs.readFile(process.cwd()+'/app/'+config.name+'/main.html');
+        if(!cacheIndex || process.env.NODE_ENV=='development') {
+            cacheIndex = yield fs.readFile(path+'/main.html');
         }
         this.body = cacheIndex;
     });

@@ -41,7 +41,7 @@ module.exports = {
             }
         ], function() {
             content = content.replace('<% include %>', includes);
-            fs.writeFile('dist/'+config.getDestDir(params)+'/'+params.appName+'/index.html', content, cb);
+            fs.writeFile('dist/'+config.getDestDir(params)+'/'+params.appName+'/main.html', content, cb);
         });
 
 

@@ -5,20 +5,26 @@ var statics = require(__dirname+'/lib/statics'),
 
 var forever = require('forever-monitor');
 
-var env = process.env['NODE_ENV'] || 'development';
+
 module.exports = {
-    start: function() {
-        if(true) {
-            statics({ port: 8080, name: 'desktop' });
-            statics({ port: 2052, name: 'admin' });
-            api({ port: 3000 });
-            sockets({ port: 8888 });
+    start: function(params) {
+        var env = null;
+        if(params.env=='dev') {//prod-dev
+            env = 'development';
+            statics({ port: 8080, name: 'desktop', debug: params.debug });
+            api({ port: 3000, debug: params.debug });
+            sockets({ port: 8888, debug: params.debug });
+        } else {
+            env = 'production';
+            statics({ port: 8080, name: 'desktop', debug: params.debug });
+            api({ port: 3000, debug: params.debug });
+            sockets({ port: 8888, debug: params.debug });
         }
         logger.info('Forever started.', {level: 2});
         logger.info('Webapp is online ('+env+').', {level: 1});
     },
     supervisor: {
-        development: function() {
+        development: function(params) {
             server.supervisor.load({
                 max: 3,
                 command: 'node --harmony',
@@ -26,19 +32,21 @@ module.exports = {
                 watch: true,
                 watchDirectory: process.cwd(),
                 watchIgnoreDotFiles: true,
-                watchIgnorePatterns: ['node_modules/**']
+                watchIgnorePatterns: ['node_modules/**'],
+                options: ['server']
             });
         },
-        production: function() {
+        production: function(params) {
             server.supervisor.load({
                 max: 3,
                 command: 'node --harmony',
                 env: {'NODE_ENV': 'production'},
-                watch: false
+                watch: false,
+                options: ['server']
             });
         },
         load: function(options) {
-            var child = new (forever.Monitor)('server.js', options);
+            var child = new (forever.Monitor)('cli.js', options);
 
             child.on('error', function (err) {
                 logger.error('Forever', err);
@@ -48,6 +56,7 @@ module.exports = {
             });
             child.on('stop', function () {
                 logger.info('Forever stopped.', {level: 2});
+                logger.info('Webapp is offline.', {level: 1, color: 'magenta'});
             });
 
             child.on('restart', function () {
@@ -60,6 +69,6 @@ module.exports = {
 
             child.start();
         }
-    },
+    }
 };
 var server = module.exports;

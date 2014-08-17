@@ -27,6 +27,18 @@
     "tests"
   ],
   "dependencies": {
-    "bootstrap": "~3.2.0"
+    "bootstrap": "~3.2.0",
+    "angular-mocks": "~1.2.20",
+    "angular": "~1.2.20",
+    "socket.io-client": "~0.9.17",
+    "angular-ui-router": "~0.2.10",
+    "angular-bootstrap": "~0.11.0",
+    "angular-hotkeys": "chieffancypants/angular-hotkeys#~1.4.0",
+    "angular-moment": "~0.7.1",
+    "moment": "~2.7.0",
+    "ngprogress-lite": "~1.0.6"
+  },
+  "resolutions": {
+    "moment": "~2.7.0"
   }
 }

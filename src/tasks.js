@@ -9,7 +9,6 @@ var logger = require(__dirname+'/logger/logger'),
 
 module.exports = {
     loadEnvironment: function(params) {
-
         logger.clear();
         logger.info('Starting '+params.env+' environnement...', {level: 1});
 

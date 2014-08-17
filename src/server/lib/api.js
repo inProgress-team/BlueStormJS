@@ -1,4 +1,5 @@
 var koa = require('koa'),
+    cors = require('koa-cors'),
     router = require('koa-router');
 
 var logger = require(__dirname+'/../../logger/logger'),
@@ -6,11 +7,12 @@ var logger = require(__dirname+'/../../logger/logger'),
 
 module.exports = function(config) {
     var app = koa();
-
+    app.use(cors());
     /**
      * Log everything if debug param is set to true in config
      */
-    if(true) {
+    if(config.debug) {
+
         //LOGGER FOR EVERY API REQUEST
         app.use(function *loggerMiddleware(next){
             var start = new Date;

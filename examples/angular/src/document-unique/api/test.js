@@ -1,7 +1,9 @@
 
 module.exports = function(app) {
-    app.get('/aa', function *(next) {
-        this.body = 'not connected';
+    app.get('/document-unique', function *(next) {
+        this.body = {
+            go: 'YESS'
+        };
     });
     app.get('/bb', function *(next) {
         this.body = 'connected';

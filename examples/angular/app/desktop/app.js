@@ -3,26 +3,24 @@
  * @description It handles Songpeek Desktop Application
  *
  */
-angular.module('assipe', [
-    'templates-app',
-    'templates-common',
-    'templates-multi-common',
+var assipe = angular.module('assipe', [
+        'templates',
 
 
-    'cfp.hotkeys',
-    'sProgress',
-    'ui.router',
-    'ui.bootstrap',
+        'cfp.hotkeys',
+        'sProgress',
+        'ui.router',
+        'ui.bootstrap',
 
-    'assipe.home',
-    'assipe.docunique',
-    'assipe.fichep',
-    'assipe.user',
+        'assipe.home',
+        'assipe.docunique',
+        'assipe.fichep',
+        'assipe.user',
 
         'numberFilters',
         'titleDirective',
-    'panel',
-    'badge',
+        'panel',
+        'badge',
 
         'analytics',
         'angularMoment'

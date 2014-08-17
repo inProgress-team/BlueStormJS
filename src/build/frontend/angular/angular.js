@@ -7,7 +7,7 @@ module.exports = {
     build: function(params, cb) {
         async.parallel([
             function(cb) {
-                html2js.build(params.env, cb);
+                html2js.build(params, cb);
             },
             function(cb) {
                 copy.build(params, cb);
