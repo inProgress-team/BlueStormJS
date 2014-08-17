@@ -6,16 +6,16 @@ var server = require(__dirname+'/../server/server'),
 var async = require('async');
 
 module.exports = {
-    loadEnvironment: function(env) {
+    loadEnvironment: function(params) {
 
         logger.clear();
-        logger.info('Starting '+env+' environnement...', {level: 1});
+        logger.info('Starting '+params.env+' environnement...', {level: 1});
 
         async.series([
             function(cb) {
-                tasks.build(env, cb)
+                tasks.build(params.env, cb)
             },
-            server.supervisor[env]
+            server.supervisor[params.env]
         ]);
     },
     build: function(env, cb) {

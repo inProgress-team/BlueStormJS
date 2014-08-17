@@ -29,7 +29,7 @@ You need NodeJS 0.11.9 as KoaJS do.
 ## Try
 You can try any test project available in src/app_test.
 
-    $ cd src/app_test/{anyapp}
+    $ cd examples/{anyapp}
     $ node cli.js #Shows every command available
     $ node cli.js dev #Start development environment.
 
