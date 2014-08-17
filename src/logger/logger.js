@@ -29,7 +29,7 @@ module.exports = {
                         prefix = "";
                         style = style.inverse;
                         if (!params.color) {
-                            color = 'red';
+                            color = 'blue';
                         }
                         break;
                     case 2:

@@ -7,15 +7,10 @@ module.exports = {
         }
         return dir;
     },
-    geti18nApps: function(params) {
-        return ['desktop', 'admin']
-    },
     getFrontendApps: function(params) {
-        return ['desktop', 'admin']
+        return ['desktop']
     },
     getIncludes: function(params, cb) {
-
-        console.log(params);
         cb(null, 'pluf');
     }
 };

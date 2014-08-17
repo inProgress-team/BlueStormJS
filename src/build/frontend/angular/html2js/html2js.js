@@ -5,6 +5,7 @@ var util = require('util'),
     recursive = require('recursive-readdir');
 
 var logger = require(__dirname+'/../../../../logger/logger'),
+    config = require(__dirname+'/../../../../config/config'),
     process = require(__dirname+'/process');
 
 
@@ -12,7 +13,7 @@ var HEADER = 'angular.module(\'templates\', []).run(function($templateCache) {\n
     FOOTER = '});\n';
 
 
-var apps = ['desktop', 'admin'];
+var apps = config.getFrontendApps();
 
 
 module.exports = {

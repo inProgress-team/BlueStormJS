@@ -15,7 +15,7 @@ module.exports = {
             sockets({ port: 8888 });
         }
         logger.info('Forever started.', {level: 2});
-        logger.info('Webapp is online ('+env+').', {level: 1, color: 'blue'});
+        logger.info('Webapp is online ('+env+').', {level: 1});
     },
     supervisor: {
         development: function() {

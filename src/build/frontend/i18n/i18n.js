@@ -2,11 +2,11 @@ var async = require('async'),
     fse = require('fs-extra'),
     _ = require('underscore');
 
-var logger = require(__dirname+'/../../logger/logger'),
-    config = require(__dirname+'/../../config/config');
+var logger = require(__dirname+'/../../../logger/logger'),
+    config = require(__dirname+'/../../../config/config');
 
 
-var apps = config.geti18nApps();
+var apps = config.getFrontendApps();
 
 
 module.exports = {
@@ -22,7 +22,7 @@ module.exports = {
     },
     buildApp: function(params, cb) {
         var appName = params.appName,
-            dest = 'dist/' +config.getDestDir(params)+'/'+appName+'/i18n';
+            dest = 'dist/' +config.getDestDir(params)+'/'+appName+'/public/i18n';
         fse.copy('app/i18n', dest, cb);
     }
 

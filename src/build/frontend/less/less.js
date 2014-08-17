@@ -5,11 +5,12 @@ var util = require('util'),
     recursive = require('recursive-readdir'),
     less = require('less');
 
-var logger = require(__dirname+'/../../../logger/logger');
+var logger = require(__dirname+'/../../../logger/logger'),
+    config = require(__dirname+'/../../../config/config');
 
 
 
-var apps = ['desktop', 'admin'];
+var apps = config.getFrontendApps();
 
 
 module.exports = {
