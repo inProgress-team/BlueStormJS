@@ -24,11 +24,8 @@ module.exports = {
             case "dev":
                 tasks.development();
                 break;
-            case "server-dev":
-                console.log('plouf');
-                break;
             case "prod":
-                console.log('prod');
+                tasks.production();
                 break;
         }
     },

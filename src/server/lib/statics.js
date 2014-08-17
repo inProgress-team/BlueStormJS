@@ -34,6 +34,6 @@ module.exports = function(config) {
     app.on('error', function errorMiddleware(err){
         logger.error(config.name+':'+config.port, err);
     });
-    logger.info(config.name+' listening on port '+config.port);
+    logger.info(config.name+' listening on port '+config.port+'.', null, 2);
     app.listen(config.port);
 };

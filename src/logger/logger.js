@@ -11,9 +11,9 @@ module.exports = {
         console.error(clc.red.bold.underline.inverse('From '+from));
         console.error(clc.red.bold(error.stack));
     },
-    info: function(message, style) {
-        if(typeof style == 'string') style = clc[style];
-        else if(typeof style == 'object' && style.length>0){
+    info: function(message, style, tab) {
+        if(style && typeof style == 'string') style = clc[style];
+        else if(style && typeof style == 'object' && style.length>0){
             var styles = style;
             style = clc[styles[0]];
             for(var i =1; i<styles.length; i++) {
@@ -23,7 +23,19 @@ module.exports = {
             style = clc.green;
         }
 
-        console.log(this.getTime()+style(message));
+        var prefix = "";
+        if(tab!==undefined) {
+            switch(tab) {
+                case 1:
+                    prefix = "-- ";
+                    break;
+                case 2:
+                    prefix = "    * ";
+                    break;
+            }
+        }
+
+        console.log(this.getTime()+style(prefix+message));
     },
     warn: function(message) {
         console.warn(this.getTime()+clc.yellow("[WARNING] "+message));

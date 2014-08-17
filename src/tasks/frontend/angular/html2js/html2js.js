@@ -1,12 +1,13 @@
 var util = require('util'),
     fs = require('fs'),
     async = require('async'),
-    mkdirp = require('mkdirp');
+    mkdirp = require('mkdirp'),
+    recursive = require('recursive-readdir');
 
-var minifier = require(__dirname+'/../html/minifier'),
-    logger = require(__dirname+'/../../../logger/logger');;
+var logger = require(__dirname+'/../../../../logger/logger'),
+    process = require(__dirname+'/process');
 
-var TEMPLATE = '   $templateCache.put(\'%s\',\n    \'%s\');\n';
+
 var HEADER = 'angular.module(\'templates\', []).run(function($templateCache) {\n',
     FOOTER = '});\n';
 
@@ -18,8 +19,8 @@ module.exports = {
             file = 'dist/'+dir+'/src/templates.js';
 
         html2js.build(file, function() {
-            logger.info('HTML2JS Done.');
-            cb(file);
+            logger.info('HTML2JS Done.', null, 2);
+            cb(null, file);
         });
 
     },
@@ -28,7 +29,17 @@ module.exports = {
             file = 'dist/'+dir+'/src/templates.js';
 
         html2js.build(file, {prod:true}, function() {
+            logger.info('HTML2JS Done.', null, 2);
             cb(file);
+        });
+    },
+    getTemplatesFilename: function(cb) {
+        recursive('src', function (err, files) {
+            if(err) return cb(err);
+            files = files.filter(function(file) {
+                if(file.indexOf('.tpl.html')!=-1) return true;
+            });
+            cb(null, files);
         });
     },
     build: function(file, params, cb) {
@@ -44,9 +55,11 @@ module.exports = {
             function(cb) {
                 async.parallel([
                     function(cb) {
-                        //get list of files
-                        files = ['src/home/desktop/home.tpl.html', 'src/home/desktop/test.tpl.html'];
-                        cb()
+                        html2js.getTemplatesFilename(function(err, filenames) {
+                            files = filenames;
+                            cb();
+                        })
+
                     },
                     function(cb) {
                         //create directories
@@ -81,7 +94,7 @@ module.exports = {
         }
         var content = "";
         async.each(files, function(path, cb) {
-            html2js.processFile(path, params, function(err, file) {
+            process.processFile(path, params, function(err, file) {
                 if(err) return cb(err)
                 content+=file;
                 cb();
@@ -91,23 +104,6 @@ module.exports = {
             cb(null, content);
         });
     },
-    processFile: function(path, params, cb) {
-        if(cb===undefined) {
-            cb = params;
-            params = {};
-        }
-        fs.readFile(path, function(err, content) {
-            if(err) return cb(err);
-            content = content.toString();
-            if(params.prod) {//if prod, minify
-                content = minifier.compress(content)
-            }
-            var res = util.format(TEMPLATE, path, html2js.escapeContent(content));
-            cb(null, res);
-        });
-    },
-    escapeContent: function(content) {
-        return content.replace(/\\/g, '\\\\').replace(/'/g, '\\\'').replace(/\r?\n/g, '\\n\' +\n    \'');
-    }
+
 };
 var html2js = module.exports;

@@ -5,26 +5,20 @@ var statics = require(__dirname+'/lib/statics'),
 
 var forever = require('forever-monitor');
 
+var env = process.env['NODE_ENV'] || 'development';
 module.exports = {
     start: function() {
-        statics({
-            port: 8080,
-            name: 'desktop'
-        });
-        statics({
-            port: 2052,
-            name: 'admin'
-        });
-        api({
-            port: 3000
-        });
-        sockets({
-            port: 8888
-        });
-        logger.info('Enjoy your server ;)', ['blue', 'bold', 'inverse']);
+        if(true) {
+            statics({ port: 8080, name: 'desktop' });
+            statics({ port: 2052, name: 'admin' });
+            api({ port: 3000 });
+            sockets({ port: 8888 });
+        }
+        logger.info('Forever started.', 'yellow', 1);
+        logger.info('Webapp is online ('+env+').', ['blue', 'bold', 'inverse']);
     },
     devStart: function() {
-        var child = new (forever.Monitor)('server.js', {
+        server.supervisor({
             max: 3,
             command: 'node --harmony',
             watch: true,
@@ -32,19 +26,30 @@ module.exports = {
             watchIgnoreDotFiles: true,
             watchIgnorePatterns: ['node_modules/**']
         });
+    },
+    prodStart: function() {
+        server.supervisor({
+            max: 3,
+            command: 'node --harmony',
+            watch: false,
+            env: {'NODE_ENV': 'production'}
+        });
+    },
+    supervisor: function(options) {
+        var child = new (forever.Monitor)('server.js', options);
 
         child.on('error', function (err) {
             logger.error('Forever', err);
         });
         child.on('start', function () {
-            logger.info('Forever started', 'yellow');
+            logger.info('Forever starting...', 'yellow', 1);
         });
         child.on('stop', function () {
-            logger.info('Forever stopped', 'yellow');
+            logger.info('Forever stopped.', 'yellow', 1);
         });
 
         child.on('restart', function () {
-            logger.info('Forever restarted', 'yellow');
+            logger.info('Forever restarting...', 'yellow', 1);
         });
 
         child.on('exit', function () {
@@ -54,3 +59,4 @@ module.exports = {
         child.start();
     }
 };
+var server = module.exports;

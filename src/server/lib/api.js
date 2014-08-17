@@ -39,6 +39,6 @@ module.exports = function(config) {
     /**
      * Set app on port defined in conf
      */
-    logger.info('API listening on port '+config.port);
+    logger.info('API listening on port '+config.port+'.', null, 2);
     app.listen(config.port);
 };
