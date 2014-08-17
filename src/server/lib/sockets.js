@@ -26,7 +26,7 @@ module.exports = function(config) {
             }
 
         });
-        logger.info('Socket.io listening on port '+config.port+'.', null, 2);
+        logger.info('Socket.io listening on port '+config.port+'.', {level: 3});
         io.listen(config.port);
     });
 };

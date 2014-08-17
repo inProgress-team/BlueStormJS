@@ -5,40 +5,58 @@ var clc = require('cli-color'),
 module.exports = {
     clear: function() {
         clear();
-        console.log();
+        console.log('\n');
     },
     error: function(from, error) {
         console.error(clc.red.bold.underline.inverse('From '+from));
         console.error(clc.red.bold(error.stack));
     },
-    info: function(message, style, tab) {
-        if(style && typeof style == 'string') style = clc[style];
-        else if(style && typeof style == 'object' && style.length>0){
-            var styles = style;
-            style = clc[styles[0]];
-            for(var i =1; i<styles.length; i++) {
-                style = style[styles[i]];
-            }
-        } else {
-            style = clc.green;
-        }
-
-        var prefix = "";
-        if(tab!==undefined) {
-            switch(tab) {
-                case 1:
-                    prefix = "-- ";
-                    break;
-                case 2:
-                    prefix = "    * ";
-                    break;
-            }
-        }
-
-        console.log(this.getTime()+style(prefix+message));
-    },
     warn: function(message) {
         console.warn(this.getTime()+clc.yellow("[WARNING] "+message));
+    },
+    info: function(message, params) {
+        var prefix = "",
+            style = clc,
+            level = 0,
+            color = 'cyan';
+
+
+        if(params!==undefined) {
+            if (params.level) {
+                level = params.level;
+                switch (level) {
+                    case 1:
+                        prefix = "";
+                        style = style.inverse;
+                        if (!params.color) {
+                            color = 'red';
+                        }
+                        break;
+                    case 2:
+                        prefix = "-- ";
+                        if (!params.color) {
+                            color = 'yellow';
+                        }
+                        break;
+                    case 3:
+                        prefix = "   * ";
+                        if (!params.color) {
+                            color = 'green';
+                        }
+                        break;
+                }
+            }
+            if (params.color) {
+                color = params.color;
+            }
+            if(params.styles!=undefined) {
+                for(var i in params.styles) {
+                    style = style[params.styles[i]];
+                }
+            }
+        }
+        console.log(this.getTime()+style[color](prefix+message));
+
     },
     getTime: function() {
         var m = moment(),

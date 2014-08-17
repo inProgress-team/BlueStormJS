@@ -12,38 +12,48 @@ var HEADER = 'angular.module(\'templates\', []).run(function($templateCache) {\n
     FOOTER = '});\n';
 
 
+var apps = ['desktop', 'admin'];
+
 
 module.exports = {
     buildDev: function(cb) {
         var dir ='build',
-            file = 'dist/'+dir+'/src/templates.js';
+            file = 'dist/'+dir+'/app/templates.js';
 
-        html2js.build(file, function() {
-            logger.info('HTML2JS Done.', null, 2);
-            cb(null, file);
-        });
+        async.each(apps, function(app, cb) {
+            html2js.build(app, file, function() {
+                logger.info('HTML2JS done ('+app+').', {level: 3});
+                cb();
+            });
+        }, cb);
 
     },
     buildProd: function(cb) {
         var dir ='bin',
-            file = 'dist/'+dir+'/src/templates.js';
+            file = 'dist/'+dir+'/app/templates';
 
-        html2js.build(file, {prod:true}, function() {
-            logger.info('HTML2JS Done.', null, 2);
-            cb(file);
-        });
+        async.each(apps, function(app, cb) {
+            html2js.build(app, file, {prod:true}, function() {
+                logger.info('HTML2JS done ('+app+').', {level: 3});
+                cb();
+            });
+        }, cb);
+
+
     },
-    getTemplatesFilename: function(cb) {
+    getTemplatesFilename: function(appName, cb) {
         recursive('src', function (err, files) {
             if(err) return cb(err);
             files = files.filter(function(file) {
+                if(file.indexOf('/'+appName+'/')==-1) return false;
                 if(file.indexOf('.tpl.html')!=-1) return true;
             });
             cb(null, files);
         });
     },
-    build: function(file, params, cb) {
+    build: function(appName, file, params, cb) {
         var files = [];
+        file = file+"-"+appName+".js";
 
         if(cb===undefined) {
             cb = params;
@@ -51,11 +61,12 @@ module.exports = {
         }
         var path = file.substring(0, file.lastIndexOf('/'));
 
+
         async.series([
             function(cb) {
                 async.parallel([
                     function(cb) {
-                        html2js.getTemplatesFilename(function(err, filenames) {
+                        html2js.getTemplatesFilename(appName, function(err, filenames) {
                             files = filenames;
                             cb();
                         })
@@ -74,7 +85,7 @@ module.exports = {
             },
             function(cb) {
                 //WRITE EACH FILE
-                html2js.appendTemplates(files, params, function(err, content) {
+                process.appendTemplates(files, params, function(err, content) {
                     if(err) throw err;
                     fs.appendFile(file, content, cb);
                 });
@@ -86,24 +97,7 @@ module.exports = {
 
             }
         ], cb);
-    },
-    appendTemplates: function(files, params, cb) {
-        if(cb===undefined) {
-            cb = params;
-            params = {};
-        }
-        var content = "";
-        async.each(files, function(path, cb) {
-            process.processFile(path, params, function(err, file) {
-                if(err) return cb(err)
-                content+=file;
-                cb();
-            });
-        }, function(err) {
-            if(err) return cb(err);
-            cb(null, content);
-        });
-    },
+    }
 
 };
 var html2js = module.exports;

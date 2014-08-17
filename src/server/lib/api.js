@@ -16,7 +16,7 @@ module.exports = function(config) {
             var start = new Date;
             yield next;
             var ms = new Date - start;
-            logger.info('API : '+this.method+' '+this.url+' - '+ms+'ms');
+            logger.info('API : '+this.method+' '+this.url+' - '+ms+'ms', {level:3});
         });
     }
 
@@ -39,6 +39,6 @@ module.exports = function(config) {
     /**
      * Set app on port defined in conf
      */
-    logger.info('API listening on port '+config.port+'.', null, 2);
+    logger.info('API listening on port '+config.port+'.', {level: 3});
     app.listen(config.port);
 };

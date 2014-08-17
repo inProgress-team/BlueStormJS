@@ -14,8 +14,8 @@ module.exports = {
             api({ port: 3000 });
             sockets({ port: 8888 });
         }
-        logger.info('Forever started.', 'yellow', 1);
-        logger.info('Webapp is online ('+env+').', ['blue', 'bold', 'inverse']);
+        logger.info('Forever started.', {level: 2});
+        logger.info('Webapp is online ('+env+').', {level: 1, color: 'blue'});
     },
     devStart: function() {
         server.supervisor({
@@ -42,14 +42,14 @@ module.exports = {
             logger.error('Forever', err);
         });
         child.on('start', function () {
-            logger.info('Forever starting...', 'yellow', 1);
+            logger.info('Forever starting...', {level: 2});
         });
         child.on('stop', function () {
-            logger.info('Forever stopped.', 'yellow', 1);
+            logger.info('Forever stopped.', {level: 2});
         });
 
         child.on('restart', function () {
-            logger.info('Forever restarting...', 'yellow', 1);
+            logger.info('Forever restarting...', {level: 2});
         });
 
         child.on('exit', function () {

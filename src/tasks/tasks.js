@@ -7,8 +7,8 @@ var async = require('async');
 module.exports = {
     development: function() {
         logger.clear();
-        logger.info('Starting development environnement...', ['red', 'bold', 'inverse']);
-        logger.info('Building files for developement environnement...', 'yellow', 1);
+        logger.info('Starting development environnement...', {level: 1});
+        logger.info('Building files for developement environnement...', {level: 2});
 
         async.series([
             tasks.buildDev,
@@ -19,8 +19,8 @@ module.exports = {
     },
     production: function() {
         logger.clear();
-        logger.info('Starting production environnement...', ['red', 'bold', 'inverse']);
-        logger.info('Building files for production environnement...', 'yellow', 1);
+        logger.info('Starting production environnement...', {level: 1});
+        logger.info('Building files for production environnement...', {level: 2});
 
         async.series([
             tasks.buildProd,
@@ -32,7 +32,7 @@ module.exports = {
         async.parallel([
             frontend.buildDev
         ], function() {
-            logger.info('Building files done.', 'yellow', 1);
+            logger.info('Building files done.', {level: 2});
             cb();
         })
     },
@@ -40,7 +40,7 @@ module.exports = {
         async.parallel([
             frontend.buildProd
         ], function() {
-            logger.info('Building files done.', 'yellow', 1);
+            logger.info('Building files done.', {level: 2});
             cb();
         })
     }

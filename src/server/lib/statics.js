@@ -19,7 +19,7 @@ module.exports = function(config) {
             var start = new Date;
             yield next;
             var ms = new Date - start;
-            logger.info(config.name+' : '+this.method+' '+this.url+' - '+ms+'ms');
+            logger.info(config.name+' : '+this.method+' '+this.url+' - '+ms+'ms', {level:3});
         });
     }
 
@@ -34,6 +34,6 @@ module.exports = function(config) {
     app.on('error', function errorMiddleware(err){
         logger.error(config.name+':'+config.port, err);
     });
-    logger.info(config.name+' listening on port '+config.port+'.', null, 2);
+    logger.info(config.name+' listening on port '+config.port+'.', {level: 3});
     app.listen(config.port);
 };
