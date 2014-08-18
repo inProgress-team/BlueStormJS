@@ -2,7 +2,6 @@ var util = require('util'),
     fs = require('fs'),
     async = require('async'),
     mkdirp = require('mkdirp'),
-    recursive = require('recursive-readdir'),
     less = require('less');
 
 var logger = require(__dirname+'/../../../logger/logger'),
@@ -35,7 +34,7 @@ module.exports = {
 
 
         var parser = new(less.Parser)({
-            paths: ['app/theme/theme-blue'], // search @import directives
+            paths: [],
             filename: 'app/'+appName+'/less/main.less' // Specify a filename, for better error messages
         });
 
@@ -46,6 +45,7 @@ module.exports = {
             function(cb) {
 
                 parser.parse(fs.readFileSync('app/'+appName+'/less/main.less').toString(), function (e, tree) {
+                    if(e) return console.log(e);
                     fs.writeFile(basePath+'/main.css', tree.toCSS(paramsLess), cb);
                 });
             }

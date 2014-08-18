@@ -1,5 +1,10 @@
 NodeFramework
 =============
+
+[![Dependency Status](https://david-dm.org/Bluestep/NodeFramework#badge-embed)](https://david-dm.org/Bluestep/NodeFramework)
+[![devDependency Status](https://david-dm.org/Bluestep/NodeFramework#badge-embed)](https://david-dm.org/Bluestep/NodeFramework#info=devDependencies)
+
+
 NodeFramework is a NodeJS framework which provides : 
 
 *   MODULAR ARCHITECTURE : Everything is a module. Copy & paste and you are ready to go !

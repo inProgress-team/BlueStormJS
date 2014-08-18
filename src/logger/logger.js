@@ -7,9 +7,14 @@ module.exports = {
         clear();
         console.log('\n');
     },
-    error: function(from, error) {
+    error: function(from, error, params) {
         console.error(clc.red.bold.underline.inverse('From '+from));
-        console.error(clc.red.bold(error.stack));
+        if(params!==undefined&&!params.stack) {
+            console.error(clc.red(error));
+        } else {
+            console.error(clc.red(error.stack));
+        }
+
     },
     warn: function(message) {
         console.warn(this.getTime()+clc.yellow("[WARNING] "+message));

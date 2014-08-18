@@ -1,5 +1,6 @@
 var async = require('async'),
-    fse = require('fs-extra');
+    fse = require('fs-extra'),
+    watch = require('node-watch');
 
 var logger = require(__dirname+'/logger/logger'),
     server = require(__dirname+'/server/server'),
@@ -20,7 +21,21 @@ module.exports = {
             function(cb) {
                 build.build(params, cb)
             },
-            server.supervisor[params.env]
+            function() {
+                server.supervisor[params.env](params);
+
+
+                watch('app', function(filename) {
+                    console.log(filename, ' changed.');
+                });
+                watch('src', function(filename) {
+                    console.log(filename, ' changed.');
+
+                    if(server.monitor && (filename.indexOf('/sockets/') != -1 || filename.indexOf('/api/') != -1)) {
+                        server.monitor.restart();
+                    }
+                });
+            }
         ]);
     }
 }

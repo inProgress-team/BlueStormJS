@@ -14,24 +14,33 @@ var argv = require('yargs')
     .alias('h', 'help')
     .describe('h', 'See help for a particular command.');
 
-var commands = ['dev', 'prod', 'server'];
+var commands = ['dev', 'prod', 'server-dev', 'server-prod', 'test'];
 
 var tasks = require(__dirname+'/tasks'),
     server = require(__dirname+'/server/server');
+
+var tasksManager = require(__dirname+'/tasks/manager');
+
 
 module.exports = {
     command: function(commands) {
         var command = commands._[0],
             debug = commands.debug || false;
         switch(command) {
+            case "test":
+                tasksManager.build('development');
+                break;
             case "dev":
                 tasks.loadEnvironment({env: 'development', debug: debug});
                 break;
             case "prod":
                 tasks.loadEnvironment({env: 'production', debug: debug});
                 break;
-            case "server":
+            case "server-dev":
                 server.start({env: 'development', debug: debug});
+                break;
+            case "server-prod":
+                server.start({env: 'production', debug: debug});
                 break;
         }
     },

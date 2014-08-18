@@ -10,7 +10,9 @@ var logger = require(__dirname+'/../../logger/logger'),
 module.exports = function(config) {
     var app = koa(),
         cacheIndex = null,
-        path = process.cwd()+'/dist/'+configApps.getDestDir()+'/'+config.name;
+        path = 'dist/'+configApps.getDestDir()+'/'+config.name;
+
+
     //SERVE STATIC FILES
     app.use(serve(path));
 
