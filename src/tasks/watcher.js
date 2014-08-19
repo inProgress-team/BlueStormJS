@@ -6,11 +6,20 @@ var logger = require(__dirname+'/../logger/logger'),
     tasksContainer = require(__dirname+'/tasksContainer'),
     builder = require(__dirname+'/builder');
 
+//TODOFRAM
+var excluded = ['app/tasks'];
+
 module.exports = {
     watch: function() {
         logger.info('And now my Watch begins.', {level:2})
         watch(['src', 'app'], function(filename) {
-            watcher.onWatch(filename);
+            var emit = true;
+            excluded.forEach(function(exclude) {
+                if(filename.indexOf(exclude)!=-1) {
+                    emit=false;
+                }
+            });
+            if(emit) watcher.onWatch(filename);
         });
     },
     onWatch: function(filename) {
