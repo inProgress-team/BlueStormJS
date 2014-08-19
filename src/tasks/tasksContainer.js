@@ -1,5 +1,7 @@
 var fs = require('fs');
 
+var watchConfig = require(process.cwd()+'/app/tasks/watch.json');
+
 var tasksAvailable = fs.readdirSync(__dirname)
     .filter(function(dir) {
         if(dir.indexOf('.')==-1) return true;
@@ -22,5 +24,8 @@ module.exports = {
             }
         });
         return res;
+    },
+    getWatchConfig: function(extension) {
+        return watchConfig[extension] || null;
     }
 };

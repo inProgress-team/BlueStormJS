@@ -3,6 +3,8 @@ var async = require('async'),
     fs = require('fs'),
     mkdirp = require('mkdirp');
 
+var logger = require(__dirname+'/../../logger/logger');
+
 var apps = ['desktop'];
 
 module.exports = {
@@ -41,8 +43,16 @@ module.exports = {
             function(cb) {
 
                 parser.parse(fs.readFileSync('app/'+appName+'/less/main.less').toString(), function (e, tree) {
-                    if(e) return console.log(e);
-                    fs.writeFile(basePath+'/main.css', tree.toCSS(paramsLess), cb);
+                    if(e) {
+                        var error = e.type+" error: "+ e.message+" on "+ e.filename
+                            + " (line "+ e.line+", column "+ e.column+")\n";
+                        e.extract.forEach(function(err) {
+                            error+="\t"+err+"\n";
+                        });
+                        logger.error("Less generation", error, {stack:false});
+                    }
+                    else
+                        fs.writeFile(basePath+'/main.css', tree.toCSS(paramsLess), cb);
                 });
             }
         ], cb)

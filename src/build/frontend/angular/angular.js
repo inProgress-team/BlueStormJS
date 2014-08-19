@@ -12,6 +12,6 @@ module.exports = {
             function(cb) {
                 copy.build(params, cb);
             }
-        ], cb)
+        ], cb);
     }
 }

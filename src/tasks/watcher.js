@@ -1,8 +1,10 @@
 var watch = require('node-watch'),
-    fs = require('fs');
+    fs = require('fs'),
+    async = require('async');
 
 var logger = require(__dirname+'/../logger/logger'),
-    tasksContainer = require(__dirname+'/tasksContainer');
+    tasksContainer = require(__dirname+'/tasksContainer'),
+    builder = require(__dirname+'/builder');
 
 module.exports = {
     watch: function() {
@@ -11,25 +13,46 @@ module.exports = {
             watcher.onWatch(filename);
         });
     },
-    onUpdate: function(filename) {
-        console.log(extension(filename));
-        console.log('updated ' + filename);
-    },
-    onDelete: function(filename) {
-        console.log('deleted ' + filename);
-    },
     onWatch: function(filename) {
-        fs.exists(filename, function(exists) {
-            if(!exists) return watcher.onDelete(filename);
+        var config = tasksContainer.getWatchConfig(getExtension(filename));
+        if(!config) return console.log('No watch for '+filename);
+        //get tasks
+        var updates = [],
+            deletes = [];
+        if(config.updatedelete) {
+            config.updatedelete.forEach(function(task) {
+                updates.push(task);
+                deletes.push(task);
+            });
+        }
 
-            watcher.onUpdate(filename);
+        fs.exists(filename, function(exists) {
+            //if it doesn't exist, load a watch : on delete
+            var tasks,
+                message = 'File '+filename;
+            if(!exists) {
+                tasks = deletes;
+                message+=' deleted.';
+            } else {
+                tasks = updates;
+                message+=' updated.';
+            }
+            logger.info(message, {level:2});
+
+            async.each(tasks, function(task, cb) {
+                builder.load(task, 'development', cb);
+            }, function() {
+                logger.info('Done.', {level:2});
+            });
         });
 
     }
 };
 var watcher = module.exports;
 
-var extension = function (filename) {
+
+
+var getExtension = function (filename) {
     var name = filename.slice(filename.lastIndexOf('/'));
     return name.slice(name.indexOf('.')+1);
 }
