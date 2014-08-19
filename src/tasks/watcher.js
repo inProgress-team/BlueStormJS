@@ -50,7 +50,8 @@ module.exports = {
 
             async.each(tasks, function(task, cb) {
                 task.filename = filename;
-                builder.load(task, 'development', cb);
+                if(!task.dir || filename.indexOf(task.dir)==0)//we check the dir var
+                    builder.load(task, 'development', cb);
             }, function() {
                 logger.info('Done.', {level:2});
             });
