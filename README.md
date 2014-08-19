@@ -1,8 +1,7 @@
 NodeFramework
 =============
 
-[![Dependency Status](https://david-dm.org/Bluestep/NodeFramework.png)](https://david-dm.org/Bluestep/NodeFramework)
-[![devDependency Status](https://david-dm.org/Bluestep/NodeFramework.png#info=devDependencies)](https://david-dm.org/Bluestep/NodeFramework#info=devDependencies)
+[![Dependency Status](https://david-dm.org/Bluestep/NodeFramework.svg)](https://david-dm.org/Bluestep/NodeFramework)
 
 
 NodeFramework is a NodeJS framework which provides : 

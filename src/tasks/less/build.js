@@ -1,24 +1,23 @@
-var util = require('util'),
+var async = require('async'),
+    less = require('less'),
     fs = require('fs'),
-    async = require('async'),
-    mkdirp = require('mkdirp'),
-    less = require('less');
+    mkdirp = require('mkdirp');
 
-var logger = require(__dirname+'/../../../logger/logger'),
-    config = require(__dirname+'/../../../config/config');
-
-
-
-var apps = config.getFrontendApps();
-
+var apps = ['desktop'];
 
 module.exports = {
+    development: function(cb) {
+        build.build('development', cb);
+    },
+    production: function(cb) {
+        build.build('production', cb);
+    },
     build: function(env, cb) {
-        async.each(apps, function(app, cb) {
-            service.buildFile(env, app, cb);
+        async.each(apps, function(appName, cb) {
+            build.buildApp(env, appName, cb);
         }, cb);
     },
-    buildFile: function(env, appName, cb) {
+    buildApp: function(env, appName, cb) {
 
         var dir = 'build',
             paramsLess = { compress: false };
@@ -51,6 +50,5 @@ module.exports = {
 
 
     }
-
 };
-var service = module.exports;
+var build = module.exports;

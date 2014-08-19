@@ -28,7 +28,11 @@ module.exports = {
             debug = commands.debug || false;
         switch(command) {
             case "test":
-                tasksManager.build('development');
+                var env = 'development';
+                tasksManager.builder.build(env, function() {
+                    tasksManager.watcher.watch();
+                    server.supervisor[env]({env: env, debug: debug});
+                });
                 break;
             case "dev":
                 tasks.loadEnvironment({env: 'development', debug: debug});

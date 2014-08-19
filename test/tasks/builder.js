@@ -1,13 +1,12 @@
-var parser = require(__dirname+'/../../src/tasks/parser'),
-    taskLoader = require(__dirname+'/../../src/tasks/taskLoader');
+var builder = require(__dirname+'/../../src/tasks/builder');
 
 var sinon = require('sinon'),
     assert = require('assert');
 
-describe('Parser', function(){
+describe('Builder', function(){
     var params;
     before(function(done) {
-        sinon.stub(taskLoader, 'load', function(param, env, cb) {
+        sinon.stub(builder, 'load', function(param, env, cb) {
             params.push(param);
             cb();
         });
@@ -15,7 +14,7 @@ describe('Parser', function(){
     });
 
     after(function(done) {
-        taskLoader.load.restore();
+        builder.load.restore();
         done();
     });
 
@@ -28,7 +27,7 @@ describe('Parser', function(){
             "E",
             "G"
         ];
-        parser(json, 'dev', function() {
+        builder.parse(json, 'dev', function() {
             assert.deepEqual(params, ['A', 'C', 'E', 'G']);
             done();
         });
@@ -38,16 +37,16 @@ describe('Parser', function(){
         params = [];
         var json = [
             [
-                "A",
-                "B",
-                "C"
+                "1",
+                "2",
+                "3"
             ],
             [
-                "D"
+                "4"
             ]
         ];
-        parser(json, 'dev', function() {
-            assert.deepEqual(params, ['A', 'B', 'C', 'D']);
+        builder.parse(json, 'dev', function() {
+            assert.deepEqual(params, ['1', '2', '3', '4']);
             done();
         });
     });
@@ -56,18 +55,18 @@ describe('Parser', function(){
         params = [];
         var json = [
             [
-                "A",
-                "C"
+                "AA",
+                "CC"
             ],
             [
-                "D"
+                "DD"
             ],
             [
-                "B"
+                "BB"
             ]
         ];
-        parser(json, 'dev', function() {
-            assert.deepEqual(params, ['A', 'C', 'D', 'B']);
+        builder.parse(json, 'dev', function() {
+            assert.deepEqual(params, ['AA', 'CC', 'DD', 'BB']);
             done();
         });
     });

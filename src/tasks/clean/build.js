@@ -1,9 +1,15 @@
+var fse = require('fs-extra');
+
 
 module.exports = {
-    development: function() {
-
+    development: function(cb) {
+        build.build('build', cb);
     },
-    production: function() {
-
+    production: function(cb) {
+        build.build('bin', cb);
+    },
+    build: function(dir, cb) {
+        fse.remove('dist/'+dir, cb);
     }
-}
+};
+var build = module.exports;
