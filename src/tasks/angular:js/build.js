@@ -79,47 +79,5 @@ module.exports = {
             cb(null, files);
         });
     }
-    /*
-    buildApp: function(env, appName, cb) {
-
-        var dir = 'build',
-            appNameLess = { compress: false };
-        if(env=='production') {
-            dir = 'bin';
-            appNameLess = { cleancss: true };
-        }
-        var basePath = 'dist/'+dir+'/'+appName+'/public';
-
-
-
-        var parser = new(less.Parser)({
-            paths: [],
-            filename: 'app/'+appName+'/less/main.less' // Specify a filename, for better error messages
-        });
-
-        async.series([
-            function(cb) {
-                mkdirp(basePath, cb);
-            },
-            function(cb) {
-
-                parser.parse(fs.readFileSync('app/'+appName+'/less/main.less').toString(), function (e, tree) {
-                    if(e) {
-                        var error = e.type+" error: "+ e.message+" on "+ e.filename
-                            + " (line "+ e.line+", column "+ e.column+")\n";
-                        e.extract.forEach(function(err) {
-                            error+="\t"+err+"\n";
-                        });
-                        logger.error("Less generation", error, {stack:false});
-                    }
-                    else
-                        fs.writeFile(basePath+'/main.css', tree.toCSS(appNameLess), cb);
-                });
-            }
-        ], cb)
-
-
-
-    }*/
 };
 var build = module.exports;
