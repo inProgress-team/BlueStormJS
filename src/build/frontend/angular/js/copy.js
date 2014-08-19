@@ -34,7 +34,7 @@ module.exports = {
                 });
             },
             function(cb) {
-                //copy src files
+                //copy app/common files
                 copy.getFiles('app/common', params, function(err, files) {
                     if(err) return cb(err);
                     async.each(files, function(file, cb) {
@@ -43,7 +43,7 @@ module.exports = {
                 });
             },
             function(cb) {
-                //copy app files
+                //copy app/{appname} files
                 copy.getFiles('app/'+params.appName, params, function(err, files) {
                     if(err) return cb(err);
                     async.each(files, function(file, cb) {
@@ -53,7 +53,7 @@ module.exports = {
                 });
             },
             function(cb) {
-                //copy app files
+                //copy bower_components files
                 var files = config.getFrontendBowerComponents(params);
                 async.each(files, function(file, cb) {
                     var dest = file;

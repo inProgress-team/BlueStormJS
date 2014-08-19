@@ -67,11 +67,11 @@ module.exports = {
 
 
     },
-    getFrontendBowerComponents: function(params) {
-        var dependencies = require(process.cwd()+'/app/'+params.appName+'/dependencies.json');
+    getFrontendBowerComponents: function(env, appName) {
+        var dependencies = require(process.cwd()+'/app/'+appName+'/dependencies.json');
 
         var dirs = ['js', 'js_dev', 'css', 'css_dev'];
-        if(params.env == 'prod') {
+        if(env == 'prod') {
             dirs = ['js', 'js_prod', 'css', 'css_prod'];
         }
         var res = [];

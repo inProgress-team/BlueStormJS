@@ -1,7 +1,8 @@
 var statics = require(__dirname+'/lib/statics'),
     api = require(__dirname+'/lib/api'),
     sockets = require(__dirname+'/lib/sockets'),
-    logger = require(__dirname+'/../logger/logger');
+    logger = require(__dirname+'/../logger/logger'),
+    livereload = require(__dirname+'/../tasks/livereload');
 
 var forever = require('forever-monitor');
 
@@ -18,6 +19,9 @@ module.exports = {
         }
         logger.info('Forever started.', {level: 2});
         logger.info('Webapp is online ('+params.env+').', {level: 1});
+        if(params.env=='development') {
+            livereload.reload();
+        }
     },
     supervisor: {
         development: function(params) {

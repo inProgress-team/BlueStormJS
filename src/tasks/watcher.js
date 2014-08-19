@@ -4,7 +4,9 @@ var watch = require('node-watch'),
 
 var logger = require(__dirname+'/../logger/logger'),
     tasksContainer = require(__dirname+'/tasksContainer'),
-    builder = require(__dirname+'/builder');
+    server = require(__dirname+'/../server/server')
+    builder = require(__dirname+'/builder'),
+    livereload = require(__dirname+'/livereload');
 
 //TODOFRAM
 var excluded = ['app/tasks'];
@@ -23,6 +25,12 @@ module.exports = {
         });
     },
     onWatch: function(filename) {
+        if(server.monitor && (filename.indexOf('src/')!=-1 && (filename.indexOf('/sockets/') != -1 || filename.indexOf('/api/') != -1))) {
+            server.monitor.restart();
+            return;
+        }
+
+
         var config = tasksContainer.getWatchConfig(getExtension(filename));
         if(!config) return console.log('No watch for '+filename);
         //get tasks
@@ -54,6 +62,7 @@ module.exports = {
                     builder.load(task, 'development', cb);
             }, function() {
                 logger.info('Done.', {level:2});
+                livereload.reload();
             });
         });
 
