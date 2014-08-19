@@ -6,6 +6,8 @@ var tasksContainer = require(__dirname+'/tasksContainer'),
 
 var buildConfig = require(process.cwd()+'/app/tasks/build.json');
 
+var apps = ['desktop'];//TODOFRAM
+
 module.exports = {
     build: function(env, cb) {
         var start = new Date;
@@ -17,18 +19,51 @@ module.exports = {
             cb();
         });
     },
-    load: function(name, env, cb) {
-        var task = tasksContainer.get(name);
-
-        if(!task || typeof task.builder[env] !='function') {cb();return console.log(name+' task not found.');}
-
-        task.builder[env](function(err) {
-            if(err) return logger.error("Builder "+name, err);
-            logger.info(name+' done.', { level: 3});
-            cb();
+    getFrontendApp: function(filename) {
+        var res = false;
+        apps.forEach(function(app) {
+            if(filename.indexOf('/'+app+'/')!=-1) {
+                res = app;
+                return;
+            }
         });
+        return res;
+    },
+    load: function(taskConfig, env, cb) {
+        if(typeof taskConfig == "string")  taskConfig = { name: taskConfig };
+
+        var task = tasksContainer.get(taskConfig.name);
+        //if task has not been found
+        if(!task || typeof task.builder[env] !='function') {cb();return console.log(taskConfig.name+' task not found.');}
+
+        //CALLBACK WHEN A TASK IS DONE
+        var callback = function(err, message) {
+            if(err) return logger.error("Builder "+taskConfig.name, err);
+            logger.info(message, { level: 3});
+            cb();
+        };
 
 
+        /**
+         * Load a buildApp if the task is called by app
+         */
+        if(taskConfig.filename
+            && builder.getFrontendApp(taskConfig.filename)
+            && taskConfig.filters
+            && taskConfig.filters.indexOf("frontendapp")!=-1) {
+
+            var app = builder.getFrontendApp(taskConfig.filename);
+            task.builder.buildApp(env, app, function(err) {
+                callback(err, taskConfig.name+' done. ('+app+')');
+            });
+        } else {
+            /**
+             * Load everything for an environnement
+             */
+            task.builder[env](function(err) {
+                callback(err, taskConfig.name+' done. ')
+            });
+        }
     },
     parse: function(env, cb) {
         var json = buildConfig[env];

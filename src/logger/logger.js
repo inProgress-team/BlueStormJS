@@ -4,7 +4,7 @@ var clc = require('cli-color'),
 
 module.exports = {
     clear: function() {
-        clear();
+        //clear();
         console.log('\n');
     },
     error: function(from, error, params) {

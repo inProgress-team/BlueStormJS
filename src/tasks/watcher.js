@@ -40,6 +40,7 @@ module.exports = {
             logger.info(message, {level:2});
 
             async.each(tasks, function(task, cb) {
+                task.filename = filename;
                 builder.load(task, 'development', cb);
             }, function() {
                 logger.info('Done.', {level:2});

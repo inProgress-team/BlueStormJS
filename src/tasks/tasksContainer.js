@@ -10,8 +10,7 @@ var tasksAvailable = fs.readdirSync(__dirname)
         var path = __dirname+'/'+dir;
         return {
             name: dir,
-            builder: fs.existsSync(path+'/build.js') ? require(path+'/build') : null ,
-            watcher: fs.existsSync(path+'/watch.js') ? require(path+'/watch') : null
+            builder: fs.existsSync(path+'/build.js') ? require(path+'/build') : null
         }
     });
 

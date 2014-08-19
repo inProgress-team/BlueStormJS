@@ -5,7 +5,7 @@ var async = require('async'),
 
 var logger = require(__dirname+'/../../logger/logger');
 
-var apps = ['desktop'];
+var apps = ['desktop'];//TODOFRAM
 
 module.exports = {
     development: function(cb) {
