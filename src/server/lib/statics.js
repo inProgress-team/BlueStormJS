@@ -1,38 +1,38 @@
 
 
-var fs = require('co-fs'),
-    koa = require('koa'),
-    serve = require('koa-static');
+var fs = require('fs'),
+    express = require('express'),
+    serveStatic = require('serve-static');
+
 
 var logger = require(__dirname+'/../../logger/logger'),
     configApps = require(__dirname+'/../../config/config');
 
 module.exports = function(config) {
-    var app = koa(),
-        cacheIndex = null,
-        path = 'dist/'+configApps.getDestDir()+'/'+config.name;
-
-
-    //SERVE STATIC FILES
-    app.use(serve(path));
+    var app = express(),
+        path = 'dist/'+configApps.getDestDir()+'/'+config.name,
+        serve = serveStatic(path, {'index': ['index.html', 'main.html']}),
+        start;
 
     if(config.debug) {
         //LOGGER FOR EVERY STATIC REQUEST
-        app.use(function *loggerMiddleware(next){
-            var start = new Date;
-            yield next;
-            var ms = new Date - start;
-            logger.info(config.name+' : '+this.method+' '+this.url+' - '+ms+'ms', {level:3});
+        app.use(function loggerMiddleware(req, res, next){
+            start = new Date;
+            next();
         });
     }
 
-    app.use(function *htmlMiddleware(next){
-        this.type = 'html';
-        if(!cacheIndex || process.env.NODE_ENV=='development') {
-            cacheIndex = yield fs.readFile(path+'/main.html');
-        }
-        this.body = cacheIndex;
+    app.use(function htmlMiddleware(req, res, next){
+        serve(req, res, next);
     });
+
+    if(config.debug) {
+        app.use(function(req, res, next) {
+            var ms = new Date - start;
+            next();
+            logger.info(config.name + ' : ' + req.method + ' ' + req.url + ' - ' + ms + 'ms', {level: 3});
+        });
+    }
 
     app.on('error', function errorMiddleware(err){
         logger.error(config.name+':'+config.port, err);

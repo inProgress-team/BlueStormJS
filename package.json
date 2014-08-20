@@ -43,7 +43,9 @@
     "koa-cors": "0.0.13",
     "watchr": "^2.4.11",
     "watch-tree": "^0.1.1",
-    "livereload": "^0.3.4"
+    "livereload": "^0.3.4",
+    "express": "^4.8.5",
+    "serve-static": "^1.5.3"
   },
   "devDependencies": {
     "sinon": "^1.10.3"
