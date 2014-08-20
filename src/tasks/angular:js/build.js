@@ -12,7 +12,7 @@ var logger = require(__dirname+'/../../logger/logger'),
 var apps = ['desktop'];//TODOFRAM
 
 module.exports = {
-    development: function(cb) {
+    development: function(cb) {""
         build.build('development', cb);
     },
     production: function(cb) {

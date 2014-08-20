@@ -1,6 +1,6 @@
 var socket = require('socket.io'),
     domain = require('domain');
-
+var redis = require('socket.io-redis');
 var logger = require(__dirname+'/../../logger/logger'),
     arborescence = require(__dirname+'/../../arborescence');
 
@@ -14,6 +14,7 @@ module.exports = function(config) {
 
     d.run(function() {
         var io = socket();
+        io.adapter(redis({ host: 'localhost', port: 6379 }));
         io.on('connection', function(socket){
             socket.emit('open');
             if(!cacheFiles) {

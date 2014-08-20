@@ -1,5 +1,4 @@
-var express = require('express'),
-    async = require('async');
+var express = require('express');
 
 var logger = require(__dirname+'/../../logger/logger'),
     arborescence = require(__dirname+'/../../arborescence');
@@ -8,7 +7,13 @@ module.exports = function(config) {
     var app = express(),
         start;
 
-    //app.use(cors());
+    app.use(function(req, res, next) {
+        res.header('Access-Control-Allow-Origin', ['http://dev.songpeek.com:8080']);
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+        res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+        next();
+    });
     /**
      * Log everything if debug param is set to true in config
      */
@@ -23,8 +28,8 @@ module.exports = function(config) {
     /**
      * Include router and routes
      */
-        //app.use(router(app));
-    arborescence.getRequiredFiles('api', function(files) {
+    arborescence.getRequiredFiles('api', function (files) {
+
         arborescence.loadFiles(files, app);
     });
 
@@ -36,12 +41,7 @@ module.exports = function(config) {
         });
     }
 
-    /**
-     * Error handler
-     */
-    app.on('error', function(err){
-        logger.error('API'+':'+config.port, err);
-    });
+
     /**
      * Set app on port defined in conf
      */

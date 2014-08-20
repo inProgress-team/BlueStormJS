@@ -3,16 +3,20 @@
 var fs = require('fs'),
     express = require('express'),
     serveStatic = require('serve-static');
-
+//var createStatic = require('connect-static');
 
 var logger = require(__dirname+'/../../logger/logger'),
     configApps = require(__dirname+'/../../config/config');
 
+
 module.exports = function(config) {
     var app = express(),
+        cacheIndex = null,
         path = 'dist/'+configApps.getDestDir()+'/'+config.name,
-        serve = serveStatic(path, {'index': ['index.html', 'main.html']}),
+        //serve = serveStatic(path),
         start;
+
+    app.use(express.static('dist/'+configApps.getDestDir()+'/'+config.name));
 
     if(config.debug) {
         //LOGGER FOR EVERY STATIC REQUEST
@@ -22,9 +26,16 @@ module.exports = function(config) {
         });
     }
 
-    app.use(function htmlMiddleware(req, res, next){
-        serve(req, res, next);
+    app.all('*', function(req, res){
+        if(!cacheIndex || process.env.NODE_ENV=='development') {
+            console.log('reload cache');
+            cacheIndex = fs.readFileSync(path+'/main.html');
+        }
+        res.set('Content-Type', 'text/html');
+        res.send(cacheIndex);
     });
+
+    //app.use(serve);
 
     if(config.debug) {
         app.use(function(req, res, next) {
