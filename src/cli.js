@@ -14,10 +14,10 @@ var argv = require('yargs')
     .alias('h', 'help')
     .describe('h', 'See help for a particular command.');
 
-var commands = ['dev', 'prod', 'server-dev', 'server-prod', 'test'];
+var commands = ['dev', 'prod', 'server-dev', 'server-prod'];
 
-var tasks = require(__dirname+'/tasks'),
-    server = require(__dirname+'/server/server');
+var server = require(__dirname+'/server/server'),
+    logger = require(__dirname+'/logger/logger');
 
 var tasksManager = require(__dirname+'/tasks/manager');
 
@@ -26,26 +26,23 @@ module.exports = {
     command: function(commands) {
         var command = commands._[0],
             debug = commands.debug || false;
-        switch(command) {
-            case "dev":
-                var env = 'development';
-                tasksManager.builder.build(env, function() {
-                    tasksManager.watcher.watch();
-                    server.supervisor[env]({env: env, debug: debug});
-                });
-                break;
-            case "prod":
-                var env = 'production';
-                tasksManager.builder.build(env, function() {
-                    server.supervisor[env]({env: env, debug: debug});
-                });
-                break;
-            case "server-dev":
-                server.start({env: 'development', debug: debug});
-                break;
-            case "server-prod":
-                server.start({env: 'production', debug: debug});
-                break;
+        if(command=="dev") {
+            tasksManager.builder.build('development', function () {
+                server.supervisor.development(debug);
+                tasksManager.watcher.watch();
+            });
+        } else if(command=="prod") {
+            tasksManager.builder.build('production', function() {
+                var command = 'node cli.js server-prod'
+                logger.info('Type '+command+' to start the server.', {level:1});
+            });
+
+        } else if(command=="server-dev") {
+            server.startDev(debug);
+
+        } else if(command=="server-prod") {
+            process.env.NODE_ENV = 'production';
+            server.startProd(debug);
         }
     },
     argv: function() {

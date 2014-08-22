@@ -1,6 +1,6 @@
 var async = require('async'),
-    fse = require('fs-extra'),
-    watch = require('node-watch');
+    fse = require('fs-extra');
+    //watch = require('node-watch');
 
 var logger = require(__dirname+'/logger/logger'),
     server = require(__dirname+'/server/server'),

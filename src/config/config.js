@@ -31,9 +31,15 @@ module.exports = {
             }
         }
 
+
+        var dir = 'build';
+        if(params.env=='production') {
+            dir='bin';
+        }
+
         async.series([
            function(cb) {
-               recursive('dist/build/'+params.appName+'/public/bower_components', function (err, files) {
+               recursive('dist/'+dir+'/'+params.appName+'/public/bower_components', function (err, files) {
                    if(err) throw err;
 
 

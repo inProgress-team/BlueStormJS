@@ -26,14 +26,11 @@ module.exports = function(config) {
 
     app.all('*', function(req, res){
         if(!cacheIndex || process.env.NODE_ENV=='development') {
-            console.log('reload cache');
             cacheIndex = fs.readFileSync(path+'/main.html');
         }
         res.set('Content-Type', 'text/html');
         res.send(cacheIndex);
     });
-
-    //app.use(serve);
 
     if(config.debug) {
         app.use(function(req, res, next) {
@@ -43,9 +40,12 @@ module.exports = function(config) {
         });
     }
 
-    app.on('error', function errorMiddleware(err){
-        logger.error(config.name+':'+config.port, err);
-    });
-    logger.info(config.name+' listening on port '+config.port+'.', {level: 3});
-    app.listen(config.port);
+    if(config.port) {
+        logger.info(config.name+' listening on port '+config.port+'.', {level: 3});
+        app.listen(config.port, function() {
+            if(typeof callback=='function') cb();
+        });
+    } else {
+        return app
+    }
 };

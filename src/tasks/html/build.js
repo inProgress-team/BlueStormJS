@@ -38,7 +38,8 @@ module.exports = {
             function(cb) {
                 //get filenames to be include
                 config.getIncludes({
-                    appName:appName
+                    appName:appName,
+                    env: env
                 }, function(err, inc) {
                     if(err) return cb(err);
                     includes = inc;
@@ -52,7 +53,8 @@ module.exports = {
                     cb();
                 });
             }
-        ], function() {
+        ], function(err) {
+            if(err)return console.log(err);
             content = content.replace('<% include %>', includes);
             fs.writeFile('dist/'+dir+'/'+appName+'/main.html', content, cb);
         });

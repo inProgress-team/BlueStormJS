@@ -5,45 +5,53 @@ var statics = require(__dirname+'/lib/statics'),
     logger = require(__dirname+'/../logger/logger'),
     livereload = require(__dirname+'/../tasks/livereload');
 
+var express = require('express');
 var forever = require('forever-monitor');
+var vhost = require('vhost');
+
+var sticky = require(__dirname+'/lib/sticky-session');
 
 module.exports = {
-    start: function(params) {
-        if(params.env=='development') {//prod-dev
-            statics({ port: 8080, name: 'desktop', debug: params.debug });
-            api({ port: 3000, debug: params.debug });
-            sockets({ port: 8888, debug: params.debug });
-        } else {
-            statics({ port: 8080, name: 'desktop', debug: params.debug });
-            api({ port: 3000, debug: params.debug });
-            sockets({ port: 8888, debug: params.debug });
-        }
-        database({debug: params.debug});
+    startDev: function(debug) {
+        statics({ port: 8080, name: 'desktop', debug: debug });
+        api({ port: 8000, debug: debug });
+        sockets({ port: 8888, debug: debug });
+        database({debug: debug});
         logger.info('Forever started.', {level: 2});
-        logger.info('Webapp is online ('+params.env+').', {level: 1});
-        if(params.env=='development') {
-            livereload.reload();
-        }
+        logger.info('Webapp is online (development).', {level: 1});
+        livereload.reload();
+    },
+    startProd: function(debug) {
+        sticky(function() {
+            var server = express();
+
+            var staticsApp = statics({ name: 'desktop', debug: debug }),
+                apiApp = api({ debug: debug }),
+                socketsApp = sockets({ debug: debug });
+
+            return server
+                .use(vhost('socket-dev.assipe-software.fr', socketsApp))
+                .use(vhost('api-dev.assipe-software.fr', apiApp))
+                .use(vhost('dev.assipe-software.fr', staticsApp))
+                .listen(3000);
+
+        }).listen(8000, function() {
+            if(process.env.NODE_WORKER_ID=='MASTER') {
+                logger.info('Master started on 8080 port', {level:11, color:'green'});
+            } else {
+                logger.info('Worker ' + process.env.NODE_WORKER_ID+ ' started', {level:2});
+            }
+
+        });
     },
     supervisor: {
-        development: function(params) {
+        development: function(debug) {
             var options = ['server-dev'];
-            if(params.debug) options.push('-d');
+            if(debug) options.push('-d');
             server.supervisor.load({
                 max: 1,
-                command: 'node --harmony',
+                command: 'node',
                 env: {'NODE_ENV': 'development'},
-                watch: false,
-                options: options
-            });
-        },
-        production: function(params) {
-            var options = ['server-prod'];
-            if(params.debug) options.push('-d');
-            server.supervisor.load({
-                max: 3,
-                command: 'node --harmony',
-                env: {'NODE_ENV': 'production'},
                 watch: false,
                 options: options
             });
