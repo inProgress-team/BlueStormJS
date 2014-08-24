@@ -57,7 +57,7 @@ module.exports = {
                     if(err) return cb(err);
 
                     files = files.filter(function(file) {
-                        if(file.indexOf('bower_components')!=-1) return false;
+                        if(file.indexOf('bower_components')!=-1 || file.indexOf('/assets/')!=-1) return false;
                         if(file.indexOf('.js')!=-1 && file.indexOf('.json')==-1) return true;
                     });
                     files.forEach(function(file) {

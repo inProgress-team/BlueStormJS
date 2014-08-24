@@ -2,7 +2,7 @@ var fs = require('fs'),
     domain = require('domain'),
     logger = require(__dirname+'/../../logger/logger');
 
-module.exports = function(config) {
+module.exports = function(debug) {
     var DATA_BASE_CONFIG_FILE_PATH = process.cwd() + '/app/config/database.json',
         dataBaseConfig;
 
@@ -28,6 +28,8 @@ module.exports = function(config) {
 
     d.run(function() {
         (require(__dirname + '/' + dataBaseConfig.name))(dataBaseConfig.host);
-        logger.info('Successfully connected to ' + dataBaseConfig.name + ' (' + dataBaseConfig.host + ').', {level: 3});
+        if(debug) {
+            logger.info('Successfully connected to ' + dataBaseConfig.name + ' (' + dataBaseConfig.host + ').', {level: 3});
+        }
     });
 };
