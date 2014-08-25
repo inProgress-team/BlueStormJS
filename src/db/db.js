@@ -1,8 +1,8 @@
 var fs = require('fs'),
-    domain = require('domain'),
-    logger = require(__dirname+'/../../logger/logger');
+    logger = require(__dirname+'/../logger/logger'),
+    db;
 
-module.exports = function(debug) {
+module.exports = function(dev, debug) {
     var DATA_BASE_CONFIG_FILE_PATH = process.cwd() + '/app/config/database.json',
         dataBaseConfig;
 
@@ -15,21 +15,12 @@ module.exports = function(debug) {
         process.exit(1);
     }
     // Check if name of database is valid
-    if (!dataBaseConfig || !dataBaseConfig.name || !fs.existsSync(__dirname + '/' + dataBaseConfig.name + '.js')) {
+    if (!dataBaseConfig || !dataBaseConfig.type || !fs.existsSync(__dirname + '/' + dataBaseConfig.type + '.js')) {
         logger.error('Database: ', new Error('name in database config file is invalid.'));
         process.exit(1);
     }
-
-    var d = domain.create();
-
-    d.on('error', function(err) {
-        logger.error(dataBaseConfig.name, err);
-    });
-
-    d.run(function() {
-        (require(__dirname + '/' + dataBaseConfig.name))(dataBaseConfig.host);
-        if(debug) {
-            logger.info('Successfully connected to ' + dataBaseConfig.name + ' (' + dataBaseConfig.host + ').', {level: 3});
-        }
-    });
+    if (dev)
+        return (require(__dirname + '/' + dataBaseConfig.type))(dataBaseConfig.hostDev);
+    else
+        return (require(__dirname + '/' + dataBaseConfig.type))(dataBaseConfig.hostProd);
 };

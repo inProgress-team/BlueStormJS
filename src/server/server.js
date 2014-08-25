@@ -1,7 +1,6 @@
 var statics = require(__dirname+'/lib/statics'),
     api = require(__dirname+'/api/api'),
     sockets = require(__dirname+'/sockets/sockets'),
-    database = require(__dirname+'/lib/database'),
     logger = require(__dirname+'/../logger/logger'),
     livereload = require(__dirname+'/../tasks/livereload/livereload');
 
@@ -16,7 +15,6 @@ module.exports = {
         statics({ port: 8080, name: 'desktop', debug: debug });
         api({ port: 8000, debug: debug });
         sockets({ port: 8888, debug: debug });
-        database(debug);
         logger.info('Forever started.', {level: 2});
         logger.info('Webapp is online (development).', {level: 1});
         livereload.reload();
