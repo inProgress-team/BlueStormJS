@@ -6,10 +6,10 @@ var logger = require(__dirname+'/../logger/logger'),
     tasksContainer = require(__dirname+'/tasksContainer'),
     server = require(__dirname+'/../server/server')
     builder = require(__dirname+'/builder'),
-    livereload = require(__dirname+'/livereload');
+    livereload = require(__dirname+'/livereload/livereload');
 
 //TODOFRAM
-var excluded = ['app/tasks'];
+var excluded = ['app/tasks', 'app/config'];
 
 module.exports = {
     watch: function() {
@@ -23,6 +23,7 @@ module.exports = {
             });
             if(emit) watcher.onWatch(filename);
         });
+        livereload.start();
     },
     onWatch: function(filename) {
         if(server.monitor && (filename.indexOf('src/')!=-1 && (filename.indexOf('/sockets/') != -1 || filename.indexOf('/api/') != -1))) {

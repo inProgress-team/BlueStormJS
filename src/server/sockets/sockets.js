@@ -39,7 +39,10 @@ module.exports = function(config) {
         });
     });
     if(config.port) {
-        logger.info('Sockets listening on port '+config.port+'.', {level: 3});
+        if(config.debug) {
+            logger.info('Sockets listening on port '+config.port+'.', {level: 3});
+        }
+
         io.listen(config.port, function() {
             if(typeof callback=='function') cb();
         });

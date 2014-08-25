@@ -54,7 +54,9 @@ module.exports = function(config, cb) {
      * Set app on port defined in conf
      */
     if(config.port) {
-        logger.info('API listening on port '+config.port+'.', {level: 3});
+        if(config.debug) {
+            logger.info('API listening on port ' + config.port + '.', {level: 3});
+        }
         app.listen(config.port, function() {
             if(typeof callback=='function') cb();
         });

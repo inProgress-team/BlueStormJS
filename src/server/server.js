@@ -1,9 +1,9 @@
 var statics = require(__dirname+'/lib/statics'),
-    api = require(__dirname+'/lib/api'),
+    api = require(__dirname+'/api/api'),
     sockets = require(__dirname+'/sockets/sockets'),
     database = require(__dirname+'/lib/database'),
     logger = require(__dirname+'/../logger/logger'),
-    livereload = require(__dirname+'/../tasks/livereload');
+    livereload = require(__dirname+'/../tasks/livereload/livereload');
 
 var express = require('express');
 var forever = require('forever-monitor');
