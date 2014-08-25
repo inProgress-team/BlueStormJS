@@ -2,7 +2,8 @@ var statics = require(__dirname+'/lib/statics'),
     api = require(__dirname+'/api/api'),
     sockets = require(__dirname+'/sockets/sockets'),
     logger = require(__dirname+'/../logger/logger'),
-    livereload = require(__dirname+'/../tasks/livereload/livereload');
+    livereload = require(__dirname+'/../tasks/livereload/livereload'),
+    db = require(__dirname+'/../db/db');
 
 var express = require('express');
 var forever = require('forever-monitor');
@@ -18,6 +19,8 @@ module.exports = {
         logger.info('Forever started.', {level: 2});
         logger.info('Webapp is online (development).', {level: 1});
         livereload.reload();
+        db.start(true);
+        console.log(db.mongo.collections('users'));
     },
     startProd: function(debug) {
         sticky(function() {
