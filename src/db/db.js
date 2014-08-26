@@ -1,8 +1,7 @@
 var fs = require('fs'),
-    logger = require(__dirname+'/../logger/logger'),
-    db;
+    logger = require(__dirname+'/../logger/logger');
 
-module.exports = function(dev, debug) {
+module.exports = function(callback) {
     var DATA_BASE_CONFIG_FILE_PATH = process.cwd() + '/app/config/database.json',
         dataBaseConfig;
 
@@ -19,8 +18,22 @@ module.exports = function(dev, debug) {
         logger.error('Database: ', new Error('name in database config file is invalid.'));
         process.exit(1);
     }
-    if (dev)
-        return (require(__dirname + '/' + dataBaseConfig.type))(dataBaseConfig.hostDev);
-    else
-        return (require(__dirname + '/' + dataBaseConfig.type))(dataBaseConfig.hostProd);
+
+    var env = process.env.NODE_ENV || 'development';
+    if (env == 'development') {
+        require(__dirname + '/' + dataBaseConfig.type)(dataBaseConfig.hostDev, function (err, res) {
+            if (err)
+                return callback(err);
+
+            return callback(null, res);
+        });
+    }
+    else {
+        require(__dirname + '/' + dataBaseConfig.type)(dataBaseConfig.hostProd, function (err, res) {
+            if (err)
+                return callback(err);
+
+            return callback(null, res);
+        });
+    }
 };
