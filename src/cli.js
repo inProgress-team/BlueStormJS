@@ -14,7 +14,7 @@ var argv = require('yargs')
     .alias('h', 'help')
     .describe('h', 'See help for a particular command.');
 
-var commands = ['dev', 'prod', 'server-dev', 'server-prod'];
+var commands = ['dev', 'prod', 'server-dev', 'server-prod', 'test'];
 
 var server = require(__dirname+'/server/server'),
     logger = require(__dirname+'/logger/logger');
@@ -43,6 +43,10 @@ module.exports = {
         } else if(command=="server-prod") {
             process.env.NODE_ENV = 'production';
             server.startProd(debug);
+
+
+        } else if(command=="test") {
+            require(__dirname+'/gulp/gulp').start();
         }
     },
     argv: function() {
