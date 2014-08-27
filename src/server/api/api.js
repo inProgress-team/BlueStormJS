@@ -1,4 +1,5 @@
 var express = require('express');
+var bodyParser = require('body-parser');
 
 var logger = require(__dirname+'/../../logger/logger'),
     arborescence = require(__dirname+'/../../arborescence');
@@ -6,6 +7,8 @@ var logger = require(__dirname+'/../../logger/logger'),
 module.exports = function(config, cb) {
     var app = express(),
         start;
+
+    app.use(bodyParser.json());
 
     var allow;//TODOFRAM
     if(process.env.NODE_ENV=='development') {
