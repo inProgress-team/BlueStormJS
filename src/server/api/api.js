@@ -1,5 +1,6 @@
 var express = require('express');
-var bodyParser = require('body-parser');
+var bodyParser = require('body-parser'),
+    _ = require('underscore');
 
 var logger = require(__dirname+'/../../logger/logger'),
     arborescence = require(__dirname+'/../../arborescence');
@@ -7,6 +8,24 @@ var logger = require(__dirname+'/../../logger/logger'),
 module.exports = function(config, cb) {
     var app = express(),
         start;
+
+    /**
+     * Override GET
+     */
+        console.log('blaaaaaaaaaaaaaaaaaa');
+    console.log(app.get);
+    var getAux = app.get;
+    console.log('---->');
+    console.log(getAux);
+    app.get = function(url, options, next) {
+        console.log('>params');
+        console.log(arguments);
+        console.log('>url');
+        console.log(url);
+        console.log('>options');
+        console.log(options);
+        getAux(url, options);
+    };
 
     app.use(bodyParser.json());
 
