@@ -12,10 +12,10 @@ module.exports = {
     build: function(env, cb) {
         var start = new Date;
 
-        logger.info('Building files for '+env+' environnement...', {level: 2});
+        logger.log('Building files for '+env+' environnement...');
         builder.parse(env, function() {
             var sec = (new Date - start)/1000;
-            logger.info('Building files done ('+sec+' seconds).', {level: 2});
+            logger.log('Buildi ('+sec+' seconds).');
             cb();
         });
     },
@@ -39,7 +39,7 @@ module.exports = {
         //CALLBACK WHEN A TASK IS DONE
         var callback = function(err, message) {
             if(err) return logger.error("Builder "+taskConfig.name, err);
-            logger.info(message, { level: 3});
+            logger.log(message);
             cb();
         };
 

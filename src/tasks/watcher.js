@@ -4,7 +4,7 @@ var watch = require('node-watch'),
 
 var logger = require(__dirname+'/../logger/logger'),
     tasksContainer = require(__dirname+'/tasksContainer'),
-    server = require(__dirname+'/../server/server')
+    server = require(__dirname+'/../server/server'),
     builder = require(__dirname+'/builder'),
     livereload = require(__dirname+'/livereload/livereload');
 
@@ -13,7 +13,7 @@ var excluded = ['app/tasks', 'app/config'];
 
 module.exports = {
     watch: function() {
-        logger.info('And now my Watch begins.', {level:2})
+        logger.log('And now my Watch begins.');
         watch(['src', 'app'], function(filename) {
             var emit = true;
             excluded.forEach(function(exclude) {
@@ -55,14 +55,14 @@ module.exports = {
                 tasks = updates;
                 message+=' updated.';
             }
-            logger.info(message, {level:2});
+            logger.log(message);
 
             async.each(tasks, function(task, cb) {
                 task.filename = filename;
                 if(!task.dir || filename.indexOf(task.dir)==0)//we check the dir var
                     builder.load(task, 'development', cb);
             }, function() {
-                logger.info('Done.', {level:2});
+                logger.log('Done.');
                 livereload.reload();
             });
         });
@@ -76,4 +76,4 @@ var watcher = module.exports;
 var getExtension = function (filename) {
     var name = filename.slice(filename.lastIndexOf('/'));
     return name.slice(name.indexOf('.')+1);
-}
+};
