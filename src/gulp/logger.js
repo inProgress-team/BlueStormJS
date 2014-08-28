@@ -7,7 +7,8 @@ module.exports = {
     gulp: function(gulp) {
 
         gulp.on('start', function (e) {
-            logger.log("Executing ", "development", ['red'], " environment.");
+            var tasks = e.message.split(': ')[1].split(',');
+            logger.log("Executing ", tasks.length, ['red'], " tasks.");
         });
         gulp.on('stop', function (e) {
             logger.log('Gulp done', ['blue', 'inverse'], ".");
