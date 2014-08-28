@@ -1,22 +1,29 @@
 var gulp = require('gulp'),
     del = require('del'),
     mainBowerFiles = require('main-bower-files'),
-    filter = require('gulp-filter');
-var stylish = require('jshint-stylish');
-var jshint = require('gulp-jshint');
+    filter = require('gulp-filter'),
+    stylish = require('jshint-stylish'),
+    jshint = require('gulp-jshint'),
+    changed = require('gulp-changed'),
+    cache = require('gulp-cached'),
+    livereload = require('gulp-livereload'),
+    rename = require("gulp-rename"),
+    useref = require('gulp-useref'),
+    inject = require("gulp-inject");
+
 
 var dir = 'dist/build';
 
-var gulpLogger = require(__dirname+'/logger');
+var gulpLogger = require(__dirname+'/logger'),
+    server = require(__dirname+'/../server/server');
 
 gulp.task('clean', function(cb) {
-    // You can use multiple globbing patterns as you would with `gulp.src`
     del(['dist'], cb);
 });
 
 
 gulp.task('bower-files', ['clean'], function(){
-    return gulp.src(mainBowerFiles(/* options */), { base: 'bower_components' })
+    return gulp.src(mainBowerFiles(), { base: 'bower_components' })
         .pipe(gulp.dest('dist/build/desktop/public/js/bower'))
 });
 
@@ -31,29 +38,50 @@ gulp.task('i18n', ['clean'], function(){
 });
 
 gulp.task('index.html', ['js-files', 'bower-files', 'i18n'], function(){
+    var sources = gulp.src([
+        'dist/build/**/bower/**/*.js',
+        'dist/build/**/*.js',
+        'dist/build/**/*.css'
+    ], {read: false});
+
+
     return gulp.src(['app/desktop/index.html'])
+        .pipe(inject(sources))
+        .pipe(rename(function (path) {
+            path.basename = "main";
+        }))
         .pipe(gulp.dest('dist/build/desktop'));
-});
-
-gulp.task('lint', function() {
-    return gulp.src(['./**/*.js', '!./bower_components/**', '!./node_modules/**', '!./dist/**'])
-        .pipe(jshint())
-        .pipe(gulpLogger.jshint);
-});
-
-gulp.task('watch', function() {
-    gulp.watch(['./**/*.js', '!./bower_components/**', '!./node_modules/**', '!./dist/**'], ['lint']);
 });
 
 
 
 module.exports= {
-    start: function() {
+    development: function(debug) {
         gulpLogger.gulp(gulp);
-        gulp.start(['bower-files', 'js-files', 'i18n', 'lint', 'watch', 'index.html']);
+        gulp.start([
+            'watch',
+            'lint'
+        ], function() {
+            console.log('');
+            var d = debug || false;
+            server.supervisor.development(d);
+        });
     }
 };
 
+
+gulp.task('watch', ['index.html'], function() {
+    livereload.listen();
+    gulp.watch('dist/build/**/*').on('change', livereload.changed);
+    gulp.watch(['./**/*.js', '!./bower_components/**', '!./node_modules/**', '!./dist/**'], ['lint']);
+});
+
+gulp.task('lint', function() {
+    return gulp.src(['./**/*.js', '!./bower_components/**', '!./node_modules/**', '!./dist/**'])
+        .pipe(cache('linting'))
+        .pipe(jshint())
+        .pipe(jshint.reporter(stylish));
+});
 
 //gulp-preprocess -> Environnement <!-- if --> AHAHAH <!--endif -->
 //gulp-useref     -> Process assets (js+css) in html

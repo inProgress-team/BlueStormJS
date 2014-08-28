@@ -21,7 +21,7 @@ module.exports = function(config) {
     var d = domain.create();
 
     d.on('error', function(err) {
-        logger.error('Socket.io'+':'+config.port, err);
+        logger.error(err, 'Socket.io'+':'+config.port);
     });
 
     d.run(function() {
@@ -40,7 +40,7 @@ module.exports = function(config) {
     });
     if(config.port) {
         if(config.debug) {
-            logger.info('Sockets listening on port '+config.port+'.', {level: 3});
+            logger.log('Sockets listening on port '+config.port+'.');
         }
 
         io.listen(config.port, function() {

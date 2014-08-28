@@ -47,8 +47,8 @@ module.exports = function(config, cb) {
         app.use(function(req, res, next){
             var ms = new Date - start;
             next();
-            logger.info('API : '+req.method+' '+req.url+' - '+ms+'ms', {level:3});
-            logger.info("------------------------------ " + process.env.NODE_WORKER_ID, {level:2});
+            logger.log('API : '+req.method+' '+req.url+' - '+ms+'ms');
+            logger.log("------------------------------ " + process.env.NODE_WORKER_ID);
         });
     }
 
@@ -58,7 +58,7 @@ module.exports = function(config, cb) {
      */
     if(config.port) {
         if(config.debug) {
-            logger.info('API listening on port ' + config.port + '.', {level: 3});
+            logger.log('API', ['green'], ' listening on port ', config.port, ['yellow'], '.');
         }
         app.listen(config.port, function() {
             if(typeof callback=='function') cb();

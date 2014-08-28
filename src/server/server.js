@@ -16,11 +16,11 @@ module.exports = {
         statics({ port: 8080, name: 'desktop', debug: debug });
         api({ port: 8000, debug: debug });
         sockets({ port: 8888, debug: debug });
-        logger.info('Forever started.', {level: 2});
-        logger.info('Webapp is online (development).', {level: 1});
-        livereload.reload();
-        db.start(true);
-        console.log(db.mongo.collections('users'));
+        logger.log('Forever started.');
+        logger.log('Webapp is online (development).');
+        //livereload.reload();
+        //db.start(true);
+        //console.dump(db.mongo.collections('users'));
     },
     startProd: function(debug) {
         sticky(function() {
@@ -61,22 +61,22 @@ module.exports = {
             server.monitor = new (forever.Monitor)('cli.js', options);
 
             server.monitor.on('error', function (err) {
-                logger.error('Forever', err);
+                logger.error(err, 'Forever');
             });
             server.monitor.on('start', function () {
-                logger.info('Forever starting...', {level: 2});
+                logger.log('Forever starting...');
             });
             server.monitor.on('stop', function () {
-                logger.info('Forever stopped.', {level: 2});
-                logger.info('Webapp is offline.', {level: 1, color: 'magenta'});
+                logger.log('Forever stopped.');
+                logger.log('Webapp is offline.');
             });
 
             server.monitor.on('restart', function () {
-                logger.info('Forever restarting...', {level: 2});
+                logger.log('Forever restarting...');
             });
 
             server.monitor.on('exit', function () {
-                logger.error('Forever', new Error('server.js has exited after '+(options.max-1)+' restarts'), {
+                logger.error(new Error('server.js has exited after '+(options.max-1)+' restarts', 'Forever'), {
                     stack: false
                 });
             });

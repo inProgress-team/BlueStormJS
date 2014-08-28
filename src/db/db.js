@@ -10,12 +10,12 @@ module.exports = function(callback) {
         dataBaseConfig = JSON.parse(fs.readFileSync(DATA_BASE_CONFIG_FILE_PATH));
     }
     catch (err) {
-        logger.error('Database: ', new Error(process.cwd() + '/app/config/database.json doesn\'t exists or it\'s not a valid JSON.'));
+        logger.error(new Error(process.cwd() + '/app/config/database.json doesn\'t exists or it\'s not a valid JSON.'), 'Database');
         process.exit(1);
     }
     // Check if name of database is valid
     if (!dataBaseConfig || !dataBaseConfig.type || !fs.existsSync(__dirname + '/' + dataBaseConfig.type + '.js')) {
-        logger.error('Database: ', new Error('name in database config file is invalid.'));
+        logger.error(new Error('name in database config file is invalid.'), 'Database');
         process.exit(1);
     }
 

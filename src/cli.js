@@ -38,6 +38,7 @@ module.exports = {
             });
 
         } else if(command=="server-dev") {
+            process.env.NODE_ENV = 'development';
             server.startDev(debug);
 
         } else if(command=="server-prod") {
@@ -46,7 +47,7 @@ module.exports = {
 
 
         } else if(command=="test") {
-            require(__dirname+'/gulp/gulp').start();
+            require(__dirname+'/gulp/gulp').development(debug);
         }
     },
     argv: function() {

@@ -2,15 +2,13 @@ var clc = require('cli-color'),
     moment = require('moment'),
     clear = require("cli-clear");
 
+var gutil = require('gulp-util');
+
 module.exports = {
-    clear: function() {
-        //clear();
-        console.log('\n');
-    },
-    error: function(from, error, params) {
-        console.error(clc.red.bold.underline.inverse('From '+from));
+    error: function(error, from, params) {
+        gutil.log(clc.red.bold.underline.inverse('From '+from));
         if(params!==undefined&&!params.stack) {
-            console.error(clc.red(error));
+            gutil.log(clc.red(error));
         } else {
             console.error(clc.red(error.stack));
         }
@@ -19,22 +17,41 @@ module.exports = {
     warn: function(message) {
         console.warn(this.getTime()+clc.yellow("[WARNING] "+message));
     },
-    info: function() {//message, params
-        //console.log(arguments.length);
-        //console.log();
-        var countMessage = parseInt(arguments.length/2, 10);
-        for(var i=0;i<countMessage; i++) {
-            var p = getParams(arguments[2*i+1]);
-            console.log(this.getTime()+ p.style[p.color](p.prefix+arguments[2*i]));
+    getStyledMessage: function(message, styles) {
+        for(var i in styles) {
+            if(gutil.colors[styles[i]])
+                message = gutil.colors[styles[i]](message);
         }
+
+        return message;
     },
-    getTime: function() {
-        var m = moment(),
-            seconds = m.seconds();
-        if(seconds<10) {
-            seconds = "0"+seconds;
+    getMessage: function(arguments) {
+        var res = "";
+
+        for(var i=0; i<arguments.length; i++) {
+            var arg = arguments[i];
+
+            if(typeof arg=='string' || typeof arg=='number') {
+                var styles=[];
+                //if next argument indicates style
+                var nextArg = arguments[i+1];
+                if(typeof nextArg=='object') {
+                    styles= nextArg;
+                    i++;
+                }
+                res+= this.getStyledMessage(arg, styles);
+            }
         }
-        return m.format('LL')+ m.format(', h:mm:ss a') +' ';
+
+        return res;
+
+    },
+    log: function() {//message, params
+        var msg = this.getMessage(arguments);
+        gutil.log(msg);
+    },
+    dump: function() {
+        console.log(arguments);
     }
 }
 
@@ -67,18 +84,6 @@ function getParams(params) {
                     prefix = "   * ";
                     if (!params.color) {
                         color = 'magenta';
-                    }
-                    break;
-                case 4:
-                    prefix = "        ";
-                    if (!params.color) {
-                        color = 'green';
-                    }
-                    break;
-                case 5:
-                    prefix = "          - ";
-                    if (!params.color) {
-                        color = 'blue';
                     }
                     break;
             }

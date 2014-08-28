@@ -36,12 +36,12 @@ module.exports = function(config) {
         app.use(function(req, res, next) {
             var ms = new Date - start;
             next();
-            logger.info(config.name + ' : ' + req.method + ' ' + req.url + ' - ' + ms + 'ms', {level: 3});
+            logger.log(config.name + ' : ' + req.method + ' ' + req.url + ' - ' + ms + 'ms');
         });
     }
 
     if(config.port) {
-        logger.info(config.name+' listening on port '+config.port+'.', {level: 3});
+        logger.log(config.name+' listening on port '+config.port+'.');
         app.listen(config.port, function() {
             if(typeof callback=='function') cb();
         });
