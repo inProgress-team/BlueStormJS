@@ -9,7 +9,8 @@ var gulp = require('gulp'),
     livereload = require('gulp-livereload'),
     rename = require("gulp-rename"),
     useref = require('gulp-useref'),
-    inject = require("gulp-inject");
+    inject = require("gulp-inject"),
+    less = require('gulp-less');
 
 
 var dir = 'dist/build';
@@ -37,11 +38,17 @@ gulp.task('i18n', ['clean'], function(){
         .pipe(gulp.dest('dist/build/desktop/public/i18n'));
 });
 
-gulp.task('index.html', ['js-files', 'bower-files', 'i18n'], function(){
+gulp.task('less', ['clean'], function(){
+    gulp.src('./app/desktop/less/main.less')
+        .pipe(less())
+        .pipe(gulp.dest('./dist/build/desktop/public/css'));
+});
+
+gulp.task('index.html', ['js-files', 'bower-files', 'i18n', 'less'], function(){
     var sources = gulp.src([
         'dist/build/**/bower/**/*.js',
         'dist/build/**/*.js',
-        'dist/build/**/*.css'
+        'dist/build/desktop/public/css/main.css'
     ], {read: false});
 
 

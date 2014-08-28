@@ -2,7 +2,6 @@ var statics = require(__dirname+'/lib/statics'),
     api = require(__dirname+'/api/api'),
     sockets = require(__dirname+'/sockets/sockets'),
     logger = require(__dirname+'/../logger/logger'),
-    livereload = require(__dirname+'/../tasks/livereload/livereload'),
     db = require(__dirname+'/../db/db');
 
 var express = require('express');
@@ -18,8 +17,6 @@ module.exports = {
         sockets({ port: 8888, debug: debug });
         logger.log('Forever started.');
         logger.log('Webapp is online (development).');
-        //livereload.reload();
-        //db.start(true);
         //console.dump(db.mongo.collections('users'));
     },
     startProd: function(debug) {
