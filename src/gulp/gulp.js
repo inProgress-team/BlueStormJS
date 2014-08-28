@@ -10,8 +10,9 @@ var gulp = require('gulp'),
     rename = require("gulp-rename"),
     useref = require('gulp-useref'),
     inject = require("gulp-inject"),
-    less = require('gulp-less');
-
+    less = require('gulp-less'),
+    concat = require('gulp-concat'),
+    html2js = require('gulp-html2js')
 
 var dir = 'dist/build';
 
@@ -25,7 +26,7 @@ gulp.task('clean', function(cb) {
 
 gulp.task('bower-files', ['clean'], function(){
     return gulp.src(mainBowerFiles(), { base: 'bower_components' })
-        .pipe(gulp.dest('dist/build/desktop/public/js/bower'))
+        .pipe(gulp.dest('dist/build/desktop/public/js/bower_components'))
 });
 
 gulp.task('js-files', ['clean'], function(){
@@ -44,16 +45,27 @@ gulp.task('less', ['clean'], function(){
         .pipe(gulp.dest('./dist/build/desktop/public/css'));
 });
 
-gulp.task('index.html', ['js-files', 'bower-files', 'i18n', 'less'], function(){
+gulp.task('html2js', ['clean'], function() {
+    gulp.src(['./src/**/*.tpl.html', './app/common/**/*.tpl.html', './app/desktop/**/*.tpl.html'])
+        .pipe(html2js({
+            outputModuleName: 'templates'
+        }))
+        .pipe(concat('templates.js'))
+        .pipe(gulp.dest('./dist/build/desktop/public/js'))
+})
+
+gulp.task('index.html', ['js-files', 'bower-files', 'i18n', 'less', 'html2js'], function(){
     var sources = gulp.src([
-        'dist/build/**/bower/**/*.js',
+        'dist/build/**/bower_components/**/*.js',
         'dist/build/**/*.js',
         'dist/build/desktop/public/css/main.css'
     ], {read: false});
 
 
     return gulp.src(['app/desktop/index.html'])
-        .pipe(inject(sources))
+        .pipe(inject(sources, {
+            ignorePath: 'dist/build/desktop'
+        }))
         .pipe(rename(function (path) {
             path.basename = "main";
         }))
