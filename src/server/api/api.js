@@ -1,9 +1,12 @@
 var express = require('express');
-var bodyParser = require('body-parser'),
-    _ = require('underscore');
+var bodyParser = require('body-parser');
 
 var logger = require(__dirname+'/../../logger/logger'),
     arborescence = require(__dirname+'/../../arborescence');
+
+var checkAuthentification = function(req, res, options, next) {
+    next(req, res);
+};
 
 module.exports = function(config, cb) {
     var app = express(),
@@ -15,8 +18,9 @@ module.exports = function(config, cb) {
     app.getAux = app.get;
     app.get = function(url, options, next) {
         if (typeof options == 'object' && options.authentification) {
-            console.log(next.arguments);
-            app.getAux(url, next);
+            app.getAux(url, function(req, res) {
+               checkAuthentification(req, res, {"role": options.role}, next);
+            });
         }
         else {
             app.getAux.apply(this, arguments);
