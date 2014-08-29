@@ -3,25 +3,31 @@ var gulp = require('gulp'),
 
 var gulpLogger = require(__dirname+'/logger'),
     server = require(__dirname+'/../server/server'),
+    logger = require(__dirname+'/../logger/logger'),
     frontend = require(__dirname+'/frontend'),
     backend = require(__dirname+'/backend'),
     beautifier = require(__dirname+'/beautifier');
 
 
 
-var builds = ['build@desktop', 'build@admin', 'build@splash', 'build@backend'];
+var frontendApps = ['desktop', 'admin', 'splash'],
+    builds = ['build@backend'];
+frontendApps.forEach(function(app) {
+    builds.push('build@'+app);
+});
 
 
 module.exports= {
-    development: function(debug) {
+    loadTasks: function() {
         gulpLogger.gulp(gulp);
-
-
-        frontend('desktop');
-        frontend('admin');
-        frontend('splash');
+        frontendApps.forEach(function(app) {
+            frontend(app);
+        });
         backend();
-
+    },
+    development: function(debug) {
+        logger.log('Starting ', 'development', ['yellow'], ' mode.');
+        this.loadTasks();
 
         var first = true;
         gulp.start([
@@ -34,6 +40,15 @@ module.exports= {
             first = false;
         });
     },
+    production: function(debug) {
+        logger.log('Building ', 'development', ['yellow'], ' files.');
+        this.loadTasks();
+
+        gulp.start(builds, function() {
+            logger.log('Building ', 'production', ['yellow'], ' files.');
+
+        });
+    },
     beautify: function(debug) {
         beautifier();
         gulp.start('beautifier');
@@ -43,12 +58,6 @@ module.exports= {
 
 
 gulp.task('watch', builds, function() {
-    livereload.listen();
-    gulp.watch('dist/build/**/*').on('change', livereload.changed);
-});
-
-
-gulp.task('beautifier', [''], function() {
     livereload.listen();
     gulp.watch('dist/build/**/*').on('change', livereload.changed);
 });

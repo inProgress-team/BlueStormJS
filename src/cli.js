@@ -27,11 +27,14 @@ module.exports = {
             debug = commands.debug || false;
 
         if(command=="dev") {
+            process.env.NODE_ENV = 'development';
             gulp.development(debug);
 
 
 
         } else if(command=="prod") {
+            process.env.NODE_ENV = 'production';
+            gulp.production(debug);
             /*tasksManager.builder.build('production', function() {
                 var command = 'node cli.js server-prod'
                 logger.info('Type '+command+' to start the server.', {level:1});

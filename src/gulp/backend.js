@@ -31,6 +31,8 @@ module.exports = function() {
     gulp.task('server-restart@backend', tasks.serverRestart);
 
     gulp.task('build@backend', ['lint@backend'], function() {
-        gulp.watch(jsFiles, ['lint@backend', 'server-restart@backend']);
+        if(process.env.NODE_ENV=='development') {
+            gulp.watch(jsFiles, ['lint@backend', 'server-restart@backend']);
+        }
     });
 };

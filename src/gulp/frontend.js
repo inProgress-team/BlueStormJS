@@ -119,10 +119,12 @@ module.exports = function(name) {
     gulp.task('index.html-watch@'+name, tasks.indexHtml);
 
     gulp.task('build@'+name, ['index.html@'+name, 'assets@'+name, 'lint@'+name], function() {
-        gulp.watch(jsFiles, ['js-files-watch@'+name, 'lint@'+name]);
-        gulp.watch(templatesFiles, ['html2js-watch@'+name]);
-        gulp.watch(i18nFiles, ['i18n-watch@'+name]);
-        gulp.watch(lessFiles, ['less-watch@'+name]);
-        gulp.watch(htmlFile, ['index.html-watch@'+name])
+        if(process.env.NODE_ENV=='development') {
+            gulp.watch(jsFiles, ['js-files-watch@'+name, 'lint@'+name]);
+            gulp.watch(templatesFiles, ['html2js-watch@'+name]);
+            gulp.watch(i18nFiles, ['i18n-watch@'+name]);
+            gulp.watch(lessFiles, ['less-watch@'+name]);
+            gulp.watch(htmlFile, ['index.html-watch@'+name]);
+        }
     });
 };
