@@ -14,11 +14,29 @@ var gulp = require('gulp'),
 module.exports = function(name) {
 
     var cleanTask = 'clean@'+name,
-        jsFiles = ['app/'+name+'/**/*.js', 'app/common/**/*.js', 'src/**/'+name+'/**/*.js'],
-        templatesFiles = ['src/**/'+name+'/**/*.tpl.html', './app/common/**/*.tpl.html', './app/'+name+'/**/*.tpl.html'],
-        htmlFile = 'app/'+name+'/index.html',
-        i18nFiles = ['app/i18n/*.json'],
-        lessFiles = ['**/*.less'];
+        jsFiles = [
+            'src/apps/'+name+'/**/*.js',
+            'src/common/frontend/**/*.js',
+            'src/modules/**/'+name+'/**/*.js'
+        ],
+        templatesFiles = [
+            'src/apps/'+name+'/**/*.tpl.html',
+            'src/common/frontend/**/*.tpl.html',
+            'src/modules/**/'+name+'/**/*.tpl.html'
+        ],
+        htmlFile = 'src/apps/'+name+'/index.html',
+        i18nFiles = [
+            'src/common/i18n/*.json'
+        ],
+        lessFile = 'src/apps/'+name+'/less/main.less',
+        lessFiles = [
+            '**/*.less'
+        ],
+        sourcesIndex = [
+                'dist/build/'+name+'/**/bower_components/**/*.js',
+                'dist/build/'+name+'/**/*.js',
+                'dist/build/'+name+'/public/css/main.css'
+        ];
 
     var tasks = {
         jsFiles: function(){
@@ -28,7 +46,8 @@ module.exports = function(name) {
         html2js: function() {
             gulp.src(templatesFiles)
                 .pipe(html2js({
-                    outputModuleName: 'templates'
+                    outputModuleName: 'templates',
+                    base: 'src/'
                 }))
                 .pipe(concat('templates.js'))
                 .pipe(gulp.dest('./dist/build/'+name+'/public/js'))
@@ -42,19 +61,15 @@ module.exports = function(name) {
                 .pipe(gulp.dest('dist/build/'+name+'/public/js/bower_components'))
         },
         less: function(){
-            gulp.src('./app/'+name+'/less/main.less')
+            gulp.src(lessFile)
                 .pipe(less())
                 .pipe(gulp.dest('./dist/build/'+name+'/public/css'));
         },
         indexHtml: function(){
-            var sources = gulp.src([
-                    'dist/build/'+name+'/**/bower_components/**/*.js',
-                    'dist/build/'+name+'/**/*.js',
-                    'dist/build/'+name+'/public/css/main.css'
-            ], {read: false});
+            var sources = gulp.src(sourcesIndex, {read: false});
 
 
-            return gulp.src(['app/'+name+'/index.html'])
+            return gulp.src(htmlFile)
                 .pipe(inject(sources, {
                     ignorePath: 'dist/build/'+name
                 }))

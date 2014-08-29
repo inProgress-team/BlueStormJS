@@ -14,25 +14,28 @@ var argv = require('yargs')
     .alias('h', 'help')
     .describe('h', 'See help for a particular command.');
 
-var commands = ['dev', 'prod', 'server-dev', 'server-prod'];
+var commands = ['dev', 'prod', 'server-dev', 'server-prod', 'beautify'];
 
 var server = require(__dirname+'/server/server'),
-    logger = require(__dirname+'/logger/logger');
-
-var tasksManager = require(__dirname+'/tasks/manager');
+    logger = require(__dirname+'/logger/logger'),
+    gulp = require(__dirname+'/gulp/gulp');
 
 
 module.exports = {
     command: function(commands) {
         var command = commands._[0],
             debug = commands.debug || false;
+
         if(command=="dev") {
-            require(__dirname+'/gulp/gulp').development(debug);
+            gulp.development(debug);
+
+
+
         } else if(command=="prod") {
-            tasksManager.builder.build('production', function() {
+            /*tasksManager.builder.build('production', function() {
                 var command = 'node cli.js server-prod'
                 logger.info('Type '+command+' to start the server.', {level:1});
-            });
+            });*/
 
         } else if(command=="server-dev") {
             process.env.NODE_ENV = 'development';
@@ -43,6 +46,8 @@ module.exports = {
             server.startProd(debug);
 
 
+        } else if(command=="beautify") {
+            gulp.beautify(debug);
         }
     },
     argv: function() {

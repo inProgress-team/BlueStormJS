@@ -4,7 +4,8 @@ var gulp = require('gulp'),
 var gulpLogger = require(__dirname+'/logger'),
     server = require(__dirname+'/../server/server'),
     frontend = require(__dirname+'/frontend'),
-    backend = require(__dirname+'/backend');
+    backend = require(__dirname+'/backend'),
+    beautifier = require(__dirname+'/beautifier');
 
 
 
@@ -32,11 +33,22 @@ module.exports= {
             }
             first = false;
         });
+    },
+    beautify: function(debug) {
+        beautifier();
+        gulp.start('beautifier');
+
     }
 };
 
 
 gulp.task('watch', builds, function() {
+    livereload.listen();
+    gulp.watch('dist/build/**/*').on('change', livereload.changed);
+});
+
+
+gulp.task('beautifier', [''], function() {
     livereload.listen();
     gulp.watch('dist/build/**/*').on('change', livereload.changed);
 });
