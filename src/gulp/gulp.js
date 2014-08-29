@@ -1,7 +1,4 @@
 var gulp = require('gulp'),
-    stylish = require('jshint-stylish'),
-    jshint = require('gulp-jshint'),
-    cache = require('gulp-cached'),
     livereload = require('gulp-livereload');
 
 var gulpLogger = require(__dirname+'/logger'),
@@ -10,7 +7,7 @@ var gulpLogger = require(__dirname+'/logger'),
 
 
 
-var builds = ['build@desktop', 'build@admin'];
+var builds = ['build@desktop', 'build@admin', 'build@splash'];
 
 
 module.exports= {
@@ -20,12 +17,12 @@ module.exports= {
 
         frontend('desktop');
         frontend('admin');
+        frontend('splash');
 
 
         var first = true;
         gulp.start([
-            'watch',
-            'lint'
+            'watch'
         ], function() {
             if(first) {
                 var d = debug || false;
@@ -40,14 +37,6 @@ module.exports= {
 gulp.task('watch', builds, function() {
     livereload.listen();
     gulp.watch('dist/build/**/*').on('change', livereload.changed);
-    gulp.watch(['./**/*.js', '!./bower_components/**', '!./node_modules/**', '!./dist/**'], ['lint']);
-});
-
-gulp.task('lint', function() {
-    return gulp.src(['./**/*.js', '!./bower_components/**', '!./node_modules/**', '!./dist/**'])
-        .pipe(cache('linting'))
-        .pipe(jshint())
-        .pipe(jshint.reporter(stylish));
 });
 
 //gulp-preprocess -> Environnement <!-- if --> AHAHAH <!--endif -->

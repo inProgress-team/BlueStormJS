@@ -12,20 +12,6 @@ module.exports = function(config, cb) {
     /**
      * Override GET
      */
-        console.log('blaaaaaaaaaaaaaaaaaa');
-    console.log(app.get);
-    var getAux = app.get;
-    console.log('---->');
-    console.log(getAux);
-    app.get = function(url, options, next) {
-        console.log('>params');
-        console.log(arguments);
-        console.log('>url');
-        console.log(url);
-        console.log('>options');
-        console.log(options);
-        getAux(url, options);
-    };
 
     app.use(bodyParser.json());
 
@@ -59,6 +45,27 @@ module.exports = function(config, cb) {
      */
     arborescence.getRequiredFiles('api', function (files) {
 
+        console.log('blaaaaaaaaaaaaaaaaaa');
+        console.log(app.get);
+        app.getAux = app.get;
+        console.log('---->');
+        console.log(app.getAux);
+        app.get = function(url, options, next) {
+            if(arguments.length<2) {
+                app.getAux(url);
+            } else if(arguments.length<3) {
+                app.getAux(url, options);
+            } else {
+                app.getAux(url, options, next);
+            }
+            console.log('>params');
+            console.log(arguments);
+            console.log('>url');
+            console.log(url);
+            console.log('>options');
+            console.log(options);
+
+        };
         arborescence.loadFiles(files, app);
     });
 

@@ -6,12 +6,18 @@ var map = require('map-stream'),
 module.exports = {
     gulp: function(gulp) {
 
+        var timer;
+
         gulp.on('start', function (e) {
+            timer = new Date;
+
             var tasks = e.message.split(': ')[1].split(',');
             logger.log("Executing ", tasks.length, ['red'], " tasks.");
         });
         gulp.on('stop', function (e) {
-            logger.log('Gulp done', ['blue', 'inverse'], ".");
+            console.log();
+            var seconds = (new Date - timer)/1000;
+            logger.log('Gulp done in ' , ['blue'], seconds, ['yellow'], " seconds.", ['blue']);
         });
 
 

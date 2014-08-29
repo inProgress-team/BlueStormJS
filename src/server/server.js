@@ -13,6 +13,8 @@ var sticky = require(__dirname+'/lib/sticky-session');
 module.exports = {
     startDev: function(debug) {
         statics({ port: 8080, name: 'desktop', debug: debug });
+        statics({ port: 8090, name: 'admin', debug: debug });
+        statics({ port: 8070, name: 'splash', debug: debug });
         api({ port: 8000, debug: debug });
         sockets({ port: 8888, debug: debug });
         logger.log('Forever started.');
