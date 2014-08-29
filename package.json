@@ -48,6 +48,7 @@
     "gulp-rename": "^1.2.0",
     "gulp-useref": "^0.6.0",
     "gulp-util": "^3.0.0",
+    "gulp-watch": "^0.6.10",
     "html-minifier": "^0.6.6",
     "jshint-stylish": "^0.4.0",
     "koa": "^0.10.0",

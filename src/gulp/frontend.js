@@ -8,7 +8,8 @@ var gulp = require('gulp'),
     html2js = require('gulp-html2js'),
     stylish = require('jshint-stylish'),
     jshint = require('gulp-jshint'),
-    cache = require('gulp-cached');
+    cache = require('gulp-cached'),
+    watch = require('gulp-watch');
 
 module.exports = function(name) {
 
