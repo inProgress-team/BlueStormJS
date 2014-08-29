@@ -14,7 +14,7 @@ var argv = require('yargs')
     .alias('h', 'help')
     .describe('h', 'See help for a particular command.');
 
-var commands = ['dev', 'prod', 'server-dev', 'server-prod', 'test'];
+var commands = ['dev', 'prod', 'server-dev', 'server-prod'];
 
 var server = require(__dirname+'/server/server'),
     logger = require(__dirname+'/logger/logger');
@@ -27,10 +27,7 @@ module.exports = {
         var command = commands._[0],
             debug = commands.debug || false;
         if(command=="dev") {
-            tasksManager.builder.build('development', function () {
-                server.supervisor.development(debug);
-                tasksManager.watcher.watch();
-            });
+            require(__dirname+'/gulp/gulp').development(debug);
         } else if(command=="prod") {
             tasksManager.builder.build('production', function() {
                 var command = 'node cli.js server-prod'
@@ -46,8 +43,6 @@ module.exports = {
             server.startProd(debug);
 
 
-        } else if(command=="test") {
-            require(__dirname+'/gulp/gulp').development(debug);
         }
     },
     argv: function() {

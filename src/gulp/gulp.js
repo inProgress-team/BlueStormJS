@@ -3,11 +3,12 @@ var gulp = require('gulp'),
 
 var gulpLogger = require(__dirname+'/logger'),
     server = require(__dirname+'/../server/server'),
-    frontend = require(__dirname+'/frontend');
+    frontend = require(__dirname+'/frontend'),
+    backend = require(__dirname+'/backend');
 
 
 
-var builds = ['build@desktop', 'build@admin', 'build@splash'];
+var builds = ['build@desktop', 'build@admin', 'build@splash', 'build@backend'];
 
 
 module.exports= {
@@ -18,6 +19,7 @@ module.exports= {
         frontend('desktop');
         frontend('admin');
         frontend('splash');
+        backend();
 
 
         var first = true;

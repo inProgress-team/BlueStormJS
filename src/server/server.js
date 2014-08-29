@@ -7,6 +7,7 @@ var statics = require(__dirname+'/lib/statics'),
 var express = require('express');
 var forever = require('forever-monitor');
 var vhost = require('vhost');
+var fs = require('fs');
 
 var sticky = require(__dirname+'/lib/sticky-session');
 
@@ -19,7 +20,7 @@ module.exports = {
         sockets({ port: 8888, debug: debug });
         logger.log('Forever started.');
         logger.log('Webapp is online (development).');
-        //console.dump(db.mongo.collections('users'));
+        fs.writeFileSync('dist/build/livereload.log', Math.random()+"");
     },
     startProd: function(debug) {
         sticky(function() {
