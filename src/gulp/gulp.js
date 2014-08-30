@@ -26,8 +26,8 @@ frontendApps.forEach(function(app) {
 
 
 module.exports= {
-    loadTasks: function() {
-        gulpLogger.gulp(gulp);
+    loadTasks: function(debug) {
+        gulpLogger.gulp(gulp, debug);
         frontendApps.forEach(function(app) {
             frontendBuild(app);
             frontendCompile(app);
@@ -35,13 +35,15 @@ module.exports= {
         backend();
 
         gulp.task('watch', builds, function() {
-            livereload.listen();
+            var options = {};
+            if(!debug) options.silent = true;
+            livereload.listen(options);
             gulp.watch('dist/build/**/*').on('change', livereload.changed);
         });
     },
     development: function(debug) {
         logger.log('Starting ', 'development', ['yellow'], ' mode.');
-        this.loadTasks();
+        this.loadTasks(debug);
 
         var first = true;
         gulp.start([
