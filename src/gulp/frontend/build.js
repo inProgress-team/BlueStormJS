@@ -70,12 +70,8 @@ module.exports = function(name) {
 
 
             return gulp.src(htmlFile)
-                .pipe(inject(sources, {
-                    ignorePath: 'dist/build/'+name
-                }))
-                .pipe(rename(function (path) {
-                    path.basename = "main";
-                }))
+                .pipe(rename(function (path) { path.basename = "main"; }))
+                .pipe(inject(sources, { ignorePath: 'dist/build/'+name }))
                 .pipe(gulp.dest('dist/build/'+name));
         },
         lint: function() {
@@ -110,7 +106,7 @@ module.exports = function(name) {
 
 
     gulp.task('assets@'+name, [cleanTask], function(){
-        return gulp.src('app/assets/**/*')
+        return gulp.src('src/common/assets/**/*')
             .pipe(gulp.dest('dist/build/'+name+'/public/assets'))
     });
 

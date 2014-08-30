@@ -4,26 +4,38 @@ var gulp = require('gulp'),
 var gulpLogger = require(__dirname+'/logger'),
     server = require(__dirname+'/../server/server'),
     logger = require(__dirname+'/../logger/logger'),
-    frontend = require(__dirname+'/frontend'),
+    frontendBuild = require(__dirname+'/frontend/build'),
+    frontendCompile = require(__dirname+'/frontend/compile'),
     backend = require(__dirname+'/backend'),
     beautifier = require(__dirname+'/beautifier');
 
 
 
 var frontendApps = ['desktop', 'admin', 'splash'],
-    builds = ['build@backend'];
+    builds = ['build@backend'],
+    compiles = [];
 frontendApps.forEach(function(app) {
     builds.push('build@'+app);
+    compiles.push('compile@'+app);
 });
+
+
+
 
 
 module.exports= {
     loadTasks: function() {
         gulpLogger.gulp(gulp);
         frontendApps.forEach(function(app) {
-            frontend(app);
+            frontendBuild(app);
+            frontendCompile(app);
         });
         backend();
+
+        gulp.task('watch', builds, function() {
+            livereload.listen();
+            gulp.watch('dist/build/**/*').on('change', livereload.changed);
+        });
     },
     development: function(debug) {
         logger.log('Starting ', 'development', ['yellow'], ' mode.');
@@ -46,7 +58,9 @@ module.exports= {
 
         gulp.start(builds, function() {
             logger.log('Building ', 'production', ['yellow'], ' files.');
-
+            gulp.start(compiles, function() {
+                logger.log('Building production done. Execute ', 'node cli.js server-prod', ['yellow'], ' to try it.');
+            });
         });
     },
     beautify: function(debug) {
@@ -55,11 +69,5 @@ module.exports= {
 
     }
 };
-
-
-gulp.task('watch', builds, function() {
-    livereload.listen();
-    gulp.watch('dist/build/**/*').on('change', livereload.changed);
-});
 
 //gulp-preprocess -> Environnement <!-- if --> AHAHAH <!--endif -->
