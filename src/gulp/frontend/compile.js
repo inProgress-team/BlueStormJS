@@ -4,12 +4,16 @@ var gulp = require('gulp'),
     rename = require('gulp-rename'),
     uglify = require('gulp-uglify'),
     ngAnnotate = require('gulp-ng-annotate'),
-    inject = require("gulp-inject");
+    inject = require("gulp-inject"),
+    uncss = require('gulp-uncss'),
+    minifyCSS = require('gulp-minify-css');
 
 module.exports = function(name) {
     var dir = 'dist/bin/'+name,
         publicDir = 'dist/bin/'+name+'/public',
         cleanTask = 'clean#compile@'+name;
+
+    var indexHtmlFile = 'src/apps/'+name+'/index.html';
 
 
     gulp.task(cleanTask, function(cb) { del(['dist/bin/'+name], cb); });
@@ -38,6 +42,15 @@ module.exports = function(name) {
     gulp.task('css-files#compile@'+name, [cleanTask], function(){
         return gulp.src('dist/build/'+name+'/public/css/main.css')
             .pipe(rename(function (path) {path.extname = ".min.css";}))
+            //.pipe(uncss({
+              //  html: [
+                    //'src/apps/'+name+'/**/*.tpl.html',
+                    //'src/common/frontend/**/*.tpl.html',
+                    //'src/modules/**/'+name+'/**/*.tpl.html',
+                    //indexHtmlFile
+                //]
+            //}))
+            .pipe(minifyCSS())
             .pipe(gulp.dest(publicDir));
     });
 
@@ -54,7 +67,7 @@ module.exports = function(name) {
                 publicDir+'/main.min.css'
         ], {read: false});
 
-        return gulp.src('src/apps/'+name+'/index.html')
+        return gulp.src(indexHtmlFile)
             .pipe(rename(function (path) {path.basename = "main";}))
             .pipe(inject(sources, {ignorePath: dir}))
             .pipe(gulp.dest(dir));

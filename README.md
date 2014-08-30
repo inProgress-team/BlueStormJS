@@ -37,6 +37,10 @@ You can try any test project available in src/app_test.
     $ node cli.js #Shows every command available
     $ node cli.js dev #Start development environment.
 
+## TODO
+
+Autodeploy
+Shrinkwrap
 
 ## License
 [The MIT License](http://opensource.org/licenses/MIT)
