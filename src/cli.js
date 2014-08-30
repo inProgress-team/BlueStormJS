@@ -14,10 +14,11 @@ var argv = require('yargs')
     .alias('h', 'help')
     .describe('h', 'See help for a particular command.');
 
-var commands = ['dev', 'prod', 'server-dev', 'server-prod', 'beautify'];
+var commands = ['dev', 'prod', 'server-dev', 'server-prod', 'beautify', 'test'];
 
 var server = require(__dirname+'/server/server'),
     logger = require(__dirname+'/logger/logger'),
+    config = require(__dirname+'/config/config'),
     gulp = require(__dirname+'/gulp/gulp');
 
 
@@ -51,6 +52,10 @@ module.exports = {
 
         } else if(command=="beautify") {
             gulp.beautify(debug);
+
+
+        } else if(command=="test") {
+            //config.frontend.list();
         }
     },
     argv: function() {

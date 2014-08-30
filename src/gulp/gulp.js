@@ -10,8 +10,10 @@ var gulpLogger = require(__dirname+'/logger'),
     beautifier = require(__dirname+'/beautifier');
 
 
+var config = require(__dirname+'/../config/config');
 
-var frontendApps = ['desktop', 'admin', 'splash'],
+
+var frontendApps = config.frontend.list(),
     builds = ['build@backend'],
     compiles = [];
 frontendApps.forEach(function(app) {

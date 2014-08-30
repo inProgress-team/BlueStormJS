@@ -1,46 +1,69 @@
 var statics = require(__dirname+'/lib/statics'),
     api = require(__dirname+'/api/api'),
-    sockets = require(__dirname+'/sockets/sockets'),
+    socket = require(__dirname+'/socket/socket'),
     logger = require(__dirname+'/../logger/logger'),
-    db = require(__dirname+'/../db/db');
+    db = require(__dirname+'/../db/db'),
+    config = require(__dirname+'/../config/config');
 
-var express = require('express');
-var forever = require('forever-monitor');
-var vhost = require('vhost');
-var fs = require('fs');
+
+var express = require('express'),
+    forever = require('forever-monitor'),
+    vhost = require('vhost'),
+    fs = require('fs');
 
 var sticky = require(__dirname+'/lib/sticky-session');
 
+var frontendApps = config.frontend.list();
+
+
+
 module.exports = {
     startDev: function(debug) {
-        statics({ port: 8080, name: 'desktop', debug: debug });
-        statics({ port: 8090, name: 'admin', debug: debug });
-        statics({ port: 8070, name: 'splash', debug: debug });
-        api({ port: 8000, debug: debug });
-        sockets({ port: 8888, debug: debug });
+        frontendApps.forEach(function(name) {
+
+            var app = config.frontend.get(name);
+            statics({
+                port: app.development,
+                name: name,
+                debug: debug
+            });
+        });
+
+        api({ port: config.backend.get('api').development, debug: debug });
+        socket({ port: config.backend.get('socket').development, debug: debug });
         logger.log('Forever started.');
         logger.log('Webapp is online (development).');
-        fs.writeFileSync('dist/build/livereload.log', Math.random()+"");
+        fs.writeFile('dist/build/livereload.log', Math.random()+"");
     },
     startProd: function(debug) {
         sticky(function() {
             var server = express();
 
-            var staticsApp = statics({ name: 'desktop', debug: debug }),
-                apiApp = api({ debug: debug }),
-                socketsApp = sockets({ debug: debug });
+
+            frontendApps.forEach(function(name) {
+
+                var app = statics({
+                    name: name,
+                    debug: debug
+                });
+                server.use(vhost(config.frontend.get(name).production, app))
+            });
+
+
+            var apiApp = api({ debug: debug }),
+                socketApp = socket({ debug: debug }),
+                getConf = config.backend.get;
 
             return server
-                .use(vhost('socket-dev.assipe-software.fr', socketsApp))
-                .use(vhost('api-dev.assipe-software.fr', apiApp))
-                .use(vhost('dev.assipe-software.fr', staticsApp))
+                .use(vhost(getConf('socket').production, socketApp))
+                .use(vhost(getConf('api').production, apiApp))
                 .listen(3000);
 
         }).listen(8000, function() {
             if(process.env.NODE_WORKER_ID=='MASTER') {
-                logger.info('Master started on 8080 port', {level:11, color:'green'});
+                logger.log('Master started on 8000 port');
             } else {
-                logger.info('Worker ' + process.env.NODE_WORKER_ID+ ' started', {level:2});
+                logger.log('Worker ' + process.env.NODE_WORKER_ID+ ' started');
             }
 
         });

@@ -28,7 +28,7 @@ module.exports = function(config) {
         io.adapter(redis({ host: 'localhost', port: 6379 }));
         io.on('connection', function (socket) {
             if (!cacheFiles) {
-                arborescence.getRequiredFiles('sockets', function (files) {
+                arborescence.getRequiredFiles('socket', function (files) {
                     cacheFiles = files;
                     arborescence.loadFiles(cacheFiles, socket);
                 });

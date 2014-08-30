@@ -3,18 +3,23 @@ var fs = require('fs'),
     serveStatic = require('serve-static');
 //var createStatic = require('connect-static');
 
-var logger = require(__dirname+'/../../logger/logger'),
-    configApps = require(__dirname+'/../../config/config');
+var logger = require(__dirname+'/../../logger/logger');
 
 
 module.exports = function(config) {
+    var dir = 'build';
+    if(process.env.NODE_ENV=='production') {
+        dir = 'bin';
+    }
+
+
     var app = express(),
         cacheIndex = null,
-        path = 'dist/'+configApps.getDestDir()+'/'+config.name,
+        path = 'dist/'+dir+'/'+config.name,
         //serve = serveStatic(path),
         start;
 
-    app.use(express.static('dist/'+configApps.getDestDir()+'/'+config.name));
+    app.use(express.static('dist/'+dir+'/'+config.name));
 
     if(config.debug) {
         //LOGGER FOR EVERY STATIC REQUEST
