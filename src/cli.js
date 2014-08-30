@@ -18,7 +18,6 @@ var commands = ['dev', 'prod', 'server-dev', 'server-prod', 'beautify', 'test'];
 
 var server = require(__dirname+'/server/server'),
     logger = require(__dirname+'/logger/logger'),
-    config = require(__dirname+'/config/config'),
     gulp = require(__dirname+'/gulp/gulp');
 
 

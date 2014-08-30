@@ -1,24 +1,13 @@
-angular.module('socket-io', [])
+angular.module('bluestorm', [])
     .factory('socket', function($rootScope) {
-        var server = window.location.protocol + '//';
 
-        var isProd = true;
+        // @if NODE_ENV='production'
+        var server = window.location.protocol + '///* @echo socketConf */:/* @echo mainPort */';
+        // @endif
 
-        if (isProd) {
-            if (window.location.hostname.split('.').length == 2) { //hostname.com
-                server += 'socket.';
-
-            } else if (window.location.hostname.split('.').length == 3) { //xxx.hostname.com
-                server += 'socket-';
-            }
-        }
-        server += window.location.hostname;
-
-        if (isProd) {
-            server += ":8000";
-        } else {
-            server += ":8888";
-        }
+        // @if NODE_ENV='development'
+        var server = window.location.protocol + '//' + window.location.hostname+":/* @echo socketConf */";
+        // @endif
 
         var socket = io(server);
         return {

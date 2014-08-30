@@ -29,6 +29,7 @@ module.exports = function(config) {
         io.on('connection', function (socket) {
             if (!cacheFiles) {
                 arborescence.getRequiredFiles('socket', function (files) {
+                    console.log(files);
                     cacheFiles = files;
                     arborescence.loadFiles(cacheFiles, socket);
                 });
@@ -47,6 +48,9 @@ module.exports = function(config) {
             if(typeof callback=='function') cb();
         });
     } else {
+        io.listen(8888, function() {
+            if(typeof callback=='function') cb();
+        });
         return server;
     }
 };

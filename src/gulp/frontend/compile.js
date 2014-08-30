@@ -30,8 +30,8 @@ module.exports = function(name) {
 
     gulp.task('js-files#compile@'+name, [cleanTask], function(){
         return gulp.src([
-            'dist/build/'+name+'/public/js/bower_components/**/*.js',
-            'dist/build/'+name+'/public/js/**/*.js'
+                'dist/build/'+name+'/public/js/bower_components/**/*.js',
+                'dist/build/'+name+'/public/js/**/*.js'
         ])
             .pipe(concat('main.min.js'))
             .pipe(ngAnnotate())
@@ -42,14 +42,6 @@ module.exports = function(name) {
     gulp.task('css-files#compile@'+name, [cleanTask], function(){
         return gulp.src('dist/build/'+name+'/public/css/main.css')
             .pipe(rename(function (path) {path.extname = ".min.css";}))
-            //.pipe(uncss({
-              //  html: [
-                    //'src/apps/'+name+'/**/*.tpl.html',
-                    //'src/common/frontend/**/*.tpl.html',
-                    //'src/modules/**/'+name+'/**/*.tpl.html',
-                    //indexHtmlFile
-                //]
-            //}))
             .pipe(minifyCSS())
             .pipe(gulp.dest(publicDir));
     });

@@ -1,4 +1,4 @@
-NodeFramework
+BlueStorm
 =============
 
 [![Dependency Status](https://david-dm.org/Bluestep/NodeFramework.svg)](https://david-dm.org/Bluestep/NodeFramework)

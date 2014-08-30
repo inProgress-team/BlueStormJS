@@ -2,14 +2,13 @@ var fs = require('fs'),
     fse = require('fs-extra'),
     async = require('async');
 
-var basePath = process.cwd()+'/src/';
+var basePath = process.cwd()+'/src/modules/';
 
 module.exports = {
     getRequiredFiles: function (type, callback) {
         //get all modules;
         var dirs = fs.readdirSync(basePath),
             files = [];
-
         //get all files of the good type and require them
         async.each(dirs, function (dir, cb) {
             var path = basePath+dir+'/'+type;

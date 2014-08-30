@@ -9,7 +9,10 @@ var gulp = require('gulp'),
     stylish = require('jshint-stylish'),
     jshint = require('gulp-jshint'),
     cache = require('gulp-cached'),
-    watch = require('gulp-watch');
+    watch = require('gulp-watch'),
+    preprocess = require('gulp-preprocess');
+
+var config = require(__dirname+'/../../config');
 
 module.exports = function(name) {
 
@@ -60,6 +63,17 @@ module.exports = function(name) {
             return gulp.src(mainBowerFiles(), { base: 'bower_components' })
                 .pipe(gulp.dest('dist/build/'+name+'/public/js/bower_components'))
         },
+        frameworkFiles: function(){
+            var env = process.env.NODE_ENV;
+
+            return gulp.src(__dirname+'/../../frontend/*.js')
+                .pipe(preprocess({context: {
+                    NODE_ENV: env,
+                    socketConf: config.get(env, 'socket'),
+                    mainPort: config.get('production', 'main')
+                }}))
+                .pipe(gulp.dest('dist/build/'+name+'/public/js/bluestorm'))
+        },
         less: function(){
             gulp.src(lessFile)
                 .pipe(less())
@@ -89,6 +103,8 @@ module.exports = function(name) {
     gulp.task(cleanTask, function(cb) { del(['dist/build/'+name], cb); });
 
     gulp.task('bower-files@'+name, [cleanTask], tasks.bowerFiles);
+
+    gulp.task('framework-files@'+name, [cleanTask], tasks.frameworkFiles);
     //gulp.task('bower-files-watch@'+name, tasks.bowerFiles);
 
     gulp.task('js-files@'+name, [cleanTask], tasks.jsFiles);
@@ -111,7 +127,14 @@ module.exports = function(name) {
     });
 
 
-    gulp.task('index.html@'+name, ['js-files@'+name, 'bower-files@'+name, 'i18n@'+name, 'less@'+name, 'html2js@'+name], tasks.indexHtml);
+    gulp.task('index.html@'+name, [
+            'js-files@'+name,
+            'bower-files@'+name,
+            'i18n@'+name,
+            'less@'+name,
+            'html2js@'+name,
+            'framework-files@'+name
+    ], tasks.indexHtml);
     gulp.task('index.html-watch@'+name, tasks.indexHtml);
 
     gulp.task('build@'+name, ['index.html@'+name, 'assets@'+name, 'lint@'+name], function() {

@@ -29,15 +29,17 @@ module.exports = function(config, cb) {
 
     app.use(bodyParser.json());
 
-    var allow;//TODOFRAM
+    var allows;//TODOFRAM
     if(process.env.NODE_ENV=='development') {
-        allow = ['http://dev.assipe-software.fr:8080'];
+        allows = ['http://dev.assipe-software.fr:8080'];
     } else if(process.env.NODE_ENV=='production') {
-        allow = ['http://dev.assipe-software.fr:8000'];
+        allows = ['http://dev.assipe-software.fr:8000', 'http://main-dev.assipe-software.fr:8000'];
     }
 
     app.use(function(req, res, next) {
-        res.header('Access-Control-Allow-Origin', allow);
+        allows.forEach(function(allow) {
+            res.header('Access-Control-Allow-Origin', allow);
+        })
         res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
         res.header('Access-Control-Allow-Headers', 'Content-Type');
 
@@ -66,7 +68,6 @@ module.exports = function(config, cb) {
             var ms = new Date - start;
             next();
             logger.log('API : '+req.method+' '+req.url+' - '+ms+'ms');
-            logger.log("------------------------------ " + process.env.NODE_WORKER_ID);
         });
     }
 

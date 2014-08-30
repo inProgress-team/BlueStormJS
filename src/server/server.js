@@ -1,9 +1,9 @@
-var statics = require(__dirname+'/lib/statics'),
+var statics = require(__dirname+'/statics/statics'),
     api = require(__dirname+'/api/api'),
     socket = require(__dirname+'/socket/socket'),
     logger = require(__dirname+'/../logger/logger'),
     db = require(__dirname+'/../db/db'),
-    config = require(__dirname+'/../config/config');
+    config = require(__dirname+'/../config');
 
 
 var express = require('express'),
@@ -11,26 +11,26 @@ var express = require('express'),
     vhost = require('vhost'),
     fs = require('fs');
 
-var sticky = require(__dirname+'/lib/sticky-session');
+var sticky = require(__dirname+'/sticky-session');
 
 var frontendApps = config.frontend.list();
-
 
 
 module.exports = {
     startDev: function(debug) {
         frontendApps.forEach(function(name) {
 
-            var app = config.frontend.get(name);
+            var app = config.get('development', name);
             statics({
-                port: app.development,
+                port: app,
                 name: name,
                 debug: debug
             });
         });
 
-        api({ port: config.backend.get('api').development, debug: debug });
-        socket({ port: config.backend.get('socket').development, debug: debug });
+        api({ port: config.get('development', 'api'), debug: debug });
+        socket({ port: config.get('development', 'socket'), debug: debug });
+
         logger.log('Forever started.');
         logger.log('Webapp is online (development).');
         fs.writeFile('dist/build/livereload.log', Math.random()+"");
@@ -46,22 +46,21 @@ module.exports = {
                     name: name,
                     debug: debug
                 });
-                server.use(vhost(config.frontend.get(name).production, app))
+                server.use(vhost(config.get('production', name), app))
             });
 
 
             var apiApp = api({ debug: debug }),
-                socketApp = socket({ debug: debug }),
-                getConf = config.backend.get;
+                socketApp = socket({ debug: debug });
 
-            return server
-                .use(vhost(getConf('socket').production, socketApp))
-                .use(vhost(getConf('api').production, apiApp))
-                .listen(3000);
+            server.use(vhost(config.get('production', 'socket'), socketApp))
+                .use(vhost(config.get('production', 'api'), apiApp));
 
-        }).listen(8000, function() {
+            return server.listen(3333);
+
+        }).listen(config.get('production', 'main'), function() {
             if(process.env.NODE_WORKER_ID=='MASTER') {
-                logger.log('Master started on 8000 port');
+                logger.log('Master started on ', config.get('production', 'main'), ['red'], ' port');
             } else {
                 logger.log('Worker ' + process.env.NODE_WORKER_ID+ ' started');
             }

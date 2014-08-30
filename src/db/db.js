@@ -2,7 +2,7 @@ var fs = require('fs'),
     logger = require(__dirname+'/../logger/logger');
 
 module.exports = function(callback) {
-    var DATA_BASE_CONFIG_FILE_PATH = process.cwd() + '/app/config/database.json',
+    var DATA_BASE_CONFIG_FILE_PATH = process.cwd() + '/config/database.json',
         dataBaseConfig;
 
     // Check if config file for database exists

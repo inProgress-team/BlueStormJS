@@ -10,7 +10,7 @@ var gulpLogger = require(__dirname+'/logger'),
     beautifier = require(__dirname+'/beautifier');
 
 
-var config = require(__dirname+'/../config/config');
+var config = require(__dirname+'/../config');
 
 
 var frontendApps = config.frontend.list(),
