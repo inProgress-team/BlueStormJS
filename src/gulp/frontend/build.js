@@ -31,9 +31,9 @@ module.exports = function(name) {
         i18nFiles = [
             'src/common/i18n/*.json'
         ],
-        lessFile = 'src/apps/'+name+'/less/main.less',
+        lessFile = 'src/apps/'+name+'/main.less',
         lessFiles = [
-            'src/apps/'+name+'/**/*less',
+            'src/apps/'+name+'/**/*.less',
             'src/common/**/*.less',
             'src/modules/**/'+name+'/**/*.less'
         ],

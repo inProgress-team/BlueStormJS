@@ -29,7 +29,6 @@ module.exports = function(config) {
         io.on('connection', function (socket) {
             if (!cacheFiles) {
                 arborescence.getRequiredFiles('socket', function (files) {
-                    console.log(files);
                     cacheFiles = files;
                     arborescence.loadFiles(cacheFiles, socket);
                 });
