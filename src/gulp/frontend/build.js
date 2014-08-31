@@ -33,7 +33,10 @@ module.exports = function(name) {
         ],
         lessFile = 'src/apps/'+name+'/less/main.less',
         lessFiles = [
-            '**/*.less'
+            'src/apps/'+name+'/**/*less',
+            'src/common/frontend/**/*.less',
+            'src/common/theme/**/*.less',
+            'src/modules/**/'+name+'/**/*.less'
         ],
         sourcesIndex = [
                 'dist/build/'+name+'/**/bower_components/**/*.js',

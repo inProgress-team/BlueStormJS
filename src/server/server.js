@@ -31,8 +31,8 @@ module.exports = {
         api({ port: config.get('development', 'api'), debug: debug });
         socket({ port: config.get('development', 'socket'), debug: debug });
 
-        logger.log('Forever started.');
-        logger.log('Webapp is online (development).');
+        logger.log('Forever started.', ['blue', 'inverse']);
+        logger.log('Webapp is online (', 'development', ['yellow'], ').');
         fs.writeFile('dist/build/livereload.log', Math.random()+"");
     },
     startProd: function(debug) {
@@ -86,7 +86,7 @@ module.exports = {
                 logger.error(err, 'Forever');
             });
             server.monitor.on('start', function () {
-                logger.log('Forever starting...');
+                logger.log('Forever starting...', ['red']);
             });
             server.monitor.on('stop', function () {
                 logger.log('Forever stopped.');

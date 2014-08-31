@@ -46,7 +46,7 @@ module.exports = function(config) {
     }
 
     if(config.port) {
-        logger.log(config.name+' listening on port '+config.port+'.');
+        logger.log(config.name, ['green'], ' listening on port ', config.port, ['yellow'], '.');
         app.listen(config.port, function() {
             if(typeof callback=='function') cb();
         });

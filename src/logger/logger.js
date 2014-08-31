@@ -6,24 +6,25 @@ var gutil = require('gulp-util');
 
 module.exports = {
     error: function(error, from, params) {
-        gutil.log(clc.red.bold.underline.inverse('From '+from));
+        console.error(clc.red.bold.underline.inverse('From '+from));
         if(params!==undefined&&!params.stack) {
-            gutil.log(clc.red(error));
+            console.error(clc.red(error));
         } else {
             console.error(clc.red(error.stack));
         }
 
     },
-    warn: function(message) {
-        console.warn(this.getTime()+clc.yellow("[WARNING] "+message));
+    warn: function() {
+        console.warn(clc.yellow("[WARNING] ")+this.getMessage(arguments));
     },
     getStyledMessage: function(message, styles) {
+        var style = clc;
         for(var i in styles) {
             if(gutil.colors[styles[i]])
-                message = gutil.colors[styles[i]](message);
+                style = style[styles[i]];
         }
 
-        return message;
+        return style(message);
     },
     getMessage: function(arguments) {
         var res = "";
@@ -47,8 +48,7 @@ module.exports = {
 
     },
     log: function() {//message, params
-        var msg = this.getMessage(arguments);
-        gutil.log(msg);
+        console.log(this.getMessage(arguments));
     },
     dump: function() {
         console.log(arguments);

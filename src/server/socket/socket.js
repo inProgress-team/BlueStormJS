@@ -41,7 +41,7 @@ module.exports = function(config) {
     });
     if(config.port) {
         if(config.debug) {
-            logger.log('Sockets listening on port '+config.port+'.');
+            logger.log('Sockets', ['green'], ' listening on port ', config.port, ['yellow'], '.');
         }
 
         io.listen(config.port, function() {

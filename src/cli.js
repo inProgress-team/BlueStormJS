@@ -35,10 +35,6 @@ module.exports = {
         } else if(command=="prod") {
             process.env.NODE_ENV = 'production';
             gulp.production(debug);
-            /*tasksManager.builder.build('production', function() {
-                var command = 'node cli.js server-prod'
-                logger.info('Type '+command+' to start the server.', {level:1});
-            });*/
 
         } else if(command=="server-dev") {
             process.env.NODE_ENV = 'development';
