@@ -1,6 +1,4 @@
-var frontConf = require(process.cwd()+'/config/frontend.json'),
-    backConf = require(process.cwd()+'/config/backend.json'),
-    domains = require(process.cwd()+'/config/domains.json');
+var domains = require(process.cwd()+'/config/domains.json');
 
 module.exports = {
     frontend: {
