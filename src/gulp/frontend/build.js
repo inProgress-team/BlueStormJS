@@ -34,14 +34,13 @@ module.exports = function(name) {
         lessFile = 'src/apps/'+name+'/less/main.less',
         lessFiles = [
             'src/apps/'+name+'/**/*less',
-            'src/common/frontend/**/*.less',
-            'src/common/theme/**/*.less',
+            'src/common/**/*.less',
             'src/modules/**/'+name+'/**/*.less'
         ],
         sourcesIndex = [
-                'dist/build/'+name+'/**/bower_components/**/*.js',
-                'dist/build/'+name+'/**/*.js',
-                'dist/build/'+name+'/public/css/main.css'
+            'dist/build/'+name+'/**/bower_components/**/*.js',
+            'dist/build/'+name+'/**/*.js',
+            'dist/build/'+name+'/public/css/main.css'
         ];
 
     var tasks = {
