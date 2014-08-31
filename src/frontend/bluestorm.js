@@ -1,4 +1,28 @@
 angular.module('bluestorm', [])
+    .
+    config(function ($httpProvider) {
+        $httpProvider.interceptors.push(function ($q) {
+            return {
+                'request': function (config) {
+                    if(config.url.indexOf('api')===0) {
+                        var url = config.url.substring(3);
+                        // @if NODE_ENV='production'
+                        url = window.location.protocol + '///* @echo apiConf */:/* @echo mainPort */'+url;
+                        // @endif
+
+                        // @if NODE_ENV='development'
+                        url = window.location.protocol + '//' + window.location.hostname+':/* @echo apiConf */'+url;
+                        // @endif
+
+                        config.url = url;
+                    }
+                    return config || $q.when(config);
+
+                }
+
+            }
+        });
+    })
     .factory('socket', function($rootScope) {
 
         // @if NODE_ENV='production'
@@ -12,6 +36,11 @@ angular.module('bluestorm', [])
         var socket = io(server);
         return {
             on: function(eventName, callback) {
+                for(var key in socket._callbacks) {
+                    if(key==eventName) {
+                        socket.removeListener(key);
+                    }
+                }
                 socket.on(eventName, function() {
                     var args = arguments;
                     $rootScope.$apply(function() {

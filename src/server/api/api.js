@@ -29,17 +29,11 @@ module.exports = function(config, cb) {
 
     app.use(bodyParser.json());
 
-    var allows;//TODOFRAM
-    if(process.env.NODE_ENV=='development') {
-        allows = ['http://dev.assipe-software.fr:8080'];
-    } else if(process.env.NODE_ENV=='production') {
-        allows = ['http://dev.assipe-software.fr:8000', 'http://main-dev.assipe-software.fr:8000'];
-    }
-
+    /**
+     * CORS
+     */
     app.use(function(req, res, next) {
-        allows.forEach(function(allow) {
-            res.header('Access-Control-Allow-Origin', allow);
-        })
+        res.header('Access-Control-Allow-Origin', "*");
         res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
         res.header('Access-Control-Allow-Headers', 'Content-Type');
 

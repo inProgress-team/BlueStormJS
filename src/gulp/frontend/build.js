@@ -70,6 +70,7 @@ module.exports = function(name) {
                 .pipe(preprocess({context: {
                     NODE_ENV: env,
                     socketConf: config.get(env, 'socket'),
+                    apiConf: config.get(env, 'api'),
                     mainPort: config.get('production', 'main')
                 }}))
                 .pipe(gulp.dest('dist/build/'+name+'/public/js/bluestorm'))
