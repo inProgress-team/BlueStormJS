@@ -1,6 +1,5 @@
 var clc = require('cli-color'),
-    moment = require('moment'),
-    clear = require("cli-clear");
+    moment = require('moment');
 
 var gutil = require('gulp-util');
 

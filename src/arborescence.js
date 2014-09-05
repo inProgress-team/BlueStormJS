@@ -1,5 +1,4 @@
 var fs = require('fs'),
-    fse = require('fs-extra'),
     async = require('async');
 
 var basePath = process.cwd()+'/src/modules/';

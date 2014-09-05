@@ -46,9 +46,7 @@ module.exports= {
         this.loadTasks(debug);
 
         var first = true;
-        gulp.start([
-            'watch'
-        ], function() {
+        gulp.start(builds, function() {
             if(first) {
                 var d = debug || false;
                 server.supervisor.development(d);
