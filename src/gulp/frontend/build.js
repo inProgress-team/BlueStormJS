@@ -66,14 +66,18 @@ module.exports = function(name) {
                 .pipe(gulp.dest('dist/build/'+name+'/public/js/bower_components'))
         },
         frameworkFiles: function(){
-            var env = process.env.NODE_ENV;
+            var env = process.env.NODE_ENV,
+                envConfig = env;
+            if(process.env.NODE_TEST!==undefined) {
+                envConfig = 'test';
+            }
 
             return gulp.src(__dirname+'/../../frontend/*.js')
                 .pipe(preprocess({context: {
                     NODE_ENV: env,
-                    socketConf: config.get(env, 'socket'),
-                    apiConf: config.get(env, 'api'),
-                    mainPort: config.get('production', 'main')
+                    socketConf: config.get(envConfig, 'socket'),
+                    apiConf: config.get(envConfig, 'api'),
+                    mainPort: config.get(envConfig, 'main')
                 }}))
                 .pipe(gulp.dest('dist/build/'+name+'/public/js/bluestorm'))
         },
