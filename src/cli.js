@@ -14,7 +14,7 @@ var argv = require('yargs')
     .alias('h', 'help')
     .describe('h', 'See help for a particular command.');
 
-var commands = ['dev', 'prod', 'server-dev', 'server-prod', 'beautify', 'test'];
+var commands = ['dev', 'prod', 'server-dev', 'server-test', 'server-prod', 'beautify', 'test'];
 
 var server = require(__dirname+'/server/server'),
     logger = require(__dirname+'/logger/logger'),
@@ -40,6 +40,10 @@ module.exports = {
             process.env.NODE_ENV = 'development';
             server.startDev(debug);
 
+        } else if(command=="server-test") {
+            process.env.NODE_ENV = 'production';
+            server.startProd(debug, true);
+
         } else if(command=="server-prod") {
             process.env.NODE_ENV = 'production';
             server.startProd(debug);
@@ -50,7 +54,7 @@ module.exports = {
 
 
         } else if(command=="test") {
-            //config.frontend.list();
+            logger.getLogs();
         }
     },
     argv: function() {

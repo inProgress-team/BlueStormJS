@@ -3,6 +3,16 @@ var clc = require('cli-color'),
 
 var gutil = require('gulp-util');
 
+var dbConnection = require(__dirname+'/../db/db'),
+    db = null;
+
+
+dbConnection(function(err, database) {
+    if(err) return console.log(err);
+    db = database;
+});
+
+
 module.exports = {
     error: function(error, from, params) {
         console.error(clc.red.bold.underline.inverse('From '+from));
@@ -25,8 +35,9 @@ module.exports = {
 
         return style(message);
     },
-    getMessage: function(arguments) {
-        var res = "";
+    getMessage: function(arguments, unstyled) {
+        var res = "",
+            unstyled = "";
 
         for(var i=0; i<arguments.length; i++) {
             var arg = arguments[i];
@@ -40,65 +51,43 @@ module.exports = {
                     i++;
                 }
                 res+= this.getStyledMessage(arg, styles);
+                unstyled += arg;
             }
         }
 
+        if(unstyled!==undefined) {
+            return unstyled;
+        }
         return res;
 
     },
     log: function() {//message, params
-        console.log(this.getMessage(arguments));
+        var message = this.getMessage(arguments);
+        console.log(message);
+
+        //if(process.env.NODE_ENV=='production') {
+            if(db) {
+                db.collection('logs').insert({
+                    "log": message,
+                    "releaseDate": new Date
+                }, function(){});    
+            }
+            
+        //}
+    },
+    getLogs: function () {
+        setTimeout(function () {
+            if(db) {
+                db.collection('logs').find({}).toArray(function(err, results){
+                    if(err) return console.log(err);
+                    for(var i in results) {
+                        console.log(results[i].log);
+                    }
+                });
+            }
+        }, 500);
     },
     dump: function() {
         console.log(arguments);
-    }
-}
-
-
-function getParams(params) {
-    var prefix = "",
-        style = clc,
-        level = 0,
-        color = 'cyan';
-
-
-    if(params!==undefined) {
-        if (params.level) {
-            level = params.level;
-            switch (level) {
-                case 1:
-                    prefix = "";
-                    style = style.inverse;
-                    if (!params.color) {
-                        color = 'blue';
-                    }
-                    break;
-                case 2:
-                    prefix = "-- ";
-                    if (!params.color) {
-                        color = 'yellow';
-                    }
-                    break;
-                case 3:
-                    prefix = "   * ";
-                    if (!params.color) {
-                        color = 'magenta';
-                    }
-                    break;
-            }
-        }
-        if (params.color) {
-            color = params.color;
-        }
-        if(params.styles!=undefined) {
-            for(var i in params.styles) {
-                style = style[params.styles[i]];
-            }
-        }
-    }
-    return {
-        style: style,
-        color: color,
-        prefix: prefix
     }
 }
