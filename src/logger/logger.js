@@ -80,7 +80,7 @@ module.exports = {
             }
             
         //}
-    }
+    },
     getLogs: function () {
         setTimeout(function () {
             if(db) {
