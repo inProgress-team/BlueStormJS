@@ -35,7 +35,12 @@ module.exports = {
         logger.log('Webapp is online (', 'development', ['yellow'], ').');
         fs.writeFile('dist/build/livereload.log', Math.random()+"");
     },
-    startProd: function(debug) {
+    startProd: function(debug, test) {
+        var type = 'production';
+        if(test!==undefined) {
+            type = 'test';
+        }
+
         sticky(function() {
             var server = express();
 
@@ -46,21 +51,21 @@ module.exports = {
                     name: name,
                     debug: debug
                 });
-                server.use(vhost(config.get('production', name), app))
+                server.use(vhost(config.get(type, name), app))
             });
 
 
             var apiApp = api({ debug: debug }),
                 socketApp = socket({ debug: debug });
 
-            server.use(vhost(config.get('production', 'socket'), socketApp))
-                .use(vhost(config.get('production', 'api'), apiApp));
+            server.use(vhost(config.get(type, 'socket'), socketApp))
+                .use(vhost(config.get(type, 'api'), apiApp));
 
             return server.listen(3333);
 
-        }).listen(config.get('production', 'main'), function() {
+        }).listen(config.get(type, 'main'), function() {
             if(process.env.NODE_WORKER_ID=='MASTER') {
-                logger.log('Master started on ', config.get('production', 'main'), ['red'], ' port');
+                logger.log('Master started on ', config.get(type, 'main'), ['red'], ' port');
             } else {
                 logger.log('Worker ' + process.env.NODE_WORKER_ID+ ' started');
             }
