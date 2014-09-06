@@ -22,6 +22,8 @@ module.exports = {
             console.error(clc.red(error.stack));
         }
 
+        this.addLog(error);
+
     },
     warn: function() {
         console.warn(clc.yellow("[WARNING] ")+this.getMessage(arguments));
@@ -62,9 +64,13 @@ module.exports = {
 
     },
     log: function() {//message, params
-        var message = this.getMessage(arguments);
-        console.log(message);
+        console.log(this.getMessage(arguments));
 
+        var message = this.getMessage(arguments);
+        this.addLog(message);
+        
+    },
+    addLog: function (message) {
         //if(process.env.NODE_ENV=='production') {
             if(db) {
                 db.collection('logs').insert({
@@ -74,7 +80,7 @@ module.exports = {
             }
             
         //}
-    },
+    }
     getLogs: function () {
         setTimeout(function () {
             if(db) {
