@@ -38,8 +38,13 @@ module.exports = function(name) {
             'src/modules/**/'+name+'/**/*.less'
         ],
         sourcesIndex = [
-            'dist/build/'+name+'/**/bower_components/**/*.js',
-            'dist/build/'+name+'/**/*.js',
+
+            'dist/build/'+name+'/public/lib/jquery.js',
+            'dist/build/'+name+'/public/lib/angular.js',
+            'dist/build/'+name+'/public/lib/socket.io.js',
+
+            'dist/build/'+name+'/public/bower_components/**/*.js',
+            'dist/build/'+name+'/public/js/**/*.js',
             'dist/build/'+name+'/public/css/main.css'
         ];
 
@@ -47,6 +52,14 @@ module.exports = function(name) {
         jsFiles: function(){
             return gulp.src(jsFiles)
                 .pipe(gulp.dest('dist/build/'+name+'/public/js'));
+        },
+        libJsFiles: function(){
+            return gulp.src([
+                    __dirname+'/../../../bower_components/jquery/dist/jquery.js',
+                    __dirname+'/../../../bower_components/angular/angular.js',
+                    __dirname+'/../../../bower_components/socket.io-client/socket.io.js'
+                ])
+                .pipe(gulp.dest('dist/build/'+name+'/public/lib'));
         },
         html2js: function() {
             gulp.src(templatesFiles)
@@ -63,7 +76,7 @@ module.exports = function(name) {
         },
         bowerFiles: function(){
             return gulp.src(mainBowerFiles(), { base: 'bower_components' })
-                .pipe(gulp.dest('dist/build/'+name+'/public/js/bower_components'))
+                .pipe(gulp.dest('dist/build/'+name+'/public/bower_components'))
         },
         frameworkFiles: function(){
             var env = process.env.NODE_ENV,
@@ -110,12 +123,13 @@ module.exports = function(name) {
     gulp.task(cleanTask, function(cb) { del(['dist/build/'+name], cb); });
 
     gulp.task('bower-files@'+name, [cleanTask], tasks.bowerFiles);
-
     gulp.task('framework-files@'+name, [cleanTask], tasks.frameworkFiles);
-    //gulp.task('bower-files-watch@'+name, tasks.bowerFiles);
+    gulp.task('lib-js-files@'+name, [cleanTask], tasks.libJsFiles);
+
 
     gulp.task('js-files@'+name, [cleanTask], tasks.jsFiles);
     gulp.task('js-files-watch@'+name, tasks.jsFiles);
+
 
     gulp.task('html2js@'+name, [cleanTask], tasks.html2js);
     gulp.task('html2js-watch@'+name, tasks.html2js);
@@ -136,6 +150,7 @@ module.exports = function(name) {
 
     gulp.task('index.html@'+name, [
             'js-files@'+name,
+            'lib-js-files@'+name,
             'bower-files@'+name,
             'i18n@'+name,
             'less@'+name,

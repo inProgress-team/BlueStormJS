@@ -1,0 +1,33 @@
+{
+  "name": "BlueStormJS",
+  "main": "index.js",
+  "version": "0.0.0",
+  "homepage": "https://github.com/Bluestorm-Team/BlueStormJS",
+  "authors": [
+    "mokto <theo.mathieu1@gmail.com>"
+  ],
+  "description": "NodeFramework",
+  "moduleType": [
+    "amd",
+    "es6",
+    "globals",
+    "node",
+    "yui"
+  ],
+  "keywords": [
+    "Framework"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "angular": "~1.2.23",
+    "socket.io-client": "~1.1.0"
+  }
+}

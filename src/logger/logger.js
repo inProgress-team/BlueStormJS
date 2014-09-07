@@ -18,11 +18,12 @@ module.exports = {
         console.error(clc.red.bold.underline.inverse('From '+from));
         if(params!==undefined&&!params.stack) {
             console.error(clc.red(error));
+            this.addLog(error);
         } else {
             console.error(clc.red(error.stack));
+            this.addLog(error.stack);
         }
 
-        this.addLog(error);
 
     },
     warn: function() {
@@ -37,7 +38,7 @@ module.exports = {
 
         return style(message);
     },
-    getMessage: function(arguments, unstyled) {
+    getMessage: function(arguments) {
         var res = "",
             unstyled = "";
 
@@ -55,10 +56,6 @@ module.exports = {
                 res+= this.getStyledMessage(arg, styles);
                 unstyled += arg;
             }
-        }
-
-        if(unstyled!==undefined) {
-            return unstyled;
         }
         return res;
 

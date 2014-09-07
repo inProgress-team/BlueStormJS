@@ -20,22 +20,25 @@ This module is not stable. DO NOT use this in production. It is currently under 
 
 # Developers
 ## Installation
-You need NodeJS 0.11.9 as KoaJS do.
+    
+    $ git clone repository
 
-    $ (install NVM)
-    
-    $ nvm install 0.11.9
-    $ nvm alias default 0.11.9
-    $ nvm use default
-    
-    $ npm install # install dependencies
+    $ cd BlueStormJS
+
+    $ npm install
+
+(MAC)
+
+	$ ulimit -n 4096
+
 
 ## Try
-You can try any test project available in src/app_test.
 
-    $ cd examples/{anyapp}
-    $ node cli.js #Shows every command available
-    $ node cli.js dev #Start development environment.
+
+
+
+
+
 
 ## TODO
 
