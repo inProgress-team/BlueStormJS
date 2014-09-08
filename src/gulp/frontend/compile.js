@@ -30,8 +30,11 @@ module.exports = function(name) {
 
     gulp.task('js-files#compile@'+name, [cleanTask], function(){
         return gulp.src([
-                'dist/build/'+name+'/public/js/bower_components/**/*.js',
-                'dist/build/'+name+'/public/js/**/*.js'
+            'dist/build/'+name+'/public/lib/jquery.js',
+            'dist/build/'+name+'/public/lib/angular.js',
+            'dist/build/'+name+'/public/lib/socket.io.js',
+            'dist/build/'+name+'/public/bower_components/**/*.js',
+            'dist/build/'+name+'/public/js/**/*.js'
         ])
             .pipe(concat('main.min.js'))
             .pipe(ngAnnotate())
