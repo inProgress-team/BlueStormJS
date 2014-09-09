@@ -15,14 +15,18 @@ var gulp = require('gulp'),
 var config = require(__dirname+'/../../config');
 
 module.exports = function(name) {
+    var dependencies = require(process.cwd()+'/src/apps/'+name+'/dependencies.json');
 
     var cleanTask = 'clean@'+name,
         jsFiles = [
             'src/apps/'+name+'/**/*.js',
-            'src/common/frontend/**/*.js',
             'src/modules/**/'+name+'/**/*.js'
-        ],
-        templatesFiles = [
+        ];
+    dependencies.common.forEach(function (dep) {
+        jsFiles.push('src/common/frontend/'+dep+'/**/*.js')
+    });
+
+    var templatesFiles = [
             'src/apps/'+name+'/**/*.tpl.html',
             'src/common/frontend/**/*.tpl.html',
             'src/modules/**/'+name+'/**/*.tpl.html'
@@ -96,7 +100,9 @@ module.exports = function(name) {
         },
         less: function(){
             gulp.src(lessFile)
-                .pipe(less())
+                .pipe(less().on('error', function(e) {
+                    console.log(e);
+                }))
                 .pipe(gulp.dest('./dist/build/'+name+'/public/css'));
         },
         indexHtml: function(){
