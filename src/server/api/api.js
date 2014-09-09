@@ -2,13 +2,34 @@ var express = require('express');
 var bodyParser = require('body-parser');
 
 var logger = require(__dirname+'/../../logger/logger'),
-    arborescence = require(__dirname+'/../../arborescence');
+    arborescence = require(__dirname+'/../../arborescence'),
+    user;
 
 var checkAuthentification = function(req, res, options, next) {
-    next(req, res);
+    if (typeof options == 'function') {
+        callback = options;
+        options = {};
+    } else if (!options) {
+        options = {};
+    }
+
+    user.tokenIsValid(req.token, function(err, token) {
+        if (err)
+            throw err;
+
+        req.decodedToken = token;
+        if (!options.role) {
+            return next(req, res);
+        }
+        else {
+            next(req, res);
+        }
+    });
 };
 
 module.exports = function(config, cb) {
+    user = require(process.cwd() + '/src/modules/user/dao/user');
+
     var app = express(),
         start;
 
@@ -19,7 +40,7 @@ module.exports = function(config, cb) {
     app.get = function(url, options, next) {
         if (typeof options == 'object' && options.authentification) {
             app.getAux(url, function(req, res) {
-               checkAuthentification(req, res, {"role": options.role}, next);
+                checkAuthentification(req, res, {"role": options.role}, next);
             });
         }
         else {
