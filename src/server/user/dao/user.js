@@ -138,7 +138,7 @@ module.exports.signUp = function(email, password, options, callback) {
                         "password": hash
                     };
                     for (var i in options.otherFields) {
-                        if (user.hasOwnProperty(i))
+                        if (options.otherFields.hasOwnProperty(i))
                             user[i] = options.otherFields[i];
                     }
                     user.role = options.role || 'user';
