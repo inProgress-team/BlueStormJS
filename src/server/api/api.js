@@ -3,7 +3,7 @@ var bodyParser = require('body-parser');
 
 var logger = require(__dirname+'/../../logger/logger'),
     arborescence = require(__dirname+'/../../arborescence'),
-    userDAO = require(__dirname + '/../../../index').userDAO;
+    userDAO = require(__dirname + '/../user/dao/user');
 
 var checkAuthentification = function(req, res, options, next) {
     if (typeof options == 'function') {

@@ -1,4 +1,4 @@
-var dbConnection = require(__dirname + '/../../../../index').db,
+var dbConnection = require(__dirname + '/../../../../db'),
     bcrypt = require('bcrypt'),
     moment = require('moment'),
     jwt = require('jwt-simple'),
@@ -109,6 +109,22 @@ var comparePassword = function(password, hash, callback) {
     });
 };
 
+var encodeToken = function(user) {
+    var expires = moment().add(1, 'months').valueOf();
+    var token = jwt.encode(
+        {
+            user: user,
+            expires: expires
+        },
+        SECRET_TOKEN);
+
+    return token;
+};
+
+var decodeToken = function(token) {
+    jwt.decode(token, SECRET_TOKEN);
+};
+
 module.exports.signUp = function(email, password, options, callback) {
     if (typeof options == 'function') {
         callback = options;
@@ -142,10 +158,12 @@ module.exports.signUp = function(email, password, options, callback) {
                             user[i] = options.otherFields[i];
                     }
                     user.role = options.role || 'user';
-                    db.collection('user').insert(user, function(err) {
+                    db.collection('user').insert(user, function(err, elts) {
                         if (err)
                             return callback(err);
-                        return callback(null, {"email": email});
+
+                        delete elts[0].password;
+                        return callback(null, elts[0], encodeToken(elts[0]));
                     });
                 });
             });
@@ -169,15 +187,8 @@ module.exports.signIn = function(email, password, callback) {
                 if (!isMatch)
                     return callback('Email or password invalid');
 
-                var expires = moment().add(1, 'months').valueOf();
-                var token = jwt.encode({
-                    user: {
-                        email: res.email,
-                        role: res.role
-                    },
-                    expires: expires
-                }, SECRET_TOKEN);
-                return callback(null, token);
+                delete res['password'];
+                return callback(null, res, encodeToken(res));
             });
         });
     });
@@ -187,7 +198,7 @@ module.exports.tokenIsValid = function(token, callback) {
     var decodedToken;
 
     try {
-        decodedToken = jwt.decode(token, SECRET_TOKEN);
+        decodedToken = decodeToken(token);
     } catch (err) {
         return callback('Token is invalid');
     }
