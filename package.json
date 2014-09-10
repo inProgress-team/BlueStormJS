@@ -24,6 +24,7 @@
   "homepage": "https://github.com/Bluestorm-Team/BlueStormJS",
   "dependencies": {
     "async": "^0.9.0",
+    "bcrypt": "^0.8.0",
     "body-parser": "^1.6.5",
     "cli-color": "^0.3.2",
     "del": "^0.1.2",
@@ -55,6 +56,7 @@
     "gulp-util": "^3.0.0",
     "gulp-watch": "^0.6.10",
     "jshint-stylish": "^0.4.0",
+    "jwt-simple": "^0.2.0",
     "main-bower-files": "^2.0.0",
     "map-stream": "^0.1.0",
     "moment": "^2.8.1",

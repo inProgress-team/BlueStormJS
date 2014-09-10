@@ -14,9 +14,11 @@ module.exports = {
         require(__dirname+'/src/db/db')(function(err, res) {
             if (err)
                 return console.log(err);
-            
+
             db = res;
             return callback(res);
         });
     }
 };
+
+module.exports.userDAO = require(__dirname + '/src/server/user/dao/user');

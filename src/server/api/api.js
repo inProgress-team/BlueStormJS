@@ -3,7 +3,7 @@ var bodyParser = require('body-parser');
 
 var logger = require(__dirname+'/../../logger/logger'),
     arborescence = require(__dirname+'/../../arborescence'),
-    user;
+    userDAO = require(__dirname + '/../../../index').userDAO;
 
 var checkAuthentification = function(req, res, options, next) {
     if (typeof options == 'function') {
@@ -13,7 +13,7 @@ var checkAuthentification = function(req, res, options, next) {
         options = {};
     }
 
-    user.tokenIsValid(req.token, function(err, token) {
+    userDAO.tokenIsValid(req.token, function(err, token) {
         if (err)
             throw err;
 
@@ -28,8 +28,6 @@ var checkAuthentification = function(req, res, options, next) {
 };
 
 module.exports = function(config, cb) {
-    user = require(process.cwd() + '/src/modules/user/dao/user');
-
     var app = express(),
         start;
 
