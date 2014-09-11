@@ -111,18 +111,16 @@ var comparePassword = function(password, hash, callback) {
 
 var encodeToken = function(user) {
     var expires = moment().add(1, 'months').valueOf();
-    var token = jwt.encode(
+    return jwt.encode(
         {
             user: user,
             expires: expires
         },
         SECRET_TOKEN);
-
-    return token;
 };
 
 var decodeToken = function(token) {
-    jwt.decode(token, SECRET_TOKEN);
+    return jwt.decode(token, SECRET_TOKEN);
 };
 
 module.exports.signUp = function(email, password, options, callback) {
@@ -203,10 +201,10 @@ module.exports.tokenIsValid = function(token, callback) {
         return callback('Token is invalid');
     }
 
-    if (decodedToken.expires > moment().valueOf())
+    if (decodedToken.expires < moment().valueOf())
         return callback('Token is expired');
 
-    return callback(null, decodedToken);
+    return callback(null, decodedToken.user);
 };
 
 module.exports.hasRole = function(user, role, callback) {
