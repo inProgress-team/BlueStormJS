@@ -1,10 +1,13 @@
 angular.module('bluestorm', [])
-    .
-    config(function ($httpProvider) {
+    .config(function ($httpProvider) {
         $httpProvider.interceptors.push(function ($q) {
             return {
                 'request': function (config) {
                     if(config.url.indexOf('api')===0) {
+
+                        /**
+                        * URLS
+                        */
                         var url = config.url.substring(3);
                         // @if NODE_ENV='production'
                         url = window.location.protocol + '///* @echo apiConf */:/* @echo mainPort */'+url;
@@ -15,6 +18,12 @@ angular.module('bluestorm', [])
                         // @endif
 
                         config.url = url;
+
+
+                        /**
+                        * URLS
+                        */
+                        console.log(config);
                     }
                     return config || $q.when(config);
 
@@ -22,6 +31,14 @@ angular.module('bluestorm', [])
 
             }
         });
+    })
+    .service('bluestorm', function(){
+        var service = {
+            urls: {}
+        };
+        /* @echo appsUrl */
+
+        return service;
     })
     .factory('socket', function($rootScope) {
 

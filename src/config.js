@@ -11,7 +11,7 @@ module.exports = {
             return res;
         }
     },
-    get: function(env, name, test) {
+    get: function(env, name) {
         return domains[env][name];
     }
 };

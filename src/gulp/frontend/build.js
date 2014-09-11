@@ -89,12 +89,26 @@ module.exports = function(name) {
                 envConfig = 'test';
             }
 
+            var appsUrl = "",
+                apps = config.frontend.list();
+
+            apps.forEach(function (app) {
+                if(env=="production") {
+                    appsUrl += "service.urls."+app+" = 'http://" + config.get(envConfig, app) + ":" + config.get(envConfig, 'main') + "';\n";
+                } else if(env=="development") {
+                    appsUrl += "service.urls."+app+" = 'http://" + config.get(envConfig, 'main') + ":" + config.get(envConfig, app) + "';\n";
+                }
+                
+            });
+            
+
             return gulp.src(__dirname+'/../../frontend/*.js')
                 .pipe(preprocess({context: {
                     NODE_ENV: env,
                     socketConf: config.get(envConfig, 'socket'),
                     apiConf: config.get(envConfig, 'api'),
-                    mainPort: config.get(envConfig, 'main')
+                    mainPort: config.get(envConfig, 'main'),
+                    appsUrl: appsUrl
                 }}))
                 .pipe(gulp.dest('dist/build/'+name+'/public/js/bluestorm'))
         },

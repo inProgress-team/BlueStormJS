@@ -64,7 +64,7 @@ module.exports = {
         console.log(this.getMessage(arguments));
 
         var message = this.getMessage(arguments);
-        this.addLog(message);
+        //this.addLog(message);
         
     },
     addLog: function (message) {
