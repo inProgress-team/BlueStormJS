@@ -14,8 +14,11 @@ module.exports = {
 
             fs.exists(path,function(exists){
                 if(exists) {
-                    var file = fs.readdirSync(path);
-                    files.push(require(path+'/'+file));
+                    var filesFound = fs.readdirSync(path);
+                    filesFound.forEach(function (file) {
+                        files.push(require(path+'/'+file));
+                    })
+                    
                 }
                 cb();
             });

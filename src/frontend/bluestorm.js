@@ -23,7 +23,6 @@ angular.module('bluestorm', [])
                         /**
                         * URLS
                         */
-                        console.log(config);
                     }
                     return config || $q.when(config);
 
