@@ -2,6 +2,7 @@ var dbConnection = require(__dirname + '/../../../../db'),
     bcrypt = require('bcrypt'),
     moment = require('moment'),
     jwt = require('jwt-simple'),
+    generatePassword = require('password-generator'),
     async = require('async'),
     fs = require('fs');
 
@@ -190,6 +191,13 @@ module.exports.signIn = function(email, password, callback) {
             });
         });
     });
+};
+
+module.exports.createUserWithRandomPassword = function(email, options, callback) {
+    var password = generatePassword(12, false);
+
+    options.emailNotification = true;
+    module.exports.signUp(email, password, options, callback);
 };
 
 module.exports.tokenIsValid = function(token, callback) {
