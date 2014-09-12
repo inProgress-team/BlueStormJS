@@ -215,6 +215,25 @@ module.exports.tokenIsValid = function(token, callback) {
     return callback(null, decodedToken.user);
 };
 
-module.exports.hasRole = function(user, role, callback) {
+module.exports.getUsers = function(options , callback) {
+    if (typeof options == 'function') {
+        callback = options;
+        options = {};
+    } else if (!options) {
+        options = {};
+    }
 
+    var criteria = options.criteria || {},
+        selection = options.selection || {};
+    
+    dbConnection(function(db) {
+        db.collection('user').find(criteria, selection).toArray(function(err, res) {
+            if (err)
+                return callback(err);
+            if (!res)
+                return callback('No users');
+
+            return callback(null, res);
+        });
+    });
 };
