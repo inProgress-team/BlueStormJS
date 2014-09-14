@@ -1,5 +1,6 @@
 var gulp = require('gulp'),
-    livereload = require('gulp-livereload');
+    livereload = require('gulp-livereload'),
+    del = require('del');
 
 var gulpLogger = require(__dirname+'/logger'),
     server = require(__dirname+'/../server/server'),
@@ -61,7 +62,9 @@ module.exports= {
         gulp.start(builds, function() {
             logger.log('Building ', 'production', ['yellow'], ' files.');
             gulp.start(compiles, function() {
-                logger.log('Building production done. Execute ', 'node cli.js server-prod', ['yellow'], ' to try it.');
+                del(['dist/build'], function () {
+                    logger.log('Building production done. Execute ', 'node cli.js server-prod', ['yellow'], ' to try it.');
+                });
             });
         });
     },
