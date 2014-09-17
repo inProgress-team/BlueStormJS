@@ -9,5 +9,6 @@ module.exports = {
     db: function(callback) {
         require(__dirname + '/db')(callback);
     },
-    userDAO: require(__dirname + '/src/server/user/dao/user')
+    userDAO: require(__dirname + '/src/server/user/dao/user'),
+    mailer: require(__dirname + '/src/server/mail/mailer')
 };

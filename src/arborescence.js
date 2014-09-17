@@ -41,9 +41,12 @@ module.exports = {
             callback(files);
         });
     },
-    loadFiles: function(files, app) {
+    loadFiles: function(files, app, callback) {
         files.forEach(function(file) {
             file(app);
         });
+
+        if (callback)
+            return callback();
     }
 };

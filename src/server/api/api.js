@@ -1,5 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var async = require('async');
 
 var logger = require(__dirname+'/../../logger/logger'),
     arborescence = require(__dirname+'/../../arborescence'),
@@ -69,12 +70,22 @@ module.exports = function(config, cb) {
         });
     }
 
-    /**
-     * Include router and routes
-     */
-    arborescence.getRequiredFiles('api', function (files) {
-        arborescence.loadFiles(files, app);
-    });
+    async.series([
+        function(callback) {
+            /**
+             * Include router and routes
+             */
+            arborescence.getRequiredFiles('api', function (files) {
+                arborescence.loadFiles(files, app, callback);
+            });
+        },
+        function() {
+            /**
+             * Include user module
+             */
+            require(__dirname + '/../user/api/user')(app);
+        }
+    ]);
 
     if(config.debug) {
         app.use(function(req, res, next){
