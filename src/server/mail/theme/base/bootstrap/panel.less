@@ -1,0 +1,23 @@
+.panel-default {
+  border: 0;
+  border-radius: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+
+  &> .panel-heading {
+    padding: 0;
+    background: none;
+    &> .panel-title > span {
+      padding: 10px 15px;
+      display: inline-block;
+      border-bottom: 1px solid @brand-primary;
+      margin-bottom: -1px;
+      text-transform: uppercase;
+      font-size: 19px;
+      max-height: 100%;
+    }
+  }
+  &> .panel-body-no-padding {
+    padding-top: 15px;
+  }
+}

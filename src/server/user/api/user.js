@@ -15,6 +15,14 @@ module.exports = function(app) {
         if (user.role)
             options.role = user.role;
 
+        options.otherFields = {};
+        if (user.firstName) {
+            options.otherFields.firstName = user.firstName;
+        }
+        if (user.lastName) {
+            options.otherFields.lastName = user.lastName;
+        }
+
         userDAO.signUp(user.email, user.password, options, function(err, user, token) {
             if (err) {
                 return res.send({

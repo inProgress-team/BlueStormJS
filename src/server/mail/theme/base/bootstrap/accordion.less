@@ -1,0 +1,54 @@
+.accordion {
+  .panel-group {
+    margin-bottom: 20px;
+  }
+
+  .panel.panel-default {
+    .panel-heading {
+      color: #333;
+      background-color: #f5f5f5;
+      border: 1px solid #ddd;
+      border-top-right-radius: 3px;
+      border-top-left-radius: 3px;
+    }
+
+
+    .panel-body {
+      border: 1px solid #ddd;
+      padding: 10px 15px;
+      border-top: 0;
+    }
+
+    .panel-title {
+
+      a {
+        cursor: pointer;
+        display: inline-block;
+        width: 100%;
+        height: 37px;
+        line-height: 37px;
+
+        &:hover {
+          text-decoration: none;
+        }
+
+        .accordion-count {
+          display: inline-block;
+          width: 40px;
+          padding-left: 10px;
+        }
+        .accordion-caret {
+          display: inline-block;
+          width: 50px;
+          text-align: right;
+          line-height: 37px;
+          padding-right: 10px;
+        }
+        .accordion-rating {
+          height: 100%;
+        }
+      }
+    }
+  }
+
+}

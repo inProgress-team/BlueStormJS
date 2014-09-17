@@ -16,7 +16,11 @@ module.exports = {
     send: function(to, subject, html, text, cb) {
 
         var mailOptions = {
-
+            from: 'Songpeek ☊ <contact@songpeek.com>', // sender address
+            to: to, // list of receivers
+            subject: subject,
+            html: html,
+            text: text
         };
 
         transporter.sendMail(mailOptions, function(err, info){
