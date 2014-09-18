@@ -60,7 +60,7 @@ module.exports = function(app) {
     });
 
     app.get('/user', function(req, res) {
-        var data = req.body;
+        var data = req.query;
 
         if (!data || !data.token) {
             return res.send({
