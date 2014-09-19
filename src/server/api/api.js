@@ -13,7 +13,6 @@ var checkAuthentification = function(req, res, options, callback) {
     } else if (!options) {
         options = {};
     }
-
     userDAO.tokenIsValid(req.body.token, function(err, token) {
         if (err)
             return callback(err);
@@ -49,6 +48,66 @@ module.exports = function(config, cb) {
         }
         else {
             app.getAux.apply(this, arguments);
+        }
+    };
+
+    /**
+     * Override POST
+     */
+    app.postAux = app.post;
+    app.post = function(url, options, next) {
+        if (typeof options == 'object' && (options.authentification || options.role)) {
+            app.postAux(url, function(req, res) {
+                checkAuthentification(req, res, options.role, function(err) {
+                    if (err)
+                        return res.send({err: err});
+
+                    return next(req, res);
+                });
+            });
+        }
+        else {
+            app.postAux.apply(this, arguments);
+        }
+    };
+
+    /**
+     * Override PUT
+     */
+    app.putAux = app.put;
+    app.put = function(url, options, next) {
+        if (typeof options == 'object' && (options.authentification || options.role)) {
+            app.putAux(url, function(req, res) {
+                checkAuthentification(req, res, options.role, function(err) {
+                    if (err)
+                        return res.send({err: err});
+
+                    return next(req, res);
+                });
+            });
+        }
+        else {
+            app.putAux.apply(this, arguments);
+        }
+    };
+
+    /**
+     * Override DELETE
+     */
+    app.deleteAux = app.delete;
+    app.delete = function(url, options, next) {
+        if (typeof options == 'object' && (options.authentification || options.role)) {
+            app.deleteAux(url, function(req, res) {
+                checkAuthentification(req, res, options.role, function(err) {
+                    if (err)
+                        return res.send({err: err});
+
+                    return next(req, res);
+                });
+            });
+        }
+        else {
+            app.deleteAux.apply(this, arguments);
         }
     };
 
