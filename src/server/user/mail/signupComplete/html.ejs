@@ -7,6 +7,10 @@
 
     <p><%= i18n.signupComplete.tr1 %> <%= appName %>.</p>
 
+    <% if (typeof password != 'undefined') { %>
+        <p><%= i18n.signupComplete.tr2 %> <%= password %></p>
+    <% } %>
+
     <p>
         <a href="<%= appURL %>"><%= appURL %></a>
     </p>

@@ -198,7 +198,14 @@ module.exports.createUserWithRandomPassword = function(email, options, callback)
     var password = generatePassword(12, false);
 
     options.emailNotification = true;
-    module.exports.signUp(email, password, options, callback);
+    module.exports.signUp(email, password, options, function(err, user, token) {
+        if (err)
+            return callback(err);
+
+        user.password = password;
+        console.log(user);
+        return callback(null, user, token);
+    });
 };
 
 module.exports.tokenIsValid = function(token, callback) {
@@ -226,7 +233,7 @@ module.exports.getUsers = function(options , callback) {
 
     var criteria = options.criteria || {},
         selection = options.selection || {};
-    
+
     dbConnection(function(db) {
         db.collection('user').find(criteria, selection).toArray(function(err, res) {
             if (err)

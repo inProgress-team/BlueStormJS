@@ -59,6 +59,7 @@ module.exports = function(app) {
     });
 
     app.get('/user', function(req, res) {
+        console.log(req);
         var data = req.body;
 
         if (!data || !data.token) {
