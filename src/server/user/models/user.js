@@ -124,17 +124,14 @@ var decodeToken = function(token) {
     return jwt.decode(token, SECRET_TOKEN);
 };
 
-module.exports.signUp = function(email, password, options, callback) {
-    if (typeof options == 'function') {
-        callback = options;
-        options = {};
-    } else if (!options) {
-        options = {};
+module.exports.signUp = function(user, callback) {
+    if (!user || !user.email || !user.password) {
+        return callback('User\'s informations not received');
     }
 
     dbConnection(function(db) {
         db.collection('user').findOne({
-            email: email
+            email: user.email
         }, function(err, res) {
             if (err)
                 return callback(err);
@@ -146,23 +143,16 @@ module.exports.signUp = function(email, password, options, callback) {
                 if (err)
                     return next(err);
 
-                bcrypt.hash(password, salt, function(err, hash) {
+                bcrypt.hash(user.password, salt, function(err, hash) {
                     if (err)
                         return next(err);
-                    var user = {
-                        "email": email,
-                        "password": hash
-                    };
-                    for (var i in options.otherFields) {
-                        if (options.otherFields.hasOwnProperty(i))
-                            user[i] = options.otherFields[i];
-                    }
-                    user.role = options.role || 'user';
+
+                    user.password = hash;
                     db.collection('user').insert(user, function(err, elts) {
                         if (err)
                             return callback(err);
 
-                        delete elts[0].password;
+                        delete user.password;
                         return callback(null, elts[0], encodeToken(elts[0]));
                     });
                 });
@@ -171,17 +161,21 @@ module.exports.signUp = function(email, password, options, callback) {
     });
 };
 
-module.exports.signIn = function(email, password, callback) {
+module.exports.signIn = function(user, callback) {
+    if (!user || !user.email || !user.password) {
+        return callback('User\'s informations not received');
+    }
+
     dbConnection(function(db) {
         db.collection('user').findOne({
-            email: email
+            email: user.email
         }, function(err, res) {
             if (err)
                 return callback(err);
             if (!res)
                 return callback('Email or password invalid');
 
-            comparePassword(password, res.password, function(err, isMatch) {
+            comparePassword(user.password, res.password, function(err, isMatch) {
                 if (err)
                     return callback(err);
                 if (!isMatch)
@@ -194,16 +188,15 @@ module.exports.signIn = function(email, password, callback) {
     });
 };
 
-module.exports.createUserWithRandomPassword = function(email, options, callback) {
+module.exports.createUserWithRandomPassword = function(user, callback) {
     var password = generatePassword(12, false);
 
-    options.emailNotification = true;
-    module.exports.signUp(email, password, options, function(err, user, token) {
+    user.password = password;
+    module.exports.signUp(user, function(err, user, token) {
         if (err)
             return callback(err);
 
         user.password = password;
-        console.log(user);
         return callback(null, user, token);
     });
 };

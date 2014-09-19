@@ -4,7 +4,7 @@ var async = require('async');
 
 var logger = require(__dirname+'/../../logger/logger'),
     arborescence = require(__dirname+'/../../arborescence'),
-    userDAO = require(__dirname + '/../user/dao/user');
+    user = require(__dirname + '/../user/models/user');
 
 var checkAuthentification = function(req, res, options, callback) {
     if (typeof options == 'function') {
@@ -13,12 +13,13 @@ var checkAuthentification = function(req, res, options, callback) {
     } else if (!options) {
         options = {};
     }
-    userDAO.tokenIsValid(req.headers['x-auth-token'], function(err, user) {
+
+    var token = req.headers['x-auth-token'] || req.body.token;
+    user.tokenIsValid(token, function(err, user) {
         if (err)
             return callback(err);
 
         req.user = user;
-        console.log(req.user);
         if (!options.role) {
             return callback();
         }
@@ -96,7 +97,7 @@ module.exports = function(config, cb) {
      * Override DELETE
      */
     app.deleteAux = app.delete;
-    app.delete = function(url, options, next) {
+    app.del = function(url, options, next) {
         if (typeof options == 'object' && (options.authentification || options.role)) {
             app.deleteAux(url, function(req, res) {
                 checkAuthentification(req, res, options.role, function(err) {
@@ -134,22 +135,12 @@ module.exports = function(config, cb) {
         });
     }
 
-    async.series([
-        function(callback) {
-            /**
-             * Include router and routes
-             */
-            arborescence.getRequiredFiles('api', function (files) {
-                arborescence.loadFiles(files, app, callback);
-            });
-        },
-        function() {
-            /**
-             * Include user module
-             */
-            require(__dirname + '/../user/api/user')(app);
-        }
-    ]);
+    /**
+     * Include router and routes
+     */
+    arborescence.getRequiredFiles('api', function (files) {
+        arborescence.loadFiles(files, app);
+    });
 
     if(config.debug) {
         app.use(function(req, res, next){
