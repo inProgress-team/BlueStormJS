@@ -5,18 +5,14 @@
 <div class="well">
     <p><%= i18n.common.hello %> <%= firstName %>,</p>
 
-    <p><%= i18n.signupComplete.tr1 %></p>
+    <p><%= i18n.signupComplete.tr1 %> <%= appName %>.</p>
 
     <p>
-        <%= i18n.signupComplete.tr2 %>
-    </p>
-
-    <p>
-        <%= i18n.signupComplete.tr3 %>
+        <a href="<%= appURL %>"><%= appURL %></a>
     </p>
 
     <p>
         <%= i18n.common.signature1 %><br/>
-        <%= i18n.common.signature2 %>
+        <%= i18n.common.signature2 %> <%=team%>.
     </p>
 </div>

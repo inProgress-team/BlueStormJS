@@ -7,9 +7,7 @@
     },
     "signupComplete": {
         "title": "Inscription complète",
-        "tr1": "Merci de vous être inscrit sur Songpeek.",
-        "tr2": "Si vous avez une remarque à faire, n'hésitez pas à nous en faire part sur la page contact du site.",
-        "tr3": "Si vous rencontrez des difficultés diverses sur Songpeek, veuillez contacter notre support technique à l'adresse contact@songpeek.com."
+        "tr1": "Merci de vous être inscrit sur "
     },
     "forgotten": {
         "title": "Changement de mot de passe",
@@ -18,6 +16,6 @@
     "common": {
         "hello": "Bonjour",
         "signature1": "Bien amicalement,",
-        "signature2": "L'équipe Songpeek."
+        "signature2": "L'équipe"
     }
 }

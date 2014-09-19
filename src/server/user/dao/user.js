@@ -139,7 +139,6 @@ module.exports.signUp = function(email, password, options, callback) {
             if (err)
                 return callback(err);
             if (res) {
-                console.log(res);
                 return callback('User already exists');
             }
 

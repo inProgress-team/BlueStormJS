@@ -6,7 +6,7 @@ var logger = require(__dirname+'/../../logger/logger'),
     arborescence = require(__dirname+'/../../arborescence'),
     userDAO = require(__dirname + '/../user/dao/user');
 
-var checkAuthentification = function(req, res, options, next) {
+var checkAuthentification = function(req, res, options, callback) {
     if (typeof options == 'function') {
         callback = options;
         options = {};
@@ -14,16 +14,16 @@ var checkAuthentification = function(req, res, options, next) {
         options = {};
     }
 
-    userDAO.tokenIsValid(req.token, function(err, token) {
+    userDAO.tokenIsValid(req.body.token, function(err, token) {
         if (err)
-            throw err;
+            return callback(err);
 
         req.decodedToken = token;
         if (!options.role) {
-            return next(req, res);
+            return callback();
         }
         else {
-            next(req, res);
+            return callback();
         }
     });
 };
@@ -37,9 +37,14 @@ module.exports = function(config, cb) {
      */
     app.getAux = app.get;
     app.get = function(url, options, next) {
-        if (typeof options == 'object' && options.authentification) {
+        if (typeof options == 'object' && (options.authentification || options.role)) {
             app.getAux(url, function(req, res) {
-                checkAuthentification(req, res, {"role": options.role}, next);
+                checkAuthentification(req, res, options.role, function(err) {
+                    if (err)
+                        return res.send({err: err});
+
+                    return next(req, res);
+                });
             });
         }
         else {

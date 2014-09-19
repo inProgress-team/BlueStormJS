@@ -10,8 +10,7 @@ var logger = require(__dirname+'/../../logger/logger');
 var MAIL_CONFIG_FILE_PATH = process.cwd() + '/config/mail.json',
     mailOptions;
 
-var pathlang,
-    pathUserModule;
+var pathMailUserModule;
 
 // reusable transporter object using SMTP transport
 var transporter;
@@ -61,15 +60,30 @@ module.exports = {
     },
     mail: function(mail, templateName, module, lang, params, cb) {
         var $this = this;
-        if (!pathlang) {
+        var pathil8n;
+        var pathMailModule;
 
+        if (module == 'user') {
+            if (!pathMailUserModule) {
+                if (fs.existsSync(process.cwd() + '/src/modules/user/mail')) {
+                    pathMailUserModule = process.cwd() + '/src/modules/user/mail';
+                } else {
+                    pathMailUserModule = __dirname + '/../user/mail';
+                }
+            }
+            pathMailModule = pathMailUserModule;
+            pathil8n = pathMailUserModule + '/i18n/' + lang;
+
+        } else {
+            pathMailModule = process.cwd() + '/src/modules/' + module + '/mail';
+            pathil8n = pathMailModule + '/i18n/' + lang;
         }
-        params.i18n = require(__dirname+'/i18n/'+lang);
-        emailTemplates(__dirname+'/../'+module+'/mail', function(err, template) {
-            if(err) return cb(err);
-            template(templateName, params, function(err, html, text) {
-                if(err) return cb(err);
-                $this.send(mail, params.i18n[templateName].title, html, text.replace(/&#39;/g, "'"), function(err, info) {
+        params.i18n = require(pathil8n);
+        emailTemplates(pathMailModule, function (err, template) {
+            if (err) return cb(err);
+            template(templateName, params, function (err, html, text) {
+                if (err) return cb(err);
+                $this.send(mail, params.i18n[templateName].title, html, text.replace(/&#39;/g, "'"), function (err, info) {
                     cb(err, info);
                 });
             });

@@ -3,7 +3,6 @@ var userDAO = require(__dirname + '/../dao/user'),
 
 module.exports = function(app) {
     app.post('/signup', function(req, res) {
-        console.log('fram');
         var user = req.body,
             options = {};
 
@@ -60,7 +59,7 @@ module.exports = function(app) {
     });
 
     app.get('/user', function(req, res) {
-        var data = req.query;
+        var data = req.body;
 
         if (!data || !data.token) {
             return res.send({
