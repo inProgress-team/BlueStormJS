@@ -13,11 +13,12 @@ var checkAuthentification = function(req, res, options, callback) {
     } else if (!options) {
         options = {};
     }
-    userDAO.tokenIsValid(req.body.token, function(err, token) {
+    userDAO.tokenIsValid(req.headers['x-auth-token'], function(err, user) {
         if (err)
             return callback(err);
 
-        req.decodedToken = token;
+        req.user = user;
+        console.log(req.user);
         if (!options.role) {
             return callback();
         }

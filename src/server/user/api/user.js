@@ -59,15 +59,15 @@ module.exports = function(app) {
     });
 
     app.get('/user', function(req, res) {
-        var data = req.body;
+        var token = req.headers['x-auth-token'];
 
-        if (!data || !data.token) {
+        if (!token) {
             return res.send({
                 err: 'token not received'
             });
         }
 
-        userDAO.tokenIsValid(data.token, function(err, user) {
+        userDAO.tokenIsValid(token, function(err, user) {
             if (err) {
                 return res.send({
                     err: err
