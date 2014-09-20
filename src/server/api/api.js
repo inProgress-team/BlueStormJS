@@ -97,7 +97,7 @@ module.exports = function(config, cb) {
      * Override DELETE
      */
     app.deleteAux = app.delete;
-    app.del = function(url, options, next) {
+    app.delete = function(url, options, next) {
         if (typeof options == 'object' && (options.authentification || options.role)) {
             app.deleteAux(url, function(req, res) {
                 checkAuthentification(req, res, options.role, function(err) {
