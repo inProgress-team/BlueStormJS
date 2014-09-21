@@ -1,4 +1,6 @@
-angular.module('bluestorm', [])
+angular.module('bluestorm', [
+    'ngCookies'
+    ])
     .run(function ($http, $cookies) {
         $http.defaults.headers.common["X-AUTH-TOKEN"] = $cookies.bluestorm_token;
     })
