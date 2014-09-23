@@ -10,5 +10,5 @@ module.exports = {
         require(__dirname + '/db')(callback);
     },
     user: require(__dirname + '/src/server/user/models/user'),
-    mailer: require(__dirname + '/src/server/mail/mailer')
+    mailer: require(__dirname + '/src/email/mailer')
 };

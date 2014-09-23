@@ -4,7 +4,8 @@ var dbConnection = require(__dirname + '/../../../../db'),
     jwt = require('jwt-simple'),
     generatePassword = require('password-generator'),
     async = require('async'),
-    fs = require('fs');
+    fs = require('fs'),
+    mailer = require(__dirname + '/../../../email/mailer');
 
 var ROLES_CONFIG_PATH = process.cwd() + '/config/roles.json';
 
@@ -124,10 +125,19 @@ var decodeToken = function(token) {
     return jwt.decode(token, SECRET_TOKEN);
 };
 
-module.exports.signUp = function(user, callback) {
+module.exports.signUp = function(user, options, callback) {
     if (!user || !user.email || !user.password) {
         return callback('User\'s informations not received');
     }
+
+    if (typeof options == 'function') {
+        callback = options;
+        options = {};
+    } else if (!options) {
+        options = {};
+    }
+
+    var password = user.password;
 
     dbConnection(function(db) {
         db.collection('user').findOne({
@@ -151,6 +161,16 @@ module.exports.signUp = function(user, callback) {
                     db.collection('user').insert(user, function(err, elts) {
                         if (err)
                             return callback(err);
+
+                        if (options.sendConfirmation) {
+                            var arguments = {};
+
+                            arguments.firstName = user.firstName;
+                            if (options.sendPassword) {
+                                arguments.password = password;
+                            }
+                            mailer.mail(user.email, 'signupComplete', 'user', 'fr', arguments);
+                        }
 
                         delete user.password;
                         return callback(null, elts[0], encodeToken(elts[0]));
@@ -188,11 +208,12 @@ module.exports.signIn = function(user, callback) {
     });
 };
 
-module.exports.createUserWithRandomPassword = function(user, callback) {
+module.exports.signUpWithRandomPassword = function(user, options, callback) {
     var password = generatePassword(12, false);
 
     user.password = password;
-    module.exports.signUp(user, function(err, user, token) {
+    options.sendPassword = true;
+    module.exports.signUp(user, options, function(err, user, token) {
         if (err)
             return callback(err);
 

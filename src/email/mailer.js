@@ -5,18 +5,13 @@ var path           = require('path');
 var emailTemplates = require('email-templates');
 var fs = require('fs');
 
-var logger = require(__dirname+'/../../logger/logger');
+var logger = require(__dirname+'/../logger/logger');
 
-var MAIL_CONFIG_FILE_PATH = process.cwd() + '/config/mail.json',
+var MAIL_CONFIG_FILE_PATH = process.cwd() + '/config/email.json',
     mailOptions;
 
-var pathMailUserModule;
-
-// reusable transporter object using SMTP transport
-var transporter;
-
 module.exports = {
-    send: function(to, subject, html, text, cb) {
+    send: function(to, subject, html, text, callback) {
 
         if (!transporter) {
             // Check if config file for database exists
@@ -55,36 +50,34 @@ module.exports = {
         };
 
         transporter.sendMail(optionsForTransporter, function(err, info){
-            cb(err, info);
+            if (callback)
+                return callback(err, info);
         });
     },
-    mail: function(mail, templateName, module, lang, params, cb) {
+    mail: function(mail, templateName, module, lang, params, callback) {
         var $this = this;
-        var pathil8n;
+        var pathi18n;
         var pathMailModule;
 
-        if (module == 'user') {
-            if (!pathMailUserModule) {
-                if (fs.existsSync(process.cwd() + '/src/modules/user/mail')) {
-                    pathMailUserModule = process.cwd() + '/src/modules/user/mail';
-                } else {
-                    pathMailUserModule = __dirname + '/../user/mail';
-                }
-            }
-            pathMailModule = pathMailUserModule;
-            pathil8n = pathMailUserModule + '/i18n/' + lang;
+        pathMailModule = process.cwd() + '/src/modules/' + module + '/email';
+        pathi18n = pathMailModule + '/i18n/' + lang;
 
-        } else {
-            pathMailModule = process.cwd() + '/src/modules/' + module + '/mail';
-            pathil8n = pathMailModule + '/i18n/' + lang;
-        }
-        params.i18n = require(pathil8n);
+        params.i18n = require(pathi18n);
         emailTemplates(pathMailModule, function (err, template) {
-            if (err) return cb(err);
+            if (err) {
+                if (callback)
+                    return callback(err);
+                throw err;
+            }
             template(templateName, params, function (err, html, text) {
-                if (err) return cb(err);
+                if (err) {
+                    if (callback)
+                        return callback(err);
+                    throw err;
+                }
                 $this.send(mail, params.i18n[templateName].title, html, text.replace(/&#39;/g, "'"), function (err, info) {
-                    cb(err, info);
+                    if (callback)
+                        return callback(err, info);
                 });
             });
         });
