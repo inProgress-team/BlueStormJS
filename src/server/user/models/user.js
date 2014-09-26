@@ -199,6 +199,7 @@ module.exports.signUp = function(user, options, callback) {
                         }
 
                         delete user.password;
+                        delete user._id;
                         return callback(null, elts[0], encodeToken(elts[0]));
                     });
                 });

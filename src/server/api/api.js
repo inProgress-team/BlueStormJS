@@ -40,7 +40,7 @@ module.exports = function(config, cb) {
     app.get = function(url, options, next) {
         if (typeof options == 'object' && (options.authentification || options.role)) {
             app.getAux(url, function(req, res) {
-                checkAuthentification(req, res, options.role, function(err) {
+                checkAuthentification(req, res, options, function(err) {
                     if (err)
                         return res.send({err: err});
 
