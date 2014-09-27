@@ -58,7 +58,7 @@ angular.module('bluestorm', [
 
         return service;
     })
-    .factory('socket', function($rootScope) {
+    .factory('socket', function($rootScope, $cookies) {
 
         // @if NODE_ENV='production'
         var server = window.location.protocol + '///* @echo socketConf */:/* @echo mainPort */';
@@ -85,11 +85,12 @@ angular.module('bluestorm', [
             },
             emit: function(eventName, data, callback) {
 
-                if (typeof(data) === 'function') {
+                if (typeof(data) === 'function' || typeof(data) === 'undefined') {
                     callback = data;
                     data = {};
                 }
-
+                /*console.log('-> Event sent : ' + eventName);
+                    console.log(data);*/
                 socket.emit(eventName, data, function() {
                     var args = arguments;
                     $rootScope.$apply(function() {

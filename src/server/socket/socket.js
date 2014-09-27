@@ -113,7 +113,6 @@ module.exports = function(config) {
                     });
                 }
                 else {
-                    console.log('C');
                     socket.onAux.apply(this, arguments);
                 }
             };
