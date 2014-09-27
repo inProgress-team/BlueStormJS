@@ -1,6 +1,6 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var async = require('async');
+var express = require('express'),
+    bodyParser = require('body-parser'),
+    async = require('async');
 
 var logger = require(__dirname+'/../../logger/logger'),
     arborescence = require(__dirname+'/../../arborescence'),
@@ -32,7 +32,6 @@ var checkAuthentification = function(req, res, options, callback) {
 module.exports = function(config, cb) {
     var app = express(),
         start;
-
     /**
      * Override GET
      */
