@@ -1,7 +1,7 @@
 BlueStorm
 =============
 
-[![Dependency Status](https://david-dm.org/Bluestorm-Team/BlueStormJS.svg)](https://david-dm.org/Bluestorm-Team/BlueStormJS)
+[![Dependency Status](https://david-dm.org/inProgress-team/BlueStormJS.svg)](https://david-dm.org/inProgress-team/BlueStormJS)
 
 
 NodeFramework is a NodeJS framework which provides : 
