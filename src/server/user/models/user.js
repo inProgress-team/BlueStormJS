@@ -1,4 +1,5 @@
 var dbConnection = require(__dirname + '/../../../../db'),
+    logger = require(__dirname + '/../../../logger/logger'),
     bcrypt = require('bcrypt'),
     moment = require('moment'),
     jwt = require('jwt-simple'),
@@ -7,19 +8,33 @@ var dbConnection = require(__dirname + '/../../../../db'),
     fs = require('fs'),
     mailer = require(__dirname + '/../../../email/mailer');
 
-var ROLES_CONFIG_PATH = process.cwd() + '/config/roles.json';
+var ROLES_CONFIG_PATH = process.cwd() + '/config/roles.json',
+    USER_CONFIG_PATH = process.cwd() + '/config/user.json';
 
 var roles = require(ROLES_CONFIG_PATH);
 
 var SALT_WORK_FACTOR = 10,
-    SECRET_TOKEN = 'V)JGp^0mtb4^8pp@T#KeTBUNacFU6F8z#tH_(gB6';
+    SECRET_TOKEN;
 
 // init roles
 try {
     roles = JSON.parse(fs.readFileSync(ROLES_CONFIG_PATH));
 }
 catch (err) {
-    logger.error(new Error(ROLES_CONFIG_PATH + ' doesn\'t exists or it\'s not a valid JSON.'), 'Database');
+    logger.error(new Error(ROLES_CONFIG_PATH + ' doesn\'t exists or it\'s not a valid JSON.'), 'User');
+    process.exit(1);
+}
+
+// init SECRET_TOKEN
+try {
+    SECRET_TOKEN = (JSON.parse(fs.readFileSync(USER_CONFIG_PATH))).SECRET_TOKEN;
+    if (!SECRET_TOKEN) {
+        logger.error(new Error('SECRET_TOKEN not found in ' + USER_CONFIG_PATH), 'User');
+        process.exit(1);
+    }
+}
+catch (err) {
+    logger.error(new Error(USER_CONFIG_PATH + ' doesn\'t exists or it\'s not a valid JSON.'), 'User');
     process.exit(1);
 }
 
@@ -126,10 +141,11 @@ var decodeToken = function(token) {
 };
 
 module.exports.signUp = function(user, options, callback) {
-    if (!user || !user.email || !user.password) {
+    if (!user || !user.email) {
         return callback('User\'s informations not received');
     }
 
+    // If no options passed
     if (typeof options == 'function') {
         callback = options;
         options = {};
@@ -137,7 +153,17 @@ module.exports.signUp = function(user, options, callback) {
         options = {};
     }
 
-    var password = user.password;
+    var password;
+    // If random password
+    if (options.randomPassword) {
+        password = generatePassword(12, false);
+        options.sendPassword = true;
+    }
+    else {
+        if(!user.password)
+            return callback('User\'s informations not received');
+        password = user.password;
+    }
 
     dbConnection(function(db) {
         db.collection('user').findOne({
@@ -146,14 +172,14 @@ module.exports.signUp = function(user, options, callback) {
             if (err)
                 return callback(err);
             if (res) {
-                return callback('User already exists');
+                return callback('user_already_existing');
             }
 
             bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
                 if (err)
                     return next(err);
 
-                bcrypt.hash(user.password, salt, function(err, hash) {
+                bcrypt.hash(password, salt, function(err, hash) {
                     if (err)
                         return next(err);
 
@@ -173,6 +199,7 @@ module.exports.signUp = function(user, options, callback) {
                         }
 
                         delete user.password;
+                        delete user._id;
                         return callback(null, elts[0], encodeToken(elts[0]));
                     });
                 });
@@ -205,20 +232,6 @@ module.exports.signIn = function(user, callback) {
                 return callback(null, res, encodeToken(res));
             });
         });
-    });
-};
-
-module.exports.signUpWithRandomPassword = function(user, options, callback) {
-    var password = generatePassword(12, false);
-
-    user.password = password;
-    options.sendPassword = true;
-    module.exports.signUp(user, options, function(err, user, token) {
-        if (err)
-            return callback(err);
-
-        user.password = password;
-        return callback(null, user, token);
     });
 };
 
