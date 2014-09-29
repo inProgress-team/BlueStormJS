@@ -11,7 +11,7 @@ var server = require(__dirname+'/../server/server');
 
 module.exports = function() {
 
-    var jsFiles = ['src/modules/**/sockets/**/*.js','src/modules/**/api/**/*.js'];
+    var jsFiles = ['src/modules/**/sockets/**/*.js','src/modules/**/api/**/*.js','src/modules/**/models/**/*.js'];
 
     var tasks = {
         lint: function() {
