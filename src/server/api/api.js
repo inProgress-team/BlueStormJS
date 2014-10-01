@@ -6,25 +6,18 @@ var logger = require(__dirname+'/../../logger/logger'),
     arborescence = require(__dirname+'/../../arborescence'),
     user = require(__dirname + '/../user/models/user');
 
-var checkAuthentification = function(req, res, options, callback) {
-    if (typeof options == 'function') {
-        callback = options;
-        options = {};
-    } else if (!options) {
-        options = {};
-    }
-
+var checkAuthentification = function(req, res, next) {
     var token = req.headers['x-auth-token'] || req.body.token;
     user.tokenIsValid(token, function(err, user) {
         if (err)
-            return callback(err);
+            return next(err);
 
         req.user = user;
-        if (!options.role) {
-            return callback();
+        if (!req.role) {
+            return next();
         }
         else {
-            return callback();
+            return next();
         }
     });
 };
@@ -36,20 +29,20 @@ module.exports = function(config, cb) {
      * Override GET
      */
     app.getAux = app.get;
-    app.get = function(url, options, next) {
-        if (typeof options == 'object' && (options.authentification || options.role)) {
-            app.getAux(url, function(req, res) {
-                checkAuthentification(req, res, options, function(err) {
-                    if (err)
-                        return res.send({err: err});
-
-                    return next(req, res);
+    app.get = function(url, callbacks, callback) {
+        for (var i=1; i<arguments.length; i++) {
+            if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].role)) {
+                var options = arguments[i];
+                app.use(function(req, res, next) {
+                    if (options.role)
+                        req.role = options.role;
+                    next();
                 });
-            });
+                arguments[i] = checkAuthentification;
+            }
         }
-        else {
-            app.getAux.apply(this, arguments);
-        }
+
+        app.getAux.apply(this, arguments);
     };
 
     /**
@@ -57,19 +50,19 @@ module.exports = function(config, cb) {
      */
     app.postAux = app.post;
     app.post = function(url, options, next) {
-        if (typeof options == 'object' && (options.authentification || options.role)) {
-            app.postAux(url, function(req, res) {
-                checkAuthentification(req, res, options.role, function(err) {
-                    if (err)
-                        return res.send({err: err});
-
-                    return next(req, res);
+        for (var i=1; i<arguments.length; i++) {
+            if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].role)) {
+                var options = arguments[i];
+                app.use(function(req, res, next) {
+                    if (options.role)
+                        req.role = options.role;
+                    next();
                 });
-            });
+                arguments[i] = checkAuthentification;
+            }
         }
-        else {
-            app.postAux.apply(this, arguments);
-        }
+
+        app.postAux.apply(this, arguments);
     };
 
     /**
@@ -77,19 +70,19 @@ module.exports = function(config, cb) {
      */
     app.putAux = app.put;
     app.put = function(url, options, next) {
-        if (typeof options == 'object' && (options.authentification || options.role)) {
-            app.putAux(url, function(req, res) {
-                checkAuthentification(req, res, options.role, function(err) {
-                    if (err)
-                        return res.send({err: err});
-
-                    return next(req, res);
+        for (var i=1; i<arguments.length; i++) {
+            if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].role)) {
+                var options = arguments[i];
+                app.use(function(req, res, next) {
+                    if (options.role)
+                        req.role = options.role;
+                    next();
                 });
-            });
+                arguments[i] = checkAuthentification;
+            }
         }
-        else {
-            app.putAux.apply(this, arguments);
-        }
+
+        app.putAux.apply(this, arguments);
     };
 
     /**
@@ -97,19 +90,19 @@ module.exports = function(config, cb) {
      */
     app.deleteAux = app.delete;
     app.delete = function(url, options, next) {
-        if (typeof options == 'object' && (options.authentification || options.role)) {
-            app.deleteAux(url, function(req, res) {
-                checkAuthentification(req, res, options.role, function(err) {
-                    if (err)
-                        return res.send({err: err});
-
-                    return next(req, res);
+        for (var i=1; i<arguments.length; i++) {
+            if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].role)) {
+                var options = arguments[i];
+                app.use(function(req, res, next) {
+                    if (options.role)
+                        req.role = options.role;
+                    next();
                 });
-            });
+                arguments[i] = checkAuthentification;
+            }
         }
-        else {
-            app.deleteAux.apply(this, arguments);
-        }
+
+        app.deleteAux.apply(this, arguments);
     };
 
     app.use(bodyParser.json());

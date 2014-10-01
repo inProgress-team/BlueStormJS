@@ -235,6 +235,62 @@ module.exports.signIn = function(user, callback) {
     });
 };
 
+module.exports.update = function(user, callback) {
+    if (!user || !user.email) {
+        return callback('User\'s informations not received');
+    }
+
+    // If no options passed
+    if (typeof options == 'function') {
+        callback = options;
+        options = {};
+    } else if (!options) {
+        options = {};
+    }
+
+    // If change password
+    var newPassword;
+    if (user.password) {
+        newPassword = user.password;
+        bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
+            if (err)
+                return next(err);
+
+            bcrypt.hash(password, salt, function (err, hash) {
+                if (err)
+                    return next(err);
+
+                user.password = hash;
+            });
+        });
+    }
+
+    db.collection('user').findAndModify({
+            "query": {"email": user.email},
+            "update": user,
+            "new": true
+        },
+        function(err, res) {
+            if (err)
+                return callback(err);
+
+            if (options.sendConfirmation) {
+                var arguments = {};
+
+                arguments.firstName = user.firstName;
+                if (options.sendPassword) {
+                    arguments.password = newPassword;
+                }
+                mailer.mail(user.email, 'edit', 'user', 'fr', arguments);
+            }
+
+            delete user.password;
+            delete user._id;
+            return callback(null, res, encodeToken(res));
+        }
+    );
+};
+
 module.exports.tokenIsValid = function(token, callback) {
     var decodedToken;
 
