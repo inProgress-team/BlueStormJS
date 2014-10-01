@@ -12,19 +12,19 @@ var ROLES_CONFIG_FILE_PATH = process.cwd() + '/config/roles.json';
 var rolesConfig;
 
 var roleContainsRole = function(activeRole, requiredRole, callback) {
-    if (!rolesConfig || rolesConfig.length == 0)
+    if (!rolesConfig || rolesConfig.roles.length == 0)
         return callback(ROLES_CONFIG_FILE_PATH + ' is empty');
 
-    for (var i=0; i<rolesConfig.length; i++) {
-        if (rolesConfig[i].name == activeRole) {
-            if (!rolesConfig[i].children || rolesConfig[i].children.length == 0)
+    for (var i=0; i<rolesConfig.roles.length; i++) {
+        if (rolesConfig.roles[i].name == activeRole) {
+            if (!rolesConfig.roles[i].children || rolesConfig.roles[i].children.length == 0)
                 return callback('Access denied');
 
-            for (var j=0; j<rolesConfig[i].children.length; j++) {
-                if (rolesConfig[i].children[j] == requiredRole)
+            for (var j=0; j<rolesConfig.roles[i].children.length; j++) {
+                if (rolesConfig.roles[i].children[j] == requiredRole)
                     return callback();
 
-                roleContainsRole(rolesConfig[i].children[j], requiredRole, function(err) {
+                roleContainsRole(rolesConfig.roles[i].children[j], requiredRole, function(err) {
                     if (!err)
                         return callback();
                 });
@@ -32,7 +32,7 @@ var roleContainsRole = function(activeRole, requiredRole, callback) {
         }
     }
 
-    return callback('user\'s role (' + activeRole + ') not found in ' + ROLES_CONFIG_FILE_PATH);
+    return callback('Access denied');
 };
 
 var checkRole = function(userRole, requiredRole, callback) {
@@ -49,28 +49,61 @@ var checkRole = function(userRole, requiredRole, callback) {
     return roleContainsRole(userRole, requiredRole, callback);
 };
 
-var checkAuthentification = function(data, options, callback) {
-    if (typeof options == 'function') {
-        callback = options;
-        options = {};
-    } else if (!options) {
-        options = {};
-    }
+var checkRoles = function(userRole, requiredRoles, callback) {
+    if (requiredRoles.length == 1)
+        return checkRole(userRole, requiredRoles[0], callback);
 
+    var i=0;
+    var done = false;
+
+    async.doWhilst(
+        function(callback) {
+            if (i >= requiredRoles.length)
+                return callback('Access denied for this role (' + userRole + ')');
+
+            checkRole(userRole, requiredRoles[i], function(err) {
+                if (!err)
+                    done = true;
+
+                i++;
+                return callback();
+            });
+        },
+        function() {
+            return !done;
+        },
+        function(err) {
+            if (err) {
+                if (callback)
+                    return callback(err);
+                throw err;
+            }
+            if (callback)
+                return callback();
+        }
+    );
+};
+
+var checkAuthentification = function(data, callback) {
     var token = data.token;
     user.tokenIsValid(token, function(err, user) {
         if (err)
             return callback(err);
 
-        data.user = user;
-        if (!options.role) {
+        data._user = user;
+        if (!data._roles) {
             return callback();
         }
         else {
-            if (options.role = user.role)
-                return callback();
+            if (data._roles.indexOf(data._user.role) > -1)
+                return next();
 
-            return checkRole(user.role, options.role, callback);
+            checkRoles(data._user.role, data._roles, function(err) {
+                if (err)
+                    return res.send({"err": err});
+
+                return next();
+            });
         }
     });
 };

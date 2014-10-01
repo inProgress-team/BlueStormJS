@@ -1,10 +1,87 @@
 var express = require('express'),
     bodyParser = require('body-parser'),
-    async = require('async');
+    async = require('async'),
+    fs = require('fs');
 
 var logger = require(__dirname+'/../../logger/logger'),
     arborescence = require(__dirname+'/../../arborescence'),
     user = require(__dirname + '/../user/models/user');
+
+var ROLES_CONFIG_FILE_PATH = process.cwd() + '/config/roles.json';
+var rolesConfig;
+
+var roleContainsRole = function(activeRole, requiredRole, callback) {
+    if (!rolesConfig || rolesConfig.roles.length == 0)
+        return callback(ROLES_CONFIG_FILE_PATH + ' is empty');
+
+    for (var i=0; i<rolesConfig.roles.length; i++) {
+        if (rolesConfig.roles[i].name == activeRole) {
+            if (!rolesConfig.roles[i].children || rolesConfig.roles[i].children.length == 0)
+                return callback('Access denied');
+
+            for (var j=0; j<rolesConfig.roles[i].children.length; j++) {
+                if (rolesConfig.roles[i].children[j] == requiredRole)
+                    return callback();
+
+                roleContainsRole(rolesConfig.roles[i].children[j], requiredRole, function(err) {
+                    if (!err)
+                        return callback();
+                });
+            }
+        }
+    }
+
+    return callback('Access denied');
+};
+
+var checkRole = function(userRole, requiredRole, callback) {
+    if (!rolesConfig) {
+        // Check if config file for roles exists
+        try {
+            rolesConfig = JSON.parse(fs.readFileSync(ROLES_CONFIG_FILE_PATH));
+        }
+        catch (err) {
+            logger.error(new Error(ROLES_CONFIG_FILE_PATH + ' doesn\'t exists or it\'s not a valid JSON.'), 'Roles');
+            process.exit(1);
+        }
+    }
+    return roleContainsRole(userRole, requiredRole, callback);
+};
+
+var checkRoles = function(userRole, requiredRoles, callback) {
+    if (requiredRoles.length == 1)
+        return checkRole(userRole, requiredRoles[0], callback);
+
+    var i=0;
+    var done = false;
+
+    async.doWhilst(
+        function(callback) {
+            if (i >= requiredRoles.length)
+                return callback('Access denied for this role (' + userRole + ')');
+
+            checkRole(userRole, requiredRoles[i], function(err) {
+                if (!err)
+                    done = true;
+
+                i++;
+                return callback();
+            });
+        },
+        function() {
+            return !done;
+        },
+        function(err) {
+            if (err) {
+                if (callback)
+                    return callback(err);
+                throw err;
+            }
+            if (callback)
+                return callback();
+        }
+    );
+};
 
 var checkAuthentification = function(req, res, next) {
     var token = req.headers['x-auth-token'] || req.body.token;
@@ -13,11 +90,19 @@ var checkAuthentification = function(req, res, next) {
             return next(err);
 
         req.user = user;
-        if (!req.role) {
+        if (!req.roles) {
             return next();
         }
         else {
-            return next();
+            if (req.roles.indexOf(req.user.role) > -1)
+                return next();
+
+            checkRoles(req.user.role, req.roles, function(err) {
+                if (err)
+                    return res.send({"err": err});
+
+                return next();
+            });
         }
     });
 };
@@ -31,11 +116,11 @@ module.exports = function(config, cb) {
     app.getAux = app.get;
     app.get = function(url, callbacks, callback) {
         for (var i=1; i<arguments.length; i++) {
-            if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].role)) {
+            if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].roles)) {
                 var options = arguments[i];
                 app.use(function(req, res, next) {
-                    if (options.role)
-                        req.role = options.role;
+                    if (options.roles)
+                        req.roles = options.roles;
                     next();
                 });
                 arguments[i] = checkAuthentification;
@@ -51,7 +136,7 @@ module.exports = function(config, cb) {
     app.postAux = app.post;
     app.post = function(url, options, next) {
         for (var i=1; i<arguments.length; i++) {
-            if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].role)) {
+            if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].roles)) {
                 var options = arguments[i];
                 app.use(function(req, res, next) {
                     if (options.role)
@@ -71,7 +156,7 @@ module.exports = function(config, cb) {
     app.putAux = app.put;
     app.put = function(url, options, next) {
         for (var i=1; i<arguments.length; i++) {
-            if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].role)) {
+            if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].roles)) {
                 var options = arguments[i];
                 app.use(function(req, res, next) {
                     if (options.role)
@@ -91,7 +176,7 @@ module.exports = function(config, cb) {
     app.deleteAux = app.delete;
     app.delete = function(url, options, next) {
         for (var i=1; i<arguments.length; i++) {
-            if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].role)) {
+            if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].roles)) {
                 var options = arguments[i];
                 app.use(function(req, res, next) {
                     if (options.role)
