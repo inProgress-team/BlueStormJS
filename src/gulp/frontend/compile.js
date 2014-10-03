@@ -5,7 +5,6 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     ngAnnotate = require('gulp-ng-annotate'),
     inject = require("gulp-inject"),
-    uncss = require('gulp-uncss'),
     minifyCSS = require('gulp-minify-css');
 
 module.exports = function(name) {

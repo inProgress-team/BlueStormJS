@@ -1,6 +1,5 @@
 var fs = require('fs'),
-    express = require('express'),
-    serveStatic = require('serve-static');
+    express = require('express');
 //var createStatic = require('connect-static');
 
 var logger = require(__dirname+'/../../logger/logger');
@@ -16,7 +15,6 @@ module.exports = function(config) {
     var app = express(),
         cacheIndex = null,
         path = 'dist/'+dir+'/'+config.name,
-        //serve = serveStatic(path),
         start;
 
     app.use(express.static('dist/'+dir+'/'+config.name));
