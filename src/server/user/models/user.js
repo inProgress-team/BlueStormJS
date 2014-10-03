@@ -1,4 +1,4 @@
-var dbConnection = require(__dirname + '/../../../../db'),
+var dbConnection = require(__dirname + '/../../../../mongo'),
     logger = require(__dirname + '/../../../logger/logger'),
     bcrypt = require('bcrypt'),
     moment = require('moment'),

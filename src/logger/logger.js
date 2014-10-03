@@ -3,12 +3,11 @@ var clc = require('cli-color'),
 
 var gutil = require('gulp-util');
 
-var dbConnection = require(__dirname+'/../db/db'),
+var dbConnection = require(__dirname+'/../../db'),
     db = null;
 
 
-dbConnection(function(err, database) {
-    if(err) return console.log(err);
+dbConnection(function(database) {
     db = database;
 });
 
