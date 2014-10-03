@@ -9,6 +9,9 @@ module.exports = {
     db: function(callback) {
         require(__dirname + '/db')(callback);
     },
+    mongo: function(callback) {
+        require(__dirname + '/mongo')(callback);
+    },
     user: require(__dirname + '/src/server/user/models/user'),
     mailer: require(__dirname + '/src/email/mailer')
 };
