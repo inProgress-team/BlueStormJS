@@ -2,14 +2,14 @@ var clc = require('cli-color'),
     moment = require('moment');
 
 var gutil = require('gulp-util');
-
+/*
 var dbConnection = require(__dirname+'/../../db'),
     db = null;
 
 
 dbConnection(function(database) {
     db = database;
-});
+});*/
 
 
 module.exports = {
@@ -68,12 +68,12 @@ module.exports = {
     },
     addLog: function (message) {
         //if(process.env.NODE_ENV=='production') {
-            if(db) {
+            /*if(db) {
                 db.collection('logs').insert({
                     "log": message,
                     "releaseDate": new Date
                 }, function(){});    
-            }
+            }*/
             
         //}
     },
