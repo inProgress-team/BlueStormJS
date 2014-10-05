@@ -1,6 +1,5 @@
 var fs = require('fs'),
     express = require('express');
-//var createStatic = require('connect-static');
 
 var logger = require(__dirname+'/../../logger/logger');
 
@@ -17,7 +16,7 @@ module.exports = function(config) {
         path = 'dist/'+dir+'/'+config.name,
         start;
 
-    app.use(express.static('dist/'+dir+'/'+config.name));
+    app.use(express.static(path));
 
     if(config.debug) {
         //LOGGER FOR EVERY STATIC REQUEST
@@ -27,7 +26,10 @@ module.exports = function(config) {
         });
     }
 
-    app.all('*', function(req, res){
+    app.get('*', function(req, res){
+        if(req.url.indexOf('/public/')==0) {
+            return res.status(404).send('Not found');
+        }
         if(!cacheIndex || process.env.NODE_ENV=='development') {
             cacheIndex = fs.readFileSync(path+'/main.html');
         }
