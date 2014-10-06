@@ -31,7 +31,20 @@ angular.module('bluestorm.user', [
         };
 
 
-        service.login = function(url, form, cb) {
+        service.signup = function(url, form, cb) {
+            $http.post(url, form)
+                .success(function (data) {
+                    if(data.err) return cb(data.err);
+                    cb(null, data.user);
+
+                })
+                .error(function () {
+                    cb('Unknown error.');
+                });
+        };
+
+
+        service.signin = function(url, form, cb) {
             $http.post(url, {
                 email: form.email,
                 password: form.password
@@ -45,7 +58,7 @@ angular.module('bluestorm.user', [
 
                 })
                 .error(function () {
-                    cb('Erreur inconnue.');
+                    cb('Unknown error.');
                 });
         };
 
