@@ -49,12 +49,12 @@ module.exports = {
             text: text
         };
 
-        if (process.env.NODE_ENV != 'development') {
+        //if (process.env.NODE_ENV != 'development') {
             transporter.sendMail(optionsForTransporter, function (err, info) {
                 if (callback)
                     return callback(err, info);
             });
-        }
+        //}
     },
     mail: function(mail, templateName, module, lang, params, callback) {
         var $this = this;

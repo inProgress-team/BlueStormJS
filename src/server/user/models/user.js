@@ -1,20 +1,21 @@
-var dbConnection = require(__dirname + '/../../../../mongo'),
-    logger = require(__dirname + '/../../../logger/logger'),
-    bcrypt = require('bcrypt'),
+var ROLES_CONFIG_PATH = process.cwd() + '/config/roles.json',
+    USER_CONFIG_PATH = process.cwd() + '/config/user.json',
+    SALT_WORK_FACTOR = 10,
+    SECRET_TOKEN;
+
+var bcrypt = require('bcrypt'),
     moment = require('moment'),
     jwt = require('jwt-simple'),
     generatePassword = require('password-generator'),
     async = require('async'),
-    fs = require('fs'),
+    uuid = require('node-uuid'),
+    fs = require('fs');
+
+var dbConnection = require(__dirname + '/../../../../mongo'),
+    logger = require(__dirname + '/../../../logger/logger'),
     mailer = require(__dirname + '/../../../email/mailer');
 
-var ROLES_CONFIG_PATH = process.cwd() + '/config/roles.json',
-    USER_CONFIG_PATH = process.cwd() + '/config/user.json';
-
 var roles = require(ROLES_CONFIG_PATH);
-
-var SALT_WORK_FACTOR = 10,
-    SECRET_TOKEN;
 
 // init roles
 try {
@@ -184,18 +185,32 @@ module.exports.signUp = function(user, options, callback) {
                         return next(err);
 
                     user.password = hash;
+                    if (options.activationLink) {
+                        user.hash = uuid.v4();
+                        user.activated = false;
+                    } else {
+                        user.activated = true;
+                    }
                     db.collection('user').insert(user, function(err, elts) {
                         if (err)
                             return callback(err);
 
-                        if (options.sendConfirmation) {
+                        if (options.sendConfirmation || options.activationLink) {
                             var arguments = {};
 
                             arguments.firstName = user.firstName;
                             if (options.sendPassword) {
                                 arguments.password = password;
                             }
-                            mailer.mail(user.email, 'signupComplete', 'user', 'fr', arguments);
+
+                            if (options.sendConfirmation)
+                                mailer.mail(user.email, 'signupComplete', 'user', 'fr', arguments);
+                            else if (options.activationLink) {
+                                if (options.activationLink.slice(-1) == '/')
+                                    options.activationLink = options.activationLink.substring(0, options.activationLink.length - 1);
+                                arguments.url = options.activationLink + '/' + user.hash;
+                                mailer.mail(user.email, 'signupConfirm', 'user', 'fr', arguments);
+                            }
                         }
 
                         delete user.password;
@@ -205,6 +220,53 @@ module.exports.signUp = function(user, options, callback) {
                 });
             });
         });
+    });
+};
+
+module.exports.signUpConfirm = function(hash, options, callback) {
+    if (!hash) {
+        return callback('Hash not received');
+    }
+
+    // If no options passed
+    if (typeof options == 'function') {
+        callback = options;
+        options = {};
+    } else if (!options) {
+        options = {};
+    }
+
+    dbConnection(function(db) {
+        db.collection('user').findAndModify({
+                "hash": hash
+            },
+            {},
+            {
+                "$set": {
+                    "activated": true
+                }
+            },
+            {
+                "new": true
+            },
+            function(err, res) {
+                if (err)
+                    return callback(err);
+
+                if (!res)
+                    return callback('Document not found');
+
+                if (options.sendConfirmation) {
+                    var arguments = {};
+                    arguments.firstName = res.firstName;
+                    mailer.mail(res.email, 'signupComplete', 'user', 'fr', arguments);
+                }
+
+                delete res.password;
+                delete res._id;
+                return callback(null, res, encodeToken(res));
+            }
+        );
     });
 };
 
@@ -221,6 +283,8 @@ module.exports.signIn = function(user, callback) {
                 return callback(err);
             if (!res)
                 return callback('Email or password invalid');
+            if (!res.activated)
+                return callback('Account not activated');
 
             comparePassword(user.password, res.password, function(err, isMatch) {
                 if (err)
@@ -229,6 +293,7 @@ module.exports.signIn = function(user, callback) {
                     return callback('Email or password invalid');
 
                 delete res['password'];
+                delete res['_id'];
                 return callback(null, res, encodeToken(res));
             });
         });
