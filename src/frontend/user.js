@@ -26,18 +26,20 @@ angular.module('bluestorm.user', [
         }();
 
 
-        service.login = function(form, cb) {
-            $http.post('api/signin', {
+        service.login = function(url, form, cb) {
+            $http.post(url, {
                 email: form.email,
                 password: form.password
             })
                 .success(function (data) {
-                    if(data.err) return cb('Email ou mot de passe invalide.');
+                    console.log(data);
+                    if(data.err) return cb(data.err);
 
 
                     service.token = $cookies.bluestorm_token = data.token;
                     service.user = data.user;
-                    $state.go('home');
+                    cb(null, data.user);
+
                 })
                 .error(function () {
                     cb('Erreur inconnue.');
