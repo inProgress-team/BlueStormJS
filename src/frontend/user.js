@@ -7,23 +7,28 @@ angular.module('bluestorm.user', [
         service.token = $cookies.bluestorm_token;
         service.user = null;
 
-        service.getUser = !function() {
+        service.getUser = function(url, cb) {
             if(!service.token) {
                 service.user = null;
                 return;
             }
 
-            $http.get('api/user')
+            $http.get(url)
                 .success(function (data) {
                     if(!data.err) {
                         service.user = data.user;
                     }
+                    if(typeof cb == 'function') {
+                        cb();
+                    }
 
                 })
                 .error(function () {
-                    console.log('Erreur inconnue.');
+                    if(typeof cb == 'function') {
+                        cb('Unknow err.');
+                    }
                 });
-        }();
+        };
 
 
         service.login = function(url, form, cb) {
@@ -32,9 +37,7 @@ angular.module('bluestorm.user', [
                 password: form.password
             })
                 .success(function (data) {
-                    console.log(data);
                     if(data.err) return cb(data.err);
-
 
                     service.token = $cookies.bluestorm_token = data.token;
                     service.user = data.user;
@@ -46,11 +49,10 @@ angular.module('bluestorm.user', [
                 });
         };
 
-        service.logout = function(callback) {
+        service.logout = function() {
             service.user = null;
             service.token = null;
             delete $cookies.bluestorm_token;
-            $state.go('home');
         };
 
         return service;
