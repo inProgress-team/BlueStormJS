@@ -172,7 +172,7 @@ module.exports.signUp = function(user, options, callback) {
             if (err)
                 return callback(err);
             if (res) {
-                return callback('user_already_existing');
+                return callback('user.already_existing');
             }
 
             bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
