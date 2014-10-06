@@ -1,7 +1,11 @@
 var fs = require('fs'),
-    logger = require(__dirname+'/src/logger/logger');
+    logger = require(__dirname+'/src/logger/logger'),
+    mongo;
 
 module.exports = function(callback) {
+    if (mongo)
+        return callback(mongo);
+
     var DATA_BASE_CONFIG_FILE_PATH = process.cwd() + '/config/database.json',
         dataBaseConfig;
 
@@ -16,19 +20,21 @@ module.exports = function(callback) {
 
     var env = process.env.NODE_ENV || 'development';
     if (env == 'development') {
-        require(__dirname + '/mongo')(dataBaseConfig.hostDev, function (err, res) {
+        require(__dirname + '/src/db/mongo')(dataBaseConfig.hostDev, function (err, res) {
             if (err)
                 return callback(err);
 
-            return callback(null, res);
+            mongo = res;
+            return callback(res);
         });
     }
     else {
-        require(__dirname + '/mongo')(dataBaseConfig.hostProd, function (err, res) {
+        require(__dirname + '/src/db/mongo')(dataBaseConfig.hostProd, function (err, res) {
             if (err)
                 return callback(err);
 
-            return callback(null, res);
+            mongo = res;
+            return callback(res);
         });
     }
 };
