@@ -10,7 +10,12 @@ module.exports = {
     server: server,
     logger: logger,
     db: function(callback) {
-        require(__dirname + '/db')(callback);
+        require(__dirname + '/db')(function(err, res) {
+            if (err)
+                return callback(err);
+
+            return callback(res.db);
+        });
     },
     mongo: function(callback) {
         require(__dirname + '/mongo')(callback);
@@ -19,9 +24,11 @@ module.exports = {
     mailer: require(__dirname + '/src/email/mailer')
 };
 
-require(__dirname + '/db')(function(db) {
-    arborescence.getRequiredFiles('models', function (files) {
-        arborescence.loadFiles(files, null, function() {
+require(__dirname + '/db')(function(err, res) {
+    if (res.type == 'mongoose') {
+        arborescence.getRequiredFiles('models', function (files) {
+            arborescence.loadFiles(files, null, function () {
+            });
         });
-    });
+    }
 });

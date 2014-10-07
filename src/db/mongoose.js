@@ -8,12 +8,12 @@ module.exports = function(host, callback) {
             if (err)
                 return callback(err);
 
-            return callback(null, mongoose);
+            return callback(null, {"type": "mongoose", "db": mongoose});
         });
     }
     else {
         mongoose.connection.on('connected', function () {
-            return callback(null, mongoose);
+            return callback(null, {"type": "mongoose", "db": mongoose});
         });
     }
 };

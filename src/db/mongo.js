@@ -3,6 +3,6 @@ module.exports = function(host, callback) {
         if (err)
             return callback(err);
 
-        return callback(null, db);
+        return callback(null, {"type": "mongo", "db": db});
     });
 };
