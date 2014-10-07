@@ -24,8 +24,8 @@ module.exports = function(callback) {
             if (err)
                 return callback(err);
 
-            mongo = res;
-            return callback(res);
+            mongo = res.db;
+            return callback(res.db);
         });
     }
     else {
@@ -33,8 +33,8 @@ module.exports = function(callback) {
             if (err)
                 return callback(err);
 
-            mongo = res;
-            return callback(res);
+            mongo = res.db;
+            return callback(res.db);
         });
     }
 };
