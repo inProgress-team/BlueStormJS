@@ -127,7 +127,7 @@ var comparePassword = function(password, hash, callback) {
     });
 };
 
-var encodeToken = function(user) {
+module.exports.encodeToken = function(user) {
     var expires = moment().add(1, 'months').valueOf();
     return jwt.encode(
         {
@@ -137,7 +137,7 @@ var encodeToken = function(user) {
         SECRET_TOKEN);
 };
 
-var decodeToken = function(token) {
+module.exports.decodeToken = function(token) {
     return jwt.decode(token, SECRET_TOKEN);
 };
 
@@ -215,7 +215,7 @@ module.exports.signUp = function(user, options, callback) {
 
                         delete user.password;
                         delete user._id;
-                        return callback(null, elts[0], encodeToken(elts[0]));
+                        return callback(null, elts[0], module.exports.encodeToken(elts[0]));
                     });
                 });
             });
@@ -264,7 +264,7 @@ module.exports.signUpConfirm = function(hash, options, callback) {
 
                 delete res.password;
                 delete res._id;
-                return callback(null, res, encodeToken(res));
+                return callback(null, res, module.exports.encodeToken(res));
             }
         );
     });
@@ -294,7 +294,7 @@ module.exports.signIn = function(user, callback) {
 
                 delete res['password'];
                 delete res['_id'];
-                return callback(null, res, encodeToken(res));
+                return callback(null, res, module.exports.encodeToken(res));
             });
         });
     });
@@ -351,7 +351,7 @@ module.exports.update = function(user, callback) {
 
             delete user.password;
             delete user._id;
-            return callback(null, res, encodeToken(res));
+            return callback(null, res, module.exports.encodeToken(res));
         }
     );
 };
@@ -360,7 +360,7 @@ module.exports.tokenIsValid = function(token, callback) {
     var decodedToken;
 
     try {
-        decodedToken = decodeToken(token);
+        decodedToken = module.exports.decodeToken(token);
     } catch (err) {
         return callback('Token is invalid');
     }

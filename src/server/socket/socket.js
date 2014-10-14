@@ -90,19 +90,19 @@ var checkAuthentification = function(data, callback) {
         if (err)
             return callback(err);
 
-        data._user = user;
-        if (!data._roles) {
+        data.user = user;
+        if (!data.roles) {
             return callback();
         }
         else {
-            if (data._roles.indexOf(data._user.role) > -1)
-                return next();
+            if (data.roles.indexOf(data.user.role) > -1)
+                return callback();
 
-            checkRoles(data._user.role, data._roles, function(err) {
+            checkRoles(data.user.role, data.roles, function(err) {
                 if (err)
-                    return res.send({"err": err});
+                    return callback(err);
 
-                return next();
+                return callback();
             });
         }
     });
@@ -129,24 +129,28 @@ module.exports = function(config) {
     d.run(function() {
         io.adapter(redis({ host: 'localhost', port: 6379 }));
         io.on('connection', function (socket) {
-
             /**
              * Override socket.on
              */
             socket.onAux = socket.on;
-            socket.on = function(url, options, next) {
+            socket.on = function(url, options, userCallback) {
                 if (typeof options == 'object' && (options.authentification || options.role)) {
-                    socket.onAux(url, function(data) {
+                    socket.onAux(url, function(data, callback) {
                         checkAuthentification(data, options, function(err) {
                             if (err)
-                                return socket.emit(url, {"err": err});
+                                return callback(err);
 
-                            return next(data);
+                            return userCallback(data, callback);
                         });
                     });
                 }
                 else {
-                    socket.onAux.apply(this, arguments);
+                    socket.onAux(url, function(data, callback) {
+                        if (typeof data == 'function')
+                            return options(callback);
+                        else
+                            return options(data, callback);
+                    });
                 }
             };
 
