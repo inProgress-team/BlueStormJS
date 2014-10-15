@@ -54,6 +54,7 @@ angular.module('bluestorm.user', [
 
                     service.token = $cookies.bluestorm_token = data.token;
                     service.user = data.user;
+                    $http.defaults.headers.common["X-AUTH-TOKEN"] = $cookies.bluestorm_token;
                     cb(null, data.user);
 
                 })
