@@ -29,6 +29,9 @@ module.exports = {
                             return callback(res.db);
                         });
                     });
+                } else {
+                    modelsLoaded = true;
+                    return callback(res.db);
                 }
             });
         }
