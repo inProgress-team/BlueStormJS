@@ -282,7 +282,7 @@ module.exports.signIn = function(user, callback) {
             if (err)
                 return callback(err);
             if (!res)
-                return callback('Email or password invalid');
+                return callback('Account not found');
             if (!res.activated)
                 return callback('Account not activated');
 
@@ -290,7 +290,7 @@ module.exports.signIn = function(user, callback) {
                 if (err)
                     return callback(err);
                 if (!isMatch)
-                    return callback('Email or password invalid');
+                    return callback('Password invalid');
 
                 delete res['password'];
                 delete res['_id'];
