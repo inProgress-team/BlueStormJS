@@ -51,7 +51,14 @@ module.exports = {
                     name: name,
                     debug: debug
                 });
-                server.use(vhost(config.get(type, name), app))
+                var urls = config.get(type, name);
+                if(typeof urls == 'object') {
+                    urls.forEach(function (url) {
+                        server.use(vhost(url, app));
+                    });
+                } else {
+                    server.use(vhost(urls, app));
+                }
             });
 
 
