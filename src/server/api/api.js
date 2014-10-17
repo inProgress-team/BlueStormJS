@@ -223,7 +223,10 @@ module.exports = function(config, cb) {
         app.use(function(req, res, next){
             var ms = new Date - start;
             next();
-            logger.log('API : '+req.method+' '+req.url+' - '+ms+'ms');
+            var ip = req.headers["X-Forwarded-For"]
+                || req.headers["x-forwarded-for"]
+                || req.client.remoteAddress;
+            logger.log('API : '+req.method+' '+req.url+' - '+ip+' - '+ms+'ms');
         });
     }
 

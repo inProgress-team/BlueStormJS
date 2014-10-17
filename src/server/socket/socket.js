@@ -134,7 +134,7 @@ module.exports = function(config) {
              */
             socket.onAux = socket.on;
             socket.on = function(url, options, userCallback) {
-                if (typeof options == 'object' && (options.authentification || options.role)) {
+                if (typeof options == 'object' && (options.authentification || options.roles)) {
                     socket.onAux(url, function(data, callback) {
                         checkAuthentification(data, function(err) {
                             if (err)
