@@ -157,7 +157,7 @@ module.exports.signUp = function(user, options, callback) {
     var password;
     // If random password
     if (options.randomPassword) {
-        password = generatePassword(12, false);
+        password = generatePassword(24, false, /\w/);
         options.sendPassword = true;
     }
     else {
@@ -267,6 +267,89 @@ module.exports.signUpConfirm = function(hash, options, callback) {
                 return callback(null, res, module.exports.encodeToken(res));
             }
         );
+    });
+};
+
+module.exports.resetPassword = function(data, callback) {
+    if (!data || !data.email || !data.resetPasswordLink) {
+        return callback('Email not received');
+    }
+
+    dbConnection(function(db) {
+        db.collection('user').findAndModify({
+                "email": data.email
+            },
+            {},
+            {
+                "$set": {
+                    "hashPassword": generatePassword(24, false, /\w/)
+                }
+            },
+            {
+                "new": true
+            },
+            function(err, res) {
+                if (err)
+                    return callback(err);
+
+                if (!res)
+                    return callback('Document not found');
+
+                var arguments = {};
+                arguments.firstName = res.firstName;
+                if (data.resetPasswordLink.slice(-1) == '/')
+                    data.resetPasswordLink = data.resetPasswordLink.substring(0, data.resetPasswordLink.length - 1);
+                arguments.url = data.resetPasswordLink + '/' + data.email + '/' + res.passwordHash;
+                mailer.mail(res.email, 'resetPassword', 'user', 'fr', arguments);
+
+                return callback();
+            }
+        );
+    });
+};
+
+module.exports.resetPasswordConfirm = function(data, callback) {
+    if (!data || !data.email || !data.hashPassword ||!data.password) {
+        return callback('Infos not received');
+    }
+
+    bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
+        if (err)
+            return callback(err);
+
+        bcrypt.hash(data.password, salt, function (err, hash) {
+            if (err)
+                return callback(err);
+
+            dbConnection(function (db) {
+                db.collection('user').findAndModify({
+                        "email": data.email,
+                        "hashPassword": data.hashPassword
+                    },
+                    {},
+                    {
+                        "$set": {
+                            "password": hash,
+                            "hashPassword": ""
+                        }
+                    },
+                    {
+                        "new": true
+                    },
+                    function (err, res) {
+                        if (err)
+                            return callback(err);
+
+                        if (!res)
+                            return callback('Document not found');
+
+                        delete res.password;
+                        delete res._id;
+                        return callback(null, res, module.exports.encodeToken(res));
+                    }
+                );
+            });
+        });
     });
 };
 
