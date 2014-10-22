@@ -2,6 +2,7 @@ var statics = require(__dirname+'/statics/statics'),
     api = require(__dirname+'/api/api'),
     socket = require(__dirname+'/socket/socket'),
     logger = require(__dirname+'/../logger/logger'),
+    cron = require(__dirname+'/cron/cron'),
     db = require(__dirname+'/../db/db'),
     config = require(__dirname+'/../config');
 
@@ -30,6 +31,7 @@ module.exports = {
 
         api({ port: config.get('development', 'api'), debug: debug });
         socket({ port: config.get('development', 'socket'), debug: debug });
+        cron({debug: debug});
 
         logger.log('Forever started.', ['blue', 'inverse']);
         logger.log('Webapp is online (', 'development', ['yellow'], ').');
@@ -67,6 +69,8 @@ module.exports = {
 
             server.use(vhost(config.get(type, 'socket'), socketApp))
                 .use(vhost(config.get(type, 'api'), apiApp));
+
+            //TODO CRON
 
             return server.listen(3333);
 
