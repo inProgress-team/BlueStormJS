@@ -10,7 +10,8 @@ var gulp = require('gulp'),
     jshint = require('gulp-jshint'),
     cache = require('gulp-cached'),
     watch = require('gulp-watch'),
-    preprocess = require('gulp-preprocess');
+    preprocess = require('gulp-preprocess'),
+    gulpFilter = require('gulp-filter');
 
 var config = require(__dirname+'/../../config');
 
@@ -21,9 +22,11 @@ module.exports = function(name) {
         jsFiles = [
             'src/apps/'+name+'/**/*.js',
             'src/modules/**/'+name+'/**/*.js'
-        ];
+        ],
+        commonJsFiles= [],
+        commonJsFilesAll = ['src/common/frontend/**/*.js'];
     dependencies.common.forEach(function (dep) {
-        jsFiles.push('src/common/frontend/'+dep+'/**/*.js')
+        commonJsFiles.push(dep+'/**/*.js')
     });
 
     var templatesFiles = [
@@ -55,7 +58,12 @@ module.exports = function(name) {
     var tasks = {
         jsFiles: function(){
             return gulp.src(jsFiles)
-                .pipe(gulp.dest('dist/build/'+name+'/public/js'));
+                .pipe(gulp.dest('dist/build/'+name+'/public/js/modules'));
+        },
+        commonJsFiles: function(){
+            return gulp.src(commonJsFilesAll)
+                .pipe(gulpFilter(commonJsFiles))
+                .pipe(gulp.dest('dist/build/'+name+'/public/js/common'));
         },
         libJsFiles: function(){
             return gulp.src([
@@ -150,6 +158,9 @@ module.exports = function(name) {
     gulp.task('js-files@'+name, [cleanTask], tasks.jsFiles);
     gulp.task('js-files-watch@'+name, tasks.jsFiles);
 
+    gulp.task('common-js-files@'+name, [cleanTask], tasks.commonJsFiles);
+    gulp.task('common-js-files-watch@'+name, tasks.commonJsFiles);
+
 
     gulp.task('html2js@'+name, [cleanTask], tasks.html2js);
     gulp.task('html2js-watch@'+name, tasks.html2js);
@@ -170,6 +181,7 @@ module.exports = function(name) {
 
     gulp.task('index.html@'+name, [
             'js-files@'+name,
+            'common-js-files@'+name,
             'lib-js-files@'+name,
             'bower-files@'+name,
             'i18n@'+name,
@@ -182,6 +194,7 @@ module.exports = function(name) {
     gulp.task('build@'+name, ['index.html@'+name, 'assets@'+name, 'lint@'+name], function() {
         if(process.env.NODE_ENV=='development') {
             gulp.watch(jsFiles, ['js-files-watch@'+name, 'lint@'+name]);
+            gulp.watch(commonJsFilesAll, ['common-js-files-watch@'+name]);
             gulp.watch(templatesFiles, ['html2js-watch@'+name]);
             gulp.watch(i18nFiles, ['i18n-watch@'+name]);
             gulp.watch(lessFiles, ['less-watch@'+name]);
