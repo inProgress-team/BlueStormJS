@@ -243,7 +243,8 @@ module.exports.signUpConfirm = function(hash, options, callback) {
             {},
             {
                 "$set": {
-                    "activated": true
+                    "activated": true,
+                    "hash": ""
                 }
             },
             {
@@ -299,7 +300,7 @@ module.exports.resetPassword = function(data, callback) {
                 arguments.firstName = res.firstName;
                 if (data.resetPasswordLink.slice(-1) == '/')
                     data.resetPasswordLink = data.resetPasswordLink.substring(0, data.resetPasswordLink.length - 1);
-                arguments.url = data.resetPasswordLink + '/' + data.email + '/' + res.passwordHash;
+                arguments.url = data.resetPasswordLink + '/' + data.email + '/' + res.hashPassword;
                 mailer.mail(res.email, 'resetPassword', 'user', 'fr', arguments);
 
                 return callback();
