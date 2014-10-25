@@ -354,6 +354,50 @@ module.exports.resetPasswordConfirm = function(data, callback) {
     });
 };
 
+module.exports.changePassword = function(data, callback) {
+    if (!data || !data.email ||!data.password || !data.newPassword) {
+        return callback('Infos not received');
+    }
+
+    dbConnection(function(db) {
+        db.collection('user').findOne({
+            email: data.email
+        }, function(err, res) {
+            if (err)
+                return callback(err);
+            if (!res)
+                return callback('Account not found');
+
+            comparePassword(data.password, res.password, function(err, isMatch) {
+                if (err)
+                    return callback(err);
+                if (!isMatch)
+                    return callback('Password invalid');
+
+                bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
+                    if (err)
+                        return callback(err);
+
+                    bcrypt.hash(data.newPassword, salt, function (err, hash) {
+                        if (err)
+                            return callback(err);
+
+                        res.password = hash;
+                        db.collection('user').save(res, function(err) {
+                            if (err)
+                                return callback(err);
+
+                            delete res.password;
+                            delete res._id;
+                            return callback(null, res, module.exports.encodeToken(res));
+                        });
+                    });
+                });
+            });
+        });
+    });
+};
+
 module.exports.signIn = function(user, callback) {
     if (!user || !user.email || !user.password) {
         return callback('User\'s informations not received');
