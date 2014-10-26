@@ -75,14 +75,13 @@ module.exports = function(name) {
                 .pipe(gulp.dest('dist/build/'+name+'/public/lib'));
         },
         html2js: function() {
-            gulp.src(templatesFiles)
+            return gulp.src(templatesFiles)
                 .pipe(html2js({
                     outputModuleName: 'templates',
                     base: 'src/'
                 }))
-                .pipe(rename(function (path) { path.extname='.js' }))
-                .pipe(gulp.dest('./dist/build/'+name+'/public/js/templates'))
-            
+                .pipe(concat('templates.js'))
+                .pipe(gulp.dest('./dist/build/'+name+'/public/js'));
         },
         i18n: function(){
             return gulp.src(i18nFiles)
@@ -123,14 +122,16 @@ module.exports = function(name) {
                 .pipe(gulp.dest('dist/build/'+name+'/public/js/bluestorm'))
         },
         less: function(){
-            gulp.src(lessFile)
+            return gulp.src(lessFile)
                 .pipe(less().on('error', function(e) {
                     console.log(e);
                 }))
                 .pipe(gulp.dest('./dist/build/'+name+'/public/css'));
         },
         indexHtml: function(){
-            var sources = gulp.src(sourcesIndex, {read: false});
+            var sources = gulp.src(sourcesIndex, {
+                read: false
+            });
 
             return gulp.src(htmlFile)
                 .pipe(rename(function (path) { path.basename = "main"; }))
@@ -192,11 +193,7 @@ module.exports = function(name) {
     ], tasks.indexHtml);
     gulp.task('index.html-watch@'+name, tasks.indexHtml);
 
-    gulp.task('build@'+name, [
-        'index.html@'+name,
-        'assets@'+name,
-        'lint@'+name
-    ], function() {
+    gulp.task('build@'+name, ['index.html@'+name,'assets@'+name,'lint@'+name], function() {
         if(process.env.NODE_ENV=='development') {
             gulp.watch(jsFiles, ['js-files-watch@'+name, 'lint@'+name]);
             gulp.watch(commonJsFilesAll, ['common-js-files-watch@'+name]);
