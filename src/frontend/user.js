@@ -7,6 +7,11 @@ angular.module('bluestorm.user', [
         service.token = $cookies.bluestorm_token;
         service.user = null;
 
+        service.setUser = function (user, token) {
+            this.user = user;
+            this.token = $cookies.bluestorm_token = token;
+        };
+
         service.getUser = function(url, cb) {
             if(!service.token) {
                 service.user = null;
