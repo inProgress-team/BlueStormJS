@@ -46,13 +46,14 @@ module.exports = function(name) {
         ],
         sourcesIndex = [
 
-            'dist/build/'+name+'/public/lib/jquery.js',
-            'dist/build/'+name+'/public/lib/angular.js',
-            'dist/build/'+name+'/public/lib/socket.io.js',
+            './dist/build/'+name+'/public/lib/jquery.js',
+            './dist/build/'+name+'/public/lib/angular.js',
+            './dist/build/'+name+'/public/lib/socket.io.js',
 
-            'dist/build/'+name+'/public/bower_components/**/*.js',
-            'dist/build/'+name+'/public/js/**/*.js',
-            'dist/build/'+name+'/public/css/main.css'
+            './dist/build/'+name+'/public/bower_components/**/*.js',
+            './dist/build/'+name+'/public/js/templates.js',
+            './dist/build/'+name+'/public/js/**/*.js',
+            './dist/build/'+name+'/public/css/main.css'
         ];
 
     var tasks = {
@@ -79,8 +80,9 @@ module.exports = function(name) {
                     outputModuleName: 'templates',
                     base: 'src/'
                 }))
-                .pipe(concat('templates.js'))
-                .pipe(gulp.dest('./dist/build/'+name+'/public/js'))
+                .pipe(rename(function (path) { path.extname='.js' }))
+                .pipe(gulp.dest('./dist/build/'+name+'/public/js/templates'))
+            
         },
         i18n: function(){
             return gulp.src(i18nFiles)
@@ -129,7 +131,6 @@ module.exports = function(name) {
         },
         indexHtml: function(){
             var sources = gulp.src(sourcesIndex, {read: false});
-
 
             return gulp.src(htmlFile)
                 .pipe(rename(function (path) { path.basename = "main"; }))
@@ -180,18 +181,22 @@ module.exports = function(name) {
 
 
     gulp.task('index.html@'+name, [
-            'js-files@'+name,
-            'common-js-files@'+name,
-            'lib-js-files@'+name,
-            'bower-files@'+name,
-            'i18n@'+name,
-            'less@'+name,
-            'html2js@'+name,
-            'framework-files@'+name
+        'js-files@'+name,
+        'common-js-files@'+name,
+        'lib-js-files@'+name,
+        'bower-files@'+name,
+        'i18n@'+name,
+        'less@'+name,
+        'html2js@'+name,
+        'framework-files@'+name
     ], tasks.indexHtml);
     gulp.task('index.html-watch@'+name, tasks.indexHtml);
 
-    gulp.task('build@'+name, ['index.html@'+name, 'assets@'+name, 'lint@'+name], function() {
+    gulp.task('build@'+name, [
+        'index.html@'+name,
+        'assets@'+name,
+        'lint@'+name
+    ], function() {
         if(process.env.NODE_ENV=='development') {
             gulp.watch(jsFiles, ['js-files-watch@'+name, 'lint@'+name]);
             gulp.watch(commonJsFilesAll, ['common-js-files-watch@'+name]);
