@@ -110,6 +110,15 @@ var checkAuthentification = function(req, res, next) {
 module.exports = function(config, cb) {
     var app = express(),
         start;
+
+    /**
+     * Vars for methods
+     */
+    app.rolesForPost = [];
+    app.rolesForGet = [];
+    app.rolesForPut = [];
+    app.rolesForDelete = [];
+
     /**
      * Override GET
      */
@@ -117,10 +126,11 @@ module.exports = function(config, cb) {
     app.get = function(url, callbacks, callback) {
         for (var i=1; i<arguments.length; i++) {
             if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].roles)) {
-                var options = arguments[i];
+                if (arguments[i].roles)
+                    app.rolesForGet[url] = arguments[i].roles;
                 app.use(function(req, res, next) {
-                    if (options.roles)
-                        req.roles = options.roles;
+                    if (app.rolesForGet[url])
+                        req.roles = app.rolesForGet[url];
                     next();
                 });
                 arguments[i] = checkAuthentification;
@@ -137,10 +147,11 @@ module.exports = function(config, cb) {
     app.post = function(url, options, next) {
         for (var i=1; i<arguments.length; i++) {
             if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].roles)) {
-                var options = arguments[i];
+                if (arguments[i].roles)
+                    app.rolesForPost[url] = arguments[i].roles;
                 app.use(function(req, res, next) {
-                    if (options.role)
-                        req.role = options.role;
+                    if (app.rolesForPost[url])
+                        req.roles = app.rolesForPost[url];
                     next();
                 });
                 arguments[i] = checkAuthentification;
@@ -157,10 +168,11 @@ module.exports = function(config, cb) {
     app.put = function(url, options, next) {
         for (var i=1; i<arguments.length; i++) {
             if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].roles)) {
-                var options = arguments[i];
+                if (arguments[i].roles)
+                    app.rolesForPut[url] = arguments[i].roles;
                 app.use(function(req, res, next) {
-                    if (options.role)
-                        req.role = options.role;
+                    if (app.rolesForPut[url])
+                        req.roles = app.rolesForPut[url];
                     next();
                 });
                 arguments[i] = checkAuthentification;
@@ -177,10 +189,11 @@ module.exports = function(config, cb) {
     app.delete = function(url, options, next) {
         for (var i=1; i<arguments.length; i++) {
             if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].roles)) {
-                var options = arguments[i];
+                if (arguments[i].roles)
+                    app.rolesForDelete[url] = arguments[i].roles;
                 app.use(function(req, res, next) {
-                    if (options.role)
-                        req.role = options.role;
+                    if (app.rolesForDelete[url])
+                        req.roles = app.rolesForDelete[url];
                     next();
                 });
                 arguments[i] = checkAuthentification;
