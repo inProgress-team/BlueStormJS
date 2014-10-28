@@ -18,7 +18,7 @@ var roleContainsRole = function(activeRole, requiredRole, callback) {
     for (var i=0; i<rolesConfig.roles.length; i++) {
         if (rolesConfig.roles[i].name == activeRole) {
             if (!rolesConfig.roles[i].children || rolesConfig.roles[i].children.length == 0)
-                return callback('Access denied');
+                return callback('access_denied');
 
             for (var j=0; j<rolesConfig.roles[i].children.length; j++) {
                 if (rolesConfig.roles[i].children[j] == requiredRole)
@@ -32,7 +32,7 @@ var roleContainsRole = function(activeRole, requiredRole, callback) {
         }
     }
 
-    return callback('Access denied');
+    return callback('access_denied');
 };
 
 var checkRole = function(userRole, requiredRole, callback) {
@@ -59,7 +59,7 @@ var checkRoles = function(userRole, requiredRoles, callback) {
     async.doWhilst(
         function(callback) {
             if (i >= requiredRoles.length)
-                return callback('Access denied for this role (' + userRole + ')');
+                return callback('access_denied');
 
             checkRole(userRole, requiredRoles[i], function(err) {
                 if (!err)
