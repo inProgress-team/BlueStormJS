@@ -143,7 +143,7 @@ module.exports.decodeToken = function(token) {
 
 module.exports.signUp = function(user, options, callback) {
     if (!user || !user.email) {
-        return callback('User\'s informations not received');
+        return callback('informations_not_received');
     }
 
     // If no options passed
@@ -162,7 +162,7 @@ module.exports.signUp = function(user, options, callback) {
     }
     else {
         if(!user.password)
-            return callback('User\'s informations not received');
+            return callback('informations_not_received');
         password = user.password;
     }
 
@@ -173,7 +173,7 @@ module.exports.signUp = function(user, options, callback) {
             if (err)
                 return callback(err);
             if (res) {
-                return callback('user.already_existing');
+                return callback('user_already_existing');
             }
 
             bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
@@ -225,7 +225,7 @@ module.exports.signUp = function(user, options, callback) {
 
 module.exports.signUpConfirm = function(hash, options, callback) {
     if (!hash) {
-        return callback('Hash not received');
+        return callback('informations_not_received');
     }
 
     // If no options passed
@@ -255,7 +255,7 @@ module.exports.signUpConfirm = function(hash, options, callback) {
                     return callback(err);
 
                 if (!res)
-                    return callback('Document not found');
+                    return callback('document_not_found');
 
                 if (options.sendConfirmation) {
                     var arguments = {};
@@ -273,7 +273,7 @@ module.exports.signUpConfirm = function(hash, options, callback) {
 
 module.exports.resetPassword = function(data, callback) {
     if (!data || !data.email || !data.resetPasswordLink) {
-        return callback('Email not received');
+        return callback('informations_not_received');
     }
 
     dbConnection(function(db) {
@@ -294,7 +294,7 @@ module.exports.resetPassword = function(data, callback) {
                     return callback(err);
 
                 if (!res)
-                    return callback('Document not found');
+                    return callback('document_not_found');
 
                 var arguments = {};
                 arguments.firstName = res.firstName;
@@ -311,7 +311,7 @@ module.exports.resetPassword = function(data, callback) {
 
 module.exports.resetPasswordConfirm = function(data, callback) {
     if (!data || !data.email || !data.hashPassword ||!data.password) {
-        return callback('Infos not received');
+        return callback('informations_not_received');
     }
 
     bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
@@ -342,7 +342,7 @@ module.exports.resetPasswordConfirm = function(data, callback) {
                             return callback(err);
 
                         if (!res)
-                            return callback('Document not found');
+                            return callback('document_not_found');
 
                         delete res.password;
                         delete res._id;
@@ -356,7 +356,7 @@ module.exports.resetPasswordConfirm = function(data, callback) {
 
 module.exports.changePassword = function(data, callback) {
     if (!data || !data.email ||!data.password || !data.newPassword) {
-        return callback('Infos not received');
+        return callback('informations_not_received');
     }
 
     dbConnection(function(db) {
@@ -366,13 +366,13 @@ module.exports.changePassword = function(data, callback) {
             if (err)
                 return callback(err);
             if (!res)
-                return callback('Account not found');
+                return callback('account_not_found');
 
             comparePassword(data.password, res.password, function(err, isMatch) {
                 if (err)
                     return callback(err);
                 if (!isMatch)
-                    return callback('Password invalid');
+                    return callback('invalid_password');
 
                 bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
                     if (err)
@@ -400,7 +400,7 @@ module.exports.changePassword = function(data, callback) {
 
 module.exports.signIn = function(user, callback) {
     if (!user || !user.email || !user.password) {
-        return callback('User\'s informations not received');
+        return callback('informations_not_received');
     }
 
     dbConnection(function(db) {
@@ -410,15 +410,15 @@ module.exports.signIn = function(user, callback) {
             if (err)
                 return callback(err);
             if (!res)
-                return callback('Account not found');
+                return callback('account_not_found');
             if (!res.activated)
-                return callback('Account not activated');
+                return callback('account_not_activated');
 
             comparePassword(user.password, res.password, function(err, isMatch) {
                 if (err)
                     return callback(err);
                 if (!isMatch)
-                    return callback('Password invalid');
+                    return callback('invalid_password');
 
                 delete res['password'];
                 delete res['_id'];
@@ -430,7 +430,7 @@ module.exports.signIn = function(user, callback) {
 
 module.exports.update = function(user, callback) {
     if (!user || !user.email) {
-        return callback('User\'s informations not received');
+        return callback('informations_not_received');
     }
 
     // If no options passed
@@ -490,11 +490,11 @@ module.exports.tokenIsValid = function(token, callback) {
     try {
         decodedToken = module.exports.decodeToken(token);
     } catch (err) {
-        return callback('Token is invalid');
+        return callback('invalid_token');
     }
 
     if (decodedToken.expires < moment().valueOf())
-        return callback('Token is expired');
+        return callback('expired_token');
 
     return callback(null, decodedToken.user);
 };
@@ -514,8 +514,6 @@ module.exports.getUsers = function(options , callback) {
         db.collection('user').find(criteria, selection).toArray(function(err, res) {
             if (err)
                 return callback(err);
-            if (!res)
-                return callback('No users');
 
             return callback(null, res);
         });
