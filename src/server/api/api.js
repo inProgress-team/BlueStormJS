@@ -112,7 +112,7 @@ var checkAuthentification = function(req, res, next) {
 
 var checkAuthentificationPost = function(req, res, next) {
     if (app.rolesForPost[req.url]) {
-        req.roles = app.rolesForPost(req.url);
+        req.roles = app.rolesForPost[req.url];
     }
 
     return checkAuthentification(req, res, next);
@@ -120,7 +120,7 @@ var checkAuthentificationPost = function(req, res, next) {
 
 var checkAuthentificationGet = function(req, res, next) {
     if (app.rolesForGet[req.url]) {
-        req.roles = app.rolesForGet(req.url);
+        req.roles = app.rolesForGet[req.url];
     }
 
     return checkAuthentification(req, res, next);
@@ -128,7 +128,7 @@ var checkAuthentificationGet = function(req, res, next) {
 
 var checkAuthentificationPut = function(req, res, next) {
     if (app.rolesForPut[req.url]) {
-        req.roles = app.rolesForPut(req.url);
+        req.roles = app.rolesForPut[req.url];
     }
 
     return checkAuthentification(req, res, next);
@@ -136,7 +136,7 @@ var checkAuthentificationPut = function(req, res, next) {
 
 var checkAuthentificationDelete = function(req, res, next) {
     if (app.rolesForDelete[req.url]) {
-        req.roles = app.rolesForDelete(req.url);
+        req.roles = app.rolesForDelete[req.url];
     }
 
     return checkAuthentification(req, res, next);
