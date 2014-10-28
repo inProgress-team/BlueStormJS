@@ -10,6 +10,9 @@ var logger = require(__dirname+'/../../logger/logger'),
 var ROLES_CONFIG_FILE_PATH = process.cwd() + '/config/roles.json';
 var rolesConfig;
 
+var app = express(),
+    start;
+
 var roleContainsRole = function(activeRole, requiredRole, callback) {
     if (!rolesConfig || rolesConfig.roles.length == 0)
         return callback(ROLES_CONFIG_FILE_PATH + ' is empty');
@@ -107,10 +110,39 @@ var checkAuthentification = function(req, res, next) {
     });
 };
 
-module.exports = function(config, cb) {
-    var app = express(),
-        start;
+var checkAuthentificationPost = function(req, res, next) {
+    if (app.rolesForPost[req.url]) {
+        req.roles = app.rolesForPost(req.url);
+    }
 
+    return checkAuthentification(req, res, next);
+};
+
+var checkAuthentificationGet = function(req, res, next) {
+    if (app.rolesForGet[req.url]) {
+        req.roles = app.rolesForGet(req.url);
+    }
+
+    return checkAuthentification(req, res, next);
+};
+
+var checkAuthentificationPut = function(req, res, next) {
+    if (app.rolesForPut[req.url]) {
+        req.roles = app.rolesForPut(req.url);
+    }
+
+    return checkAuthentification(req, res, next);
+};
+
+var checkAuthentificationDelete = function(req, res, next) {
+    if (app.rolesForDelete[req.url]) {
+        req.roles = app.rolesForDelete(req.url);
+    }
+
+    return checkAuthentification(req, res, next);
+};
+
+module.exports = function(config, cb) {
     /**
      * Vars for methods
      */
@@ -128,12 +160,7 @@ module.exports = function(config, cb) {
             if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].roles)) {
                 if (arguments[i].roles)
                     app.rolesForGet[url] = arguments[i].roles;
-                app.use(function(req, res, next) {
-                    if (app.rolesForGet[url])
-                        req.roles = app.rolesForGet[url];
-                    next();
-                });
-                arguments[i] = checkAuthentification;
+                arguments[i] = checkAuthentificationGet;
             }
         }
 
@@ -149,12 +176,7 @@ module.exports = function(config, cb) {
             if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].roles)) {
                 if (arguments[i].roles)
                     app.rolesForPost[url] = arguments[i].roles;
-                app.use(function(req, res, next) {
-                    if (app.rolesForPost[url])
-                        req.roles = app.rolesForPost[url];
-                    next();
-                });
-                arguments[i] = checkAuthentification;
+                arguments[i] = checkAuthentificationPost;
             }
         }
 
@@ -170,12 +192,7 @@ module.exports = function(config, cb) {
             if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].roles)) {
                 if (arguments[i].roles)
                     app.rolesForPut[url] = arguments[i].roles;
-                app.use(function(req, res, next) {
-                    if (app.rolesForPut[url])
-                        req.roles = app.rolesForPut[url];
-                    next();
-                });
-                arguments[i] = checkAuthentification;
+                arguments[i] = checkAuthentificationPut;
             }
         }
 
@@ -191,12 +208,7 @@ module.exports = function(config, cb) {
             if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].roles)) {
                 if (arguments[i].roles)
                     app.rolesForDelete[url] = arguments[i].roles;
-                app.use(function(req, res, next) {
-                    if (app.rolesForDelete[url])
-                        req.roles = app.rolesForDelete[url];
-                    next();
-                });
-                arguments[i] = checkAuthentification;
+                arguments[i] = checkAuthentificationDelete;
             }
         }
 
