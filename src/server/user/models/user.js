@@ -255,7 +255,7 @@ module.exports.signUpConfirm = function(hash, options, callback) {
                     return callback(err);
 
                 if (!res)
-                    return callback('document_not_found');
+                    return callback('not_found');
 
                 if (options.sendConfirmation) {
                     var arguments = {};
@@ -294,7 +294,7 @@ module.exports.resetPassword = function(data, callback) {
                     return callback(err);
 
                 if (!res)
-                    return callback('document_not_found');
+                    return callback('not_found');
 
                 var arguments = {};
                 arguments.firstName = res.firstName;
@@ -342,7 +342,7 @@ module.exports.resetPasswordConfirm = function(data, callback) {
                             return callback(err);
 
                         if (!res)
-                            return callback('document_not_found');
+                            return callback('not_found');
 
                         delete res.password;
                         delete res._id;
