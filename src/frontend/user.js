@@ -15,6 +15,10 @@ angular.module('bluestorm.user', [
         service.getUser = function(url, cb) {
             if(!service.token) {
                 service.user = null;
+
+                if(typeof cb == 'function') {
+                    cb(null, null);
+                }
                 return;
             }
 
@@ -24,7 +28,7 @@ angular.module('bluestorm.user', [
                         service.user = data.user;
                     }
                     if(typeof cb == 'function') {
-                        cb();
+                        cb(null, data.user);
                     }
 
                 })
