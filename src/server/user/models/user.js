@@ -199,6 +199,7 @@ module.exports.signUp = function(user, options, callback) {
                             var arguments = {};
 
                             arguments.firstName = user.firstName;
+                            arguments.email = user.email;
                             if (options.sendPassword) {
                                 arguments.password = password;
                             }
