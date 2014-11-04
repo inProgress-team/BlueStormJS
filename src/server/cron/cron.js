@@ -7,7 +7,7 @@ module.exports = function(config) {
      */
     arborescence.getRequiredFiles('cron', function (files) {
         arborescence.loadFiles(files, null, function() {
-            if(config.debug) {
+            if(config && config.debug) {
                 logger.log('CRON', ['green'], ' loaded.');
             }
         });

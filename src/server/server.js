@@ -70,7 +70,7 @@ module.exports = {
             server.use(vhost(config.get(type, 'socket'), socketApp))
                 .use(vhost(config.get(type, 'api'), apiApp));
 
-            //TODO CRON
+            cron({debug: debug});
 
             return server.listen(3333);
 
