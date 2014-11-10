@@ -31,7 +31,6 @@ module.exports = {
 
         api({ port: config.get('development', 'api'), debug: debug });
         socket({ port: config.get('development', 'socket'), debug: debug });
-        cron({debug: debug});
 
         logger.log('Forever started.', ['blue', 'inverse']);
         logger.log('Webapp is online (', 'development', ['yellow'], ').');
