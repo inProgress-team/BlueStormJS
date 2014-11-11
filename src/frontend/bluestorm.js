@@ -56,10 +56,12 @@ angular.module('bluestorm', [
                     callback = data;
                     data = {};
                 }
-                data.token = $cookies.bluestorm_token;
-                /*console.log('-> Event sent : ' + eventName);
-                    console.log(data);*/
-                socket.emit(eventName, data, function() {
+                var res = {
+                    token: $cookies.bluestorm_token,
+                    data: data
+                };
+                
+                socket.emit(eventName, res, function() {
                     var args = arguments;
                     $rootScope.$apply(function() {
                         if (callback) {
