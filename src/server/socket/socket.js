@@ -136,6 +136,9 @@ module.exports = function(config) {
             socket.on = function(url, options, userCallback) {
                 if (typeof options == 'object' && (options.authentification || options.roles)) {
                     socket.onAux(url, function(data, callback) {
+                        if(config.debug) {
+                            logger.log('SOCKET : ' + url);
+                        }
                         checkAuthentification(data, function(err) {
                             if (err)
                                 return callback(err);
@@ -146,6 +149,9 @@ module.exports = function(config) {
                 }
                 else {
                     socket.onAux(url, function(data, callback) {
+                        if(config.debug) {
+                            logger.log('SOCKET : ' + url);
+                        }
                         if (typeof data == 'function')
                             return options(callback);
                         else
