@@ -1,7 +1,8 @@
 var fs = require('fs'),
     express = require('express');
 
-var logger = require(__dirname+'/../../logger/logger');
+var logger = require(__dirname+'/../../logger/logger'),
+    seo = require(__dirname+'/seo');
 
 
 module.exports = function(config) {
@@ -17,7 +18,7 @@ module.exports = function(config) {
         start;
 
     app.use(express.static(path));
-    app.use(require('prerender-node').set('prerenderServiceUrl', 'http://127.0.0.1:3000'));
+    app.use(seo.middleware);
 
     if(config.debug) {
         //LOGGER FOR EVERY STATIC REQUEST
