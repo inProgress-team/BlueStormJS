@@ -14,6 +14,7 @@ var gulp = require('gulp'),
     gulpFilter = require('gulp-filter');
 var debug = require('gulp-debug');
 var changed = require('gulp-changed');
+var Multistream = require('multistream');
 
 var config = require(__dirname+'/../../config');
 
@@ -56,7 +57,8 @@ module.exports = function(name) {
             'dist/build/'+name+'/public/js/templates.js',
             'dist/build/'+name+'/public/js/**/*.js',
             'dist/build/'+name+'/public/css/main.css'
-        ];
+        ],
+        assets = 'src/common/assets/**/*';
 
     var tasks = {
         jsFiles: function(){
@@ -128,11 +130,16 @@ module.exports = function(name) {
                 .pipe(gulp.dest('dist/build/'+name+'/public/js/bluestorm'))
         },
         less: function(){
+            var l = less({});
+            l.on('error',function(e){
+                console.log(e);
+                l.emit('end');
+            });
             return gulp.src(lessFile)
-                .pipe(less().on('error', function(e) {
-                    console.log(e);
-                }))
+                .pipe(l)
                 .pipe(gulp.dest('./dist/build/'+name+'/public/css'));
+
+            return less;
         },
         indexHtml: function(){
             var sources = gulp.src(sourcesIndex, {
@@ -149,6 +156,12 @@ module.exports = function(name) {
                 .pipe(cache('linting'))
                 .pipe(jshint())
                 .pipe(jshint.reporter(stylish));
+        },
+        assets: function() {
+            var dest = 'dist/build/'+name+'/public/assets';
+            return gulp.src(assets)
+                .pipe(changed(dest))
+                .pipe(gulp.dest(dest))
         }
     };
 
@@ -183,10 +196,8 @@ module.exports = function(name) {
 
 
 
-    gulp.task('assets@'+name, [cleanTask], function(){
-        return gulp.src('src/common/assets/**/*')
-            .pipe(gulp.dest('dist/build/'+name+'/public/assets'))
-    });
+    gulp.task('assets@'+name, [cleanTask], tasks.assets);
+    gulp.task('assets-watch@'+name, tasks.assets);
 
 
     gulp.task('index.html@'+name, [
@@ -213,6 +224,9 @@ module.exports = function(name) {
             gulp.watch(templatesFiles, function(file) {
                 gulp.start('html2js-watch@'+name);
             });
+            gulp.watch(assets, function(file) {
+                gulpWatch.assets(file, name);
+            });
             gulp.watch(i18nFiles, ['i18n-watch@'+name]);
             gulp.watch(lessFiles, ['less-watch@'+name]);
             gulp.watch(htmlFile, ['index.html-watch@'+name]);
@@ -221,6 +235,16 @@ module.exports = function(name) {
 };
 
 var gulpWatch = {
+    assets: function(file, name) {
+        console.log(file.type);
+        if(file.type=='deleted') {
+            var pathToDelete = file.path.substring(file.path.indexOf('src/common')+11);
+            console.log("dist/build/"+name+"/public/"+pathToDelete);
+            del("dist/build/"+name+"/public/"+pathToDelete);
+        } else {
+            gulp.start('assets-watch@'+name);
+        }
+    },
     jsFiles: function(file, name) {
         if(file.type=='changed') {
             gulp.start(['js-files-watch@'+name, 'lint@'+name]);
