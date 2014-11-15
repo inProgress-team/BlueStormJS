@@ -69,7 +69,7 @@ module.exports = {
             server.use(vhost(config.get(type, 'socket'), socketApp))
                 .use(vhost(config.get(type, 'api'), apiApp));
 
-            if(process.env.NODE_WORKER_ID==0) {
+            if(process.env.NODE_WORKER_ID=='MASTER') {
                 cron({debug: debug});
             }
 
