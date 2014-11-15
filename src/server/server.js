@@ -69,7 +69,9 @@ module.exports = {
             server.use(vhost(config.get(type, 'socket'), socketApp))
                 .use(vhost(config.get(type, 'api'), apiApp));
 
-            cron({debug: debug});
+            if(process.env.NODE_WORKER_ID==0) {
+                cron({debug: debug});
+            }
 
             return server.listen(3333);
 
