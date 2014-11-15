@@ -8,9 +8,14 @@ module.exports = {
 
         var shell = require('shell');
 
-        var fragment = req.query._escaped_fragment_;
-        if(fragment===undefined||typeof fragment!='string')
-            return next();
+        var fragment = req.query._escaped_fragment_,
+            userAgent = req.headers['user-agent'];
+
+        console.log(userAgent);
+        if(userAgent!='facebookexternalhit/1.0'&&userAgent!='facebookexternalhit/1.1'&&userAgent!='Facebot') {
+            if(fragment===undefined||typeof fragment!='string')
+                return next();
+        }
 
         if(fragment=='')
             fragment = '/';
