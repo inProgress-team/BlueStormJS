@@ -210,7 +210,9 @@ module.exports = function(name) {
             gulp.watch(commonJsFilesAll, function(file) {
                 gulpWatch.commonJsFilesAll(file, name);
             });
-            gulp.watch(templatesFiles, ['html2js-watch@'+name]);
+            gulp.watch(templatesFiles, function(file) {
+                gulp.start('html2js-watch@'+name);
+            });
             gulp.watch(i18nFiles, ['i18n-watch@'+name]);
             gulp.watch(lessFiles, ['less-watch@'+name]);
             gulp.watch(htmlFile, ['index.html-watch@'+name]);
