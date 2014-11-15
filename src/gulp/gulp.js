@@ -35,11 +35,23 @@ module.exports= {
         });
         backend();
 
+        var timeoutRename;
+
         gulp.task('watch', builds, function() {
             var options = {};
             if(!debug) options.silent = true;
             livereload.listen(options);
-            gulp.watch('dist/build/**/*').on('change', livereload.changed);
+            gulp.watch('dist/build/**/*', function(file) {
+                livereload.changed(file.path);
+                /*
+                 clearTimeout(timeoutRename);
+                 timeoutRename = setTimeout(function() {
+                 livereload.changed(file.path);
+                 }, 500);
+                 */
+
+
+            });
         });
     },
     development: function(debug) {

@@ -24,7 +24,7 @@ module.exports = {
 
 
         gulp.on('task_start', function (e) {
-            //logger.log("Starting '",  e.task, ['green'], "'...");
+            logger.log("Starting '",  e.task, ['green'], "'...");
         });
         gulp.on('task_stop', function (e) {
             logger.log("Finished '", e.task, ['green', 'underline'], "' after ", parseInt(e.duration * 1000, 10), ['yellow'], " ms");
@@ -33,7 +33,6 @@ module.exports = {
             console.log(e);
         });
         gulp.on('task_recursion', function (e) {
-            console.log('plouf');
             console.log(e);
         });
     }
