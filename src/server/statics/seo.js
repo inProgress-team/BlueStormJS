@@ -12,7 +12,7 @@ module.exports = {
             userAgent = req.headers['user-agent'];
 
         console.log(userAgent);
-        if(userAgent!='facebookexternalhit/1.0'&&userAgent!='facebookexternalhit/1.1'&&userAgent!='Facebot') {
+        if(userAgent!='facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)'&&userAgent!='facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)'&&userAgent!='Facebot') {
             if(fragment===undefined||typeof fragment!='string')
                 return next();
         }
