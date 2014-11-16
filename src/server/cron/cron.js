@@ -1,5 +1,6 @@
 var logger = require(__dirname+'/../../logger/logger'),
-    arborescence = require(__dirname+'/../../arborescence');
+    arborescence = require(__dirname+'/../../arborescence'),
+    domain = require('domain');
 
 module.exports = function(config) {
     /**

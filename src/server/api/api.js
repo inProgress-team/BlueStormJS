@@ -1,7 +1,8 @@
 var express = require('express'),
     bodyParser = require('body-parser'),
     async = require('async'),
-    fs = require('fs');
+    fs = require('fs'),
+    domain = require('domain');
 
 var logger = require(__dirname+'/../../logger/logger'),
     arborescence = require(__dirname+'/../../arborescence'),
