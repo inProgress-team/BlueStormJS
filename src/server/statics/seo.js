@@ -11,7 +11,6 @@ module.exports = {
         var fragment = req.query._escaped_fragment_,
             userAgent = req.headers['user-agent'];
 
-        console.log(userAgent);
         if(userAgent!='facebookexternalhit/1.0 (+http://www.facebook.com/externalhit_uatext.php)'&&userAgent!='facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)'&&userAgent!='Facebot') {
             if(fragment===undefined||typeof fragment!='string')
                 return next();

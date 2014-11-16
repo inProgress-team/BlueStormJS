@@ -215,45 +215,57 @@ module.exports = function(config, cb) {
         app.deleteAux.apply(this, arguments);
     };
 
-    app.use(bodyParser.json());
 
-    /**
-     * CORS
-     */
-    app.use(function(req, res, next) {
-        res.header('Access-Control-Allow-Origin', "*");
-        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-        res.header('Access-Control-Allow-Headers', 'Content-Type, X-AUTH-TOKEN');
-        next();
-    });
-    /**
-     * Log everything if debug param is set to true in config
-     */
-    if(config.debug) {
-        //LOGGER FOR EVERY API REQUEST
-        app.use(function(req, res, next){
-            start = new Date;
-            next();
-        });
-    }
+    var d = domain.create();
 
-    /**
-     * Include router and routes
-     */
-    arborescence.getRequiredFiles('api', function (files) {
-        arborescence.loadFiles(files, app);
+    d.on('error', function(err) {
+        logger.error(err, 'API'+':'+config.port);
     });
 
-    if(config.debug) {
-        app.use(function(req, res, next){
-            var ms = new Date - start;
+    d.run(function() {
+
+
+        app.use(bodyParser.json());
+
+        /**
+         * CORS
+         */
+        app.use(function(req, res, next) {
+            res.header('Access-Control-Allow-Origin', "*");
+            res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+            res.header('Access-Control-Allow-Headers', 'Content-Type, X-AUTH-TOKEN');
             next();
-            var ip = req.headers["X-Forwarded-For"]
-                || req.headers["x-forwarded-for"]
-                || req.client.remoteAddress;
-            logger.log('API : '+req.method+' '+req.url+' - '+ip+' - '+ms+'ms');
         });
-    }
+        /**
+         * Log everything if debug param is set to true in config
+         */
+        if(config.debug) {
+            //LOGGER FOR EVERY API REQUEST
+            app.use(function(req, res, next){
+                start = new Date;
+                next();
+            });
+        }
+
+        /**
+         * Include router and routes
+         */
+        arborescence.getRequiredFiles('api', function (files) {
+            arborescence.loadFiles(files, app);
+        });
+
+        if(config.debug) {
+            app.use(function(req, res, next){
+                var ms = new Date - start;
+                next();
+                var ip = req.headers["X-Forwarded-For"]
+                    || req.headers["x-forwarded-for"]
+                    || req.client.remoteAddress;
+                logger.log('API : '+req.method+' '+req.url+' - '+ip+' - '+ms+'ms');
+            });
+        }
+    });
+
 
 
     /**
