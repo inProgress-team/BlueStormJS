@@ -140,6 +140,8 @@ module.exports = function(config) {
                         if(config.debug) {
                             logger.log('SOCKET : ' + url);
                         }
+                        if (options.roles)
+                            data.roles = options.roles;
                         checkAuthentification(data, function(err) {
                             if (err)
                                 return callback(err);
