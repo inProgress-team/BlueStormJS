@@ -1,39 +1,25 @@
-<div class="text-center" style="background:#24282E;margin-bottom:20px;">
-    <img src="/public/assets/images/logo/large.png" style="max-width: 810px;width: 100%;" alt="Songpeek" />
+<div page-title>
+    Projet {{projectsApi.project.name}}
 </div>
 
-<div class="container-fluid">
-    <div class="well text-center">
-        <a href="#" class="pull-left big-i" ng-click="prev()">
-            <i class="fa fa-angle-double-left"></i>
-        </a>
-        <a href="#" class="pull-right big-i" ng-click="next()">
-            <i class="fa fa-angle-double-right"></i>
-        </a>
-
-        <h4 style="margin-top: 0">{{'home.did_you_know' |translate}} ({{current+1}}/{{didYouKnowArray.length}})</h4>
-        {{('home.did_you_know.'+didYouKnow()) | translate}}
-    </div>
-</div>
-
-<div class="col-xs-6">
-    <div panel panel-title="home.today_best_albums" body-no-padding id="plouf">
-        <div media="span-3" album="album" ng-repeat="album in dailyAlbums">
-            <div media-album>
-            </div>
+<div class="col-md-8">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Développement</h3>
         </div>
-        <div style="clear: both;"></div>
-    </div>
-</div>
-
-
-<div class="col-xs-6">
-    <div panel panel-title="home.last_added_albums" body-no-padding>
-        <div media="span-3" album="album" ng-repeat="album in lastAddedAlbums">
-            <div media-album>
-            </div>
+        <div class="panel-body">
+            Panel content
         </div>
-        <div style="clear: both;"></div>
     </div>
 </div>
 
+<div class="col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Production</h3>
+        </div>
+        <div class="panel-body">
+            Panel content
+        </div>
+    </div>
+</div>

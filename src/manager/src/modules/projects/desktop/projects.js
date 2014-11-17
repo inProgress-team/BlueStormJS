@@ -61,6 +61,10 @@ angular.module('bs.projects', [])
     };
 
     service.set = function(index) {
+        angular.forEach(service.projects, function(p) {
+            p.active = false;
+        });
+        service.projects[index].active = true;
         service.project = service.projects[index];
         $cookieStore.put('project', service.project);
         $state.go('home');
