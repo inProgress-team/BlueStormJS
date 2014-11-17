@@ -1,0 +1,107 @@
+.navbar-left {
+  position:fixed;
+  left:0;
+  top:0;
+  height:100%;
+  width:@navbar-width;
+  background:@primary-bg;
+  z-index: 3000;
+
+
+  &> ul {
+    &> li {
+      width: 100%;
+
+      a:focus {
+        background: @primary-bg;
+      }
+
+      &.open > a {
+          background: @brand-primary;
+          &:hover, &:focus {
+            background: @brand-primary;
+          }
+      }
+      a.dropdown-toggle {
+        &~ .dropdown-menu {
+          left:@navbar-width;
+          top:-3px;
+          background: @primary-bg;
+          border-radius: 0;
+
+          &:focus {
+            background: @primary-bg;
+          }
+          &> li {
+
+            &:hover > a{
+              background: @brand-primary;
+              color: white;
+            }
+            &> a {
+              color:#aaa;
+            }
+          }
+        }
+      }
+
+      &> a {
+        color:#aaa;
+        font-size:12px;
+        font-weight:400;
+        text-align:center;
+        text-shadow:rgba(0,0,0,0.6) 0 -1px 0;
+
+        .transition(color 0.2s);
+
+        i {
+          font-size:1.6em;
+          padding: 5px 0;
+        }
+        strong {
+          display:block;
+          margin-left:5px;
+          font-size: 15px;
+          color: @brand-primary;
+        }
+
+        &#logo {
+          padding:10px 0;
+        }
+
+        &:hover {
+          background-color: transparent;
+        }
+      }
+
+
+      &> a:hover {
+        color:#ccc;
+        text-shadow:rgba(255,255,255,0.3) 0 0 5px;
+
+      }
+      &.active {
+        &> a:not(#logo) {
+          background: @brand-primary;
+          .box-shadow(rgba(0,0,0,0.25) 0 1px 3px inset) !important;
+          color:#DDD;
+          &:hover {
+            cursor: default;
+            text-shadow:rgba(0,0,0,0.6) 0 -1px 0;
+          }
+
+          strong {
+            color: white;
+          }
+        }
+      }
+    }
+    &.menus-bottom {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+    }
+  }
+
+}

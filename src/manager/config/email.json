@@ -1,0 +1,9 @@
+{
+    "from": "Songpeek <noreply@songpeek.com>",
+    "port": 465,
+    "host": "mail.gandi.net",
+    "auth": {
+        "user": "noreply@in-progress.io",
+        "pass": "Podsjz45azPodsjz45az"
+    }
+}

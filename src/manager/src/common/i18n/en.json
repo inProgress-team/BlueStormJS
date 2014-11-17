@@ -1,0 +1,226 @@
+{
+
+    "home": {
+        "home": "Home",
+        "today_best_albums": "Daily albums",
+        "last_added_albums": "Latest added albums",
+        "did_you_know": {
+            "did_you_know": "Did you know ?",
+            "songpeek": "Songpeek is a free music website, limitless and without ads.",
+            "hotkeys": "You can click on \"?\" to see the available keyboard shortcuts.",
+            "mobile": "The Android version of Songpeek is currently in development."
+        }
+    },
+    "tops" : {
+        "tops": "Top listening",
+        "top_albums": "Top albums",
+        "top_artists": "Top artists",
+        "top_songs": "Top tracks",
+        "top_playlists": "Top playlists"
+    },
+    "genres": {
+        "genres": "Genres",
+        "all": "All",
+        "rock": "Rock",
+        "pop": "Pop",
+        "electronic": "Electronic",
+        "reggae": "Reggae",
+        "rap": "Rap",
+        "jazz": "Jazz",
+        "metal": "Metal",
+        "dance": "Dance",
+        "downtempo": "Downtempo"
+    },
+    "form": {
+        "not_an_email": "Not a valid email address.",
+        "required": "Is required.",
+        "minlength": "Too short.",
+        "maxlength": "Too long.",
+        "passwords_no_match": "Passwords do not match."
+    },
+    "user": {
+        "not_found": "The email is not recognized as any account's one.",
+        "first_name": "First name",
+        "last_name": "Surname",
+        "email": "Email",
+        "password": "Password",
+        "password_confirm": "Password (please confirm)",
+        "playlists": "My playlists",
+        "signout": "Sign out"
+    },
+    "login": {
+        "login": "Sign in",
+        "subtitle": "For a better experience, please sign in.",
+        "social": "Sign in with your social networks account",
+        "classic": "Or more classically",
+        "no_account_signup": "No account yet ? Sign up now !",
+        "bad_credentials": "Wrong identifiers.",
+        "account_not_activated": "The email has not been confirmed yet for this account.",
+        "must_be": "You must be connected.",
+
+        "a_problem": "A connection problem occurred ?",
+        "send_forgotten_email": "Send us an email",
+        "forgotten": "Forgotten password ?",
+        "forgotten_mail_sent": "An email has been sent. Click on the link included in it to recover a password.",
+        "modify_password": "Change my password",
+        "password_modified": "Your password has been updated.",
+        "password_modified_error": "The given link is not valid anymore.",
+        "forgotten_infos": "Some problems to connect ? Fill the field below with your email address. A link will be sent to you to recover your password.",
+        "forgotten_confirm_infos": "Choose a new password for your account.",
+        "remember_email": "Remember my email"
+    },
+    "signup": {
+        "signup": "Sign up",
+        "subtitle": "No account yet ? Sign up now !",
+        "subtitle_social": "Sign up with your favourite social network.",
+        "already_an_account_sign_in": "Already an account ? Sign in !",
+        "email_sent": "An email has been sent to your email address, please check your electronic mailbox to confirm your account.",
+        "already_existing": "Email address already used.",
+        "confirm": "Email address confirmation.",
+        "confirming": "Loading validation",
+        "confirm_invalid_link": "Invalid link",
+        "confirm_back_home": "Back to home",
+        "confirm_account_activated": "Your account is now activated and you are connected.",
+        "confirm_thanks": "Thank you",
+        "first_login": "Your first connection was with a social network account (<span style='text-transform:capitalize'>{{type}}</span>). Please fill some more information to create a account.",
+        "email_taken_social": "Email address already used. Maybe you should simply synchronize your accounts in the parameters page when connected."
+    },
+
+
+
+
+
+    "search":{
+        "search": "Search",
+        "type": "Type your search here",
+        "title": "Looking for songs on Songpeek",
+        "subtitle": "Start to type to search",
+        "last_queries": "Last queries",
+        "no_last_queries": "No recent query.",
+        "providers": "Providers",
+        "no_results": "No results for your query.",
+        "search_on_songpeek": "Query on Songpeek",
+        "search_on_youtube": "Query on Youtube"
+    },
+    "legal": {
+        "legal": "Imprint",
+        "cgu": "Terms and Conditions",
+        "users": "User data collection"
+    },
+    "contact": {
+        "contact": "Contact us",
+        "email": "Email",
+        "report_bug": "Report a bug",
+        "suggest": "Send a suggestion",
+        "other": "Other",
+        "message_content": "Message content",
+        "send": "Send",
+        "valid": "Your message has been sent.<br/>You will receive an answer soon."
+    },
+    "album": {
+        "album": "Album",
+        "albums": "Albums",
+        "not_found": "No album has been found."
+    },
+    "artist": {
+        "artist": "Artist",
+        "artists": "Artists",
+        "not_found": "No artist has been found."
+    },
+    "playlist": {
+        "playlist": "Playlist",
+        "playlists": "Playlists",
+        "add_to": "Add to my playlists",
+
+        "public": "Public playlist",
+        "private": "Private playlist",
+        "created_by": "created by",
+        "save": "Save the playlist",
+        "name": "Playlist name",
+        "save_choose_image": "Choose a picture for the playlist",
+        "delete_confirm": "Do you really want to delete this playlist ?",
+        "no_playlists": "You do not have any playlist yet.",
+        "choose": "Choose this playlist",
+        "edit": "Edit a playlist",
+        "import": "Import a playlist",
+        "import_infos": "Use a YouTube playlist link to import it on Songpeek.",
+        "bad_link": "The provided link is incorrect.",
+        "not_found": "No playlist has been found."
+    },
+    "song": {
+        "song": "Song",
+        "songs": "Songs",
+        "title": "Title",
+        "length": "Length",
+        "listened": "Seen",
+        "no_song": "No song here.",
+        "not_found": "No song has been found."
+    },
+    "settings": {
+        "settings": "Settings",
+        "language": "Language"
+    },
+    "error": {
+        "error": "Error",
+        "unknown": "An unknown error appeared."
+    },
+
+    "alert": {
+        "alert": "Report",
+        "album": "Report an album",
+        "artist": "Report an artist",
+        "song": "Report a song",
+        "comments": "Thank you for sharing your remarks.",
+        "more": "Additional message",
+        "other": "Other",
+        "unavailable": "Incorrect data",
+        "unavailable_song": "Song not available.",
+        "few_songs": "Too few songs are available.",
+        "bad_content": "Bad content",
+        "bad_quality": "Bad quality",
+        "live": "This song is live music and should not be."
+    },
+    "queue": {
+        "randomize": "Randomize playlist",
+        "delete": "Clear out the current playlist",
+        "repeat_song": "Repeat this song",
+        "repeat": "Loop the playlist"
+    },
+    "loading": "Loading ...",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "yes": "Yes",
+    "no": "No",
+    "share": "Share",
+
+
+    "edit": "Edit",
+    "events": {
+        "events": "Events",
+        "10": "10 km",
+        "50": "50 km",
+        "100": "100 km",
+        "250": "250 km",
+        "filters": "Filters",
+        "all": "All",
+        "website": "Website",
+        "name": "Event name, Artist",
+        "your_town": "Your city",
+        "next_7_day": "Next 7 days",
+        "next_30_day": "Next 30 days",
+        "next_6_month": "Next 6 months",
+        "next_12_month": "Next 12 months",
+        "geolocate": "Find me using geolocation",
+        "not_found":"No event has been found."
+    },
+    "hotkeys": {
+        "info": "Show / hide this help menu",
+        "next": "Next song",
+        "prev": "Previous song",
+        "play_pause": "Play / Pause"
+    },
+    "confirm": {
+        "quit": "A song is playing."
+    }
+}

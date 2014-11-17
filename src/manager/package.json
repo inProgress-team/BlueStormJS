@@ -1,0 +1,43 @@
+{
+  "name": "Assipe",
+  "version": "0.1.01",
+  "homepage": "http://assipe-software.com",
+  "contributors": [
+    "Théo Mathieu",
+    "Alexandre Frantz"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@bitbucket.org:Mokto/assipe.git"
+  },
+  "description": "Songpeek",
+  "dependencies": {
+    "assert": "^1.1.1",
+    "async": "^0.9.0",
+    "base64": "^2.1.0",
+    "bcrypt": "^0.8.0",
+    "cron": "^1.0.5",
+    "crypto": "0.0.3",
+    "events": "^1.0.2",
+    "facebook-node-sdk": "^0.2.0",
+    "jwt-simple": "^0.2.0",
+    "lru-cache": "^2.5.0",
+    "moment": "^2.8.2",
+    "mongoose": "^3.8.17",
+    "os-utils": "0.0.14",
+    "passport": "^0.2.0",
+    "passport-local": "^1.0.0",
+    "password-generator": "^0.2.2",
+    "prerender": "^3.10.0",
+    "prerender-node": "^1.1.1",
+    "querystring": "^0.2.0",
+    "request": "^2.45.0",
+    "should": "^4.0.4",
+    "slug": "^0.7.1",
+    "socket.io-client": "^1.1.0",
+    "supertest": "^0.13.0",
+    "time": "^0.11.0",
+    "underscore": "^1.7.0"
+  },
+  "devDependencies": {}
+}

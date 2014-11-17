@@ -1,0 +1,78 @@
+.background-modal-page {
+  background-image: url(/public/assets/images/background.png);
+  position: fixed;
+  min-height: 100%;
+  width: 100%;
+}
+
+
+.modal-page {
+  position: relative;
+
+
+  padding: 40px 0;
+  .center-block();
+  width:600px;
+  border-radius: 5px;
+
+  &> .header {
+    .background-transparency(@primary-bg, 50%);
+
+    color:white;
+    text-align: center;
+    border-radius: 5px 5px 0 0;
+    box-shadow: 0 0 10px #333;
+    h3 {
+      margin: 0;
+      padding: 20px 0;
+    }
+  }
+  &> .content {
+    border-radius: 0 0 5px 5px;
+    .background-transparency(#F7F7F7, 20%);
+    .clearfix();
+    display: table;
+    width: 100%;
+
+    &.all {
+      box-shadow: 0 0 10px #333;
+    }
+
+    .container-fluid {
+      padding-top: 15px;
+      padding-bottom: 15px;
+    }
+
+    &> .left, &> .right {
+      box-shadow: 0 0 10px #333;
+      display: table-cell;
+    }
+    &> .left {
+      .background-transparency(@primary-bg, 80%);
+      width: 40%;
+      color: white;
+      border-radius: 5px 0 0 5px;
+      position:relative;
+
+      &> h3 {
+        padding: 0 10px;
+        &> small {
+          color:#CCC;
+          text-transform: none;
+          margin-top:20px;
+          display: block;
+        }
+      }
+    }
+    &> .right {
+      .background-transparency(#F7F7F7, 20%);
+      border-radius: 0 5px 5px 0;
+      width: 60%;
+      padding: 15px 0;
+      color: #222;
+    }
+
+  }
+}
+
+

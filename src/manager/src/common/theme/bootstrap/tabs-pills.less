@@ -1,0 +1,29 @@
+.nav {
+  &.nav-tabs, &.nav-pills:not(.nav-stacked) {
+
+    margin-bottom: 20px;
+    border-bottom: 1px solid #DDD;
+    text-align: center;
+    font-size: 16px;
+
+    &> li {
+      float:none;
+      display:inline-block;
+      margin-bottom: -1px;
+
+      &> a {
+        color:#BBB;
+      }
+
+      &.active > a, &> a:hover {
+        border-color: transparent;
+        color:#444;
+        background: transparent;
+      }
+
+      &.active > a {
+        border-bottom: 2px solid @brand-primary;
+      }
+    }
+  }
+}
