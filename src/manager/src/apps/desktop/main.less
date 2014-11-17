@@ -1,0 +1,29 @@
+@import '../../common/theme/main';
+
+@navbar-width: 55px;
+
+@import '../../common/frontend/modalPage/modalPage';
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.big-i {
+  font-size: 30px;
+}
+
+body {
+  padding-left: @navbar-width;
+}
+
+.well.active {
+  border: 2px solid @secondary-bg;
+  background: @primary-bg;
+  color: white;
+}
+.img-choose {
+  cursor: pointer;
+  &.active {
+    box-shadow: 0 0 10px @brand-primary, 0 0 10px @brand-primary, 0 0 10px @brand-primary;
+  }
+}

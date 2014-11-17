@@ -1,0 +1,70 @@
+<div page-title>
+    Projects <i class="fa fa-ellipsis-v"></i>
+</div>
+
+<div class="col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Mes projets</h3>
+        </div>
+        <div class="panel-body">
+            <div class="alert alert-info" ng-if="projectsApi.projects.length==0">
+                Vous n'avez pas encore de projets
+            </div>
+            <table class="table table-bordered table-striped">
+                <tr ng-class="{'success': project.active}" ng-repeat="project in projectsApi.projects">
+                    <td>{{project.name}}</td>
+                    <td>{{project.path}}</td>
+                    <td>
+                        <a href class="btn btn-primary btn-xs" ng-click="projectsApi.set($index)"><i class="fa fa-bullseye"></i></a>
+                        <a href class="btn btn-primary btn-xs" ng-click="projectsApi.remove($index)"><i class="fa fa-remove"></i></a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<div class="col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Importer un projet existant</h3>
+        </div>
+        <div class="panel-body">
+            <form ng-submit="searchProjects()" name="importForm">
+                <div class="input-group">
+                    <input type="text" name="path" class="form-control" ng-model="importProgressPath">
+                <span class="input-group-btn">
+                    <button class="btn btn-primary btn-block" type="submit">Rechercher</button>
+                </span>
+                </div>
+            </form>
+            <br/><br/>
+            <table class="table table-bordered table-striped">
+                <tr ng-repeat="project in importProjects">
+                    <td><input type="checkbox" ng-model="project.active"/></td>
+                    <td>{{project.name}}</td>
+                    <td>{{project.path}}</td>
+                </tr>
+            </table>
+            <div class="text-center" ng-if="importProjects.length!=0">
+                <a href ng-click="import()" class="btn btn-primary">Importer</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div class="col-md-4">
+    <div class="well">
+
+    </div>
+</div>
