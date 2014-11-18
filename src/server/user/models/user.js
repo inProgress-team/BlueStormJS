@@ -157,7 +157,7 @@ module.exports.signUp = function(user, options, callback) {
     var password;
     // If random password
     if (options.randomPassword) {
-        password = generatePassword(24, false, /\w/);
+        password = generatePassword(8, false, /\w/);
         options.sendPassword = true;
     }
     else {
@@ -215,7 +215,6 @@ module.exports.signUp = function(user, options, callback) {
                         }
 
                         delete user.password;
-                        delete user._id;
                         return callback(null, elts[0], module.exports.encodeToken(elts[0]));
                     });
                 });
@@ -284,7 +283,7 @@ module.exports.resetPassword = function(data, callback) {
             {},
             {
                 "$set": {
-                    "hashPassword": generatePassword(24, false, /\w/)
+                    "hashPassword": generatePassword(8, false, /\w/)
                 }
             },
             {
@@ -422,7 +421,6 @@ module.exports.signIn = function(user, callback) {
                     return callback('invalid_password');
 
                 delete res['password'];
-                delete res['_id'];
                 return callback(null, res, module.exports.encodeToken(res));
             });
         });
@@ -479,7 +477,6 @@ module.exports.update = function(user, callback) {
             }
 
             delete user.password;
-            delete user._id;
             return callback(null, res, module.exports.encodeToken(res));
         }
     );
