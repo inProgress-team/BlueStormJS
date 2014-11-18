@@ -167,7 +167,7 @@ module.exports.signUp = function(user, options, callback) {
     }
 
     dbConnection(function(db) {
-        db.collection('user').findOne({
+        db.collection('users').findOne({
             email: user.email
         }, function(err, res) {
             if (err)
@@ -191,7 +191,7 @@ module.exports.signUp = function(user, options, callback) {
                     } else {
                         user.activated = true;
                     }
-                    db.collection('user').insert(user, function(err, elts) {
+                    db.collection('users').insert(user, function(err, elts) {
                         if (err)
                             return callback(err);
 
@@ -238,7 +238,7 @@ module.exports.signUpConfirm = function(hash, options, callback) {
     }
 
     dbConnection(function(db) {
-        db.collection('user').findAndModify({
+        db.collection('users').findAndModify({
                 "hash": hash
             },
             {},
@@ -278,7 +278,7 @@ module.exports.resetPassword = function(data, callback) {
     }
 
     dbConnection(function(db) {
-        db.collection('user').findAndModify({
+        db.collection('users').findAndModify({
                 "email": data.email
             },
             {},
@@ -324,7 +324,7 @@ module.exports.resetPasswordConfirm = function(data, callback) {
                 return callback(err);
 
             dbConnection(function (db) {
-                db.collection('user').findAndModify({
+                db.collection('users').findAndModify({
                         "email": data.email,
                         "hashPassword": data.hashPassword
                     },
@@ -361,7 +361,7 @@ module.exports.changePassword = function(data, callback) {
     }
 
     dbConnection(function(db) {
-        db.collection('user').findOne({
+        db.collection('users').findOne({
             email: data.email
         }, function(err, res) {
             if (err)
@@ -384,7 +384,7 @@ module.exports.changePassword = function(data, callback) {
                             return callback(err);
 
                         res.password = hash;
-                        db.collection('user').save(res, function(err) {
+                        db.collection('users').save(res, function(err) {
                             if (err)
                                 return callback(err);
 
@@ -405,7 +405,7 @@ module.exports.signIn = function(user, callback) {
     }
 
     dbConnection(function(db) {
-        db.collection('user').findOne({
+        db.collection('users').findOne({
             email: user.email
         }, function(err, res) {
             if (err)
@@ -459,7 +459,7 @@ module.exports.update = function(user, callback) {
         });
     }
 
-    db.collection('user').findAndModify({
+    db.collection('users').findAndModify({
             "query": {"email": user.email},
             "update": user,
             "new": true
@@ -512,7 +512,7 @@ module.exports.getUsers = function(options , callback) {
         selection = options.selection || {};
 
     dbConnection(function(db) {
-        db.collection('user').find(criteria, selection).toArray(function(err, res) {
+        db.collection('users').find(criteria, selection).toArray(function(err, res) {
             if (err)
                 return callback(err);
 
