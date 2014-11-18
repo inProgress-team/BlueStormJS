@@ -2,23 +2,19 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     async = require('async'),
     fs = require('fs'),
-    domain = require('domain'),
-    bb = require('express-busboy');
+    domain = require('domain');
 
 var logger = require(__dirname+'/../../logger/logger'),
     arborescence = require(__dirname+'/../../arborescence'),
-    user = require(__dirname + '/../user/models/user');
+    user = require(__dirname + '/../user/models/user'),
+    multer  = require('multer');
+
 
 var ROLES_CONFIG_FILE_PATH = process.cwd() + '/config/roles.json';
 var rolesConfig;
 
 var app = express(),
     start;
-
-//UPLOAD
-bb.extend(app, {
-    upload: true
-});
 
 var roleContainsRole = function(activeRole, requiredRole, callback) {
     if (!rolesConfig || rolesConfig.roles.length == 0)
@@ -231,7 +227,7 @@ module.exports = function(config, cb) {
 
     d.run(function() {
 
-
+        app.use(multer());
         app.use(bodyParser.json());
 
         /**
@@ -265,9 +261,7 @@ module.exports = function(config, cb) {
             app.use(function(req, res, next){
                 var ms = new Date - start;
                 next();
-                var ip = req.headers["X-Forwarded-For"]
-                    || req.headers["x-forwarded-for"]
-                    || req.client.remoteAddress;
+                var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
                 logger.log('API : '+req.method+' '+req.url+' - '+ip+' - '+ms+'ms');
             });
         }
