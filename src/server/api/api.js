@@ -2,7 +2,8 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     async = require('async'),
     fs = require('fs'),
-    domain = require('domain');
+    domain = require('domain'),
+    bb = require('express-busboy');
 
 var logger = require(__dirname+'/../../logger/logger'),
     arborescence = require(__dirname+'/../../arborescence'),
@@ -13,6 +14,11 @@ var rolesConfig;
 
 var app = express(),
     start;
+
+//UPLOAD
+bb.extend(app, {
+    upload: true
+});
 
 var roleContainsRole = function(activeRole, requiredRole, callback) {
     if (!rolesConfig || rolesConfig.roles.length == 0)
