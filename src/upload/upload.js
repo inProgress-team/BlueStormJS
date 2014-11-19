@@ -1,6 +1,7 @@
 var fs = require('fs'),
     fse = require('fs.extra'),
-    async = require('async');
+    async = require('async'),
+    uuid = require('node-uuid');
 
 var config = require(__dirname + '/../config');
 
@@ -8,6 +9,15 @@ var basePath = process.cwd()+'/dist/build/';
 
 module.exports = {
     addPublic: function(file, apps, callback) {
+        var hash = uuid.v4();
+        var name = file.originalname;
+        var ext = file.extension;
+
+        if (ext && ext != '') {
+            ext = '.' + ext;
+            name = name.substring(0, name.length - ext.length + 1);
+        }
+
         if (typeof apps == 'function') {
             callback = apps;
             apps = [];
@@ -21,7 +31,7 @@ module.exports = {
                 if (err)
                     return callback(err);
 
-                var destination = basePath + app + '/public/upload/' + file.originalname;
+                var destination = basePath + app + '/public/upload/' + name + hash + ext;
                 fs.unlink(destination, function() {
                     fse.copy(file.path, destination, function(err) {
                         return callback(err);
