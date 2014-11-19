@@ -38,7 +38,7 @@ module.exports = {
         };
         if (fields) {
             for (var i in fields) {
-                if (defaultsFields.hasOwnProperty(i) && !defaultsFields[i]) {
+                if (fields.hasOwnProperty(i)) {
                     defaultsFields[i] = fields[i];
                 }
             }
