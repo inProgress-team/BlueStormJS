@@ -1,15 +1,17 @@
-var async = require('async');
+var async = require('async'),
+    mongoose = require('mongoose');
 
 var logger = require(__dirname+'/src/logger/logger'),
     server = require(__dirname+'/src/server/server'),
     cli = require(__dirname+'/src/cli'),
     arborescence = require(__dirname+'/src/arborescence'),
-    mongoose = require('mongoose');
+    upload = require(__dirname + '/src/upload/upload');
 
 module.exports = {
     cli: cli,
     server: server,
     logger: logger,
+    upload: upload,
     db: function(callback) {
         require(__dirname + '/db')(function(err, res) {
             if (err)
