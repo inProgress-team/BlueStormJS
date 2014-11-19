@@ -43,7 +43,7 @@ module.exports = {
                 return callback(err);
 
             fs.unlink(file.path, function(err) {
-                return callback(err, '/public/upload/' + file.originalname);
+                return callback(err, '/public/upload/' + name + hash + ext);
             });
         });
     },
