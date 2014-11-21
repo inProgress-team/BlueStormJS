@@ -1,8 +1,8 @@
 var fs = require('fs'),
-    express = require('express');
+express = require('express');
 
 var logger = require(__dirname+'/../../logger/logger'),
-    seo = require(__dirname+'/seo');
+seo = require(__dirname+'/seo');
 
 
 module.exports = function(config) {
@@ -13,9 +13,9 @@ module.exports = function(config) {
 
 
     var app = express(),
-        cacheIndex = null,
-        path = 'dist/'+dir+'/'+config.name,
-        start;
+    cacheIndex = null,
+    path = 'dist/'+dir+'/'+config.name,
+    start;
 
     app.use(express.static(path));
     app.use(seo.middleware);
@@ -29,7 +29,7 @@ module.exports = function(config) {
     }
 
     app.get('*', function(req, res){
-        if(req.url.indexOf('/public/')==0) {
+        if(req.url.indexOf('/public/')==0 || req.url.indexOf('.tpl.html')!=-1) {
             return res.status(404).send('Not found');
         }
         if(!cacheIndex || process.env.NODE_ENV=='development') {
