@@ -70,12 +70,12 @@ module.exports = {
                 .use(vhost(config.get(type, 'api'), apiApp));
 
             if(process.env.NODE_WORKER_ID=='MASTER') {
-                cron({debug: debug});
+                //cron({debug: debug});
             }
 
             return server.listen(3333);
 
-        }).listen(config.get(type, 'main'), function() {
+        }).listen(3334, function() {
             if(process.env.NODE_WORKER_ID=='MASTER') {
                 logger.log('Master started on ', config.get(type, 'main'), ['red'], ' port');
             } else {
