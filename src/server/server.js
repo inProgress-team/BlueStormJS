@@ -70,7 +70,7 @@ module.exports = {
                 .use(vhost(config.get(type, 'api'), apiApp));
 
             if(process.env.NODE_WORKER_ID=='MASTER') {
-                //cron({debug: debug});
+                cron({debug: debug});
             }
 
             return server.listen(3333);
