@@ -13,8 +13,17 @@ module.exports = function(config) {
     });
 
     d.run(function() {
+        /*
         arborescence.getCrons('cron', function (files) {
             arborescence.loadCrons(files, function () {
+                if (config && config.debug) {
+                    logger.log('CRON', ['green'], ' loaded.');
+                }
+            });
+        });
+        */
+        arborescence.getRequiredFiles('cron', function (files) {
+            arborescence.loadFiles(files, null, function () {
                 if (config && config.debug) {
                     logger.log('CRON', ['green'], ' loaded.');
                 }

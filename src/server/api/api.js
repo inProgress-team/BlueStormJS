@@ -2,7 +2,8 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     async = require('async'),
     fs = require('fs'),
-    domain = require('domain');
+    domain = require('domain'),
+    compression = require('compression');
 
 var logger = require(__dirname+'/../../logger/logger'),
     arborescence = require(__dirname+'/../../arborescence'),
@@ -227,6 +228,9 @@ module.exports = function(config, cb) {
 
     d.run(function() {
 
+        if (process.env.NODE_ENV != 'development') {
+            app.use(compression());
+        }
         app.use(multer());
         app.use(bodyParser.json());
 
