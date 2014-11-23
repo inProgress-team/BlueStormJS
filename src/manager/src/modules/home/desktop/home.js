@@ -1,6 +1,6 @@
 angular.module('bs.home', [
     'ui.router'
-])
+    ])
 
 
 
@@ -24,4 +24,17 @@ angular.module('bs.home', [
     $scope.appsApi = appsApi;
     $scope.tasksApi = tasksApi;
     $scope.serverApi = serverApi;
+
+    $scope.startFrontend = function () {
+        $scope.type = 'frontend';
+        tasksApi.development();
+    };
+
+    $scope.startBackend = function () {
+        $scope.type = 'backend';
+        serverApi.development.start();
+    };
+
+
+
 });

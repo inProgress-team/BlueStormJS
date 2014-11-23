@@ -3,7 +3,7 @@
  * @description It handles Songpeek Desktop Application
  *
  */
-var songpeek = angular.module('bs', [
+ var songpeek = angular.module('bs', [
     'bluestorm',
     'templates',
     'app',
@@ -22,27 +22,22 @@ var songpeek = angular.module('bs', [
     'bs.server'
 
 
-])
+    ])
 
 /**
  * @name AppCtrl
  * @description The controller which contains languages and url states
  */
-.controller('AppCtrl', function AppCtrl($scope, titleApi, $rootScope, $document, $translate, $state, hotkeys, projectsApi, configApi, socket, serverApi, tasksApi) {
+ .controller('AppCtrl', function AppCtrl($scope, titleApi, $rootScope, $document, $translate, $state, hotkeys, projectsApi, configApi) {
 
 
     $rootScope.$state = $state;
     $rootScope.lang = $translate.storage().get( $translate.storageKey())||$translate.preferredLanguage();
     $scope.projectsApi = projectsApi;
 
-	$rootScope.pageTitle = titleApi;
+    $rootScope.pageTitle = titleApi;
 
     $scope.$on('$stateChangeSuccess', function(event, toState) {
         titleApi.setPageTitle(toState.data.pageTitle);
-    });
-
-    socket.on('message', function (message) {
-        serverApi.on(message);
-        tasksApi.on(message);
     });
 });

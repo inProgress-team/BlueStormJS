@@ -1,37 +1,55 @@
 angular.module('bs.server', [
-])
+    ])
 
 
-.service('serverApi', function (socket, appsApi, projectsApi) {
+.service('serverApi', function (socket, frontendAppsApi, projectsApi) {
 
     var service = {};
-    service.apps = [{
-        name: 'api',
-        status: 'up'
-    }, {
-        name: 'socket',
-        status: 'down'
-    },{
-        name: 'desktop',
-        status: 'down'
-    }, {
-        name: 'admin',
-        status: 'down'
-    }];
+
+    socket.emit('server:getApps', {path: projectsApi.project.path}, function (err, apps) {
+        if(err) return console.log(err);
+
+        service.apps = apps;
+    });
+    socket.emit('server:isProcessing', function(err, res) {
+        if(err) return console.log(err);
+        service.isProcessing = res;
+        console.log(false);
+    });
 
     service.development = {
         start: function () {
-            console.log('starting server');
-            socket.emit('server:development:start', function(err) {
-                console.log('server started');
+            socket.emit('server:development:start', {
+                path: projectsApi.project.path,
+                apps: frontendAppsApi.getApps()
+            }, function(err) {
+                if(err) return console.log(err);
+
+                service.isProcessing = true;
+            });
+
+        }
+    };
+
+    socket.on('message_server', function (data) {
+        console.log(data);
+        if(data.type=="app_started") {
+            angular.forEach(service.apps, function (app) {
+                if(data.name==app.name) {
+                    app.status = 'up';
+                    app.port = data.port;
+                }
             });
         }
-    }
-/*
-    socket.emit('tasks:isProcessing', function(err, res) {
-        if(err) return console.log(err);
-        service.isProcessing = res;
     });
+    service.kill = function() {
+        socket.emit('server:kill', function(err) {
+            if(err) return console.log(err);
+
+            service.isProcessing = false;
+        });
+    };
+/*
 
     service.development = function() {
         socket.emit('server:development', {
@@ -42,26 +60,9 @@ angular.module('bs.server', [
         });
     };
 
-    service.kill = function() {
-        socket.emit('tasks:kill', function(err) {
-            if(err) return console.log(err);
-
-            service.isProcessing = false;
-        });
+    
     };
-*/
-    service.on = function (message) {
-        
-        /*if(message.type=="tasks_executing") {
-            service.tasks = {
-                count: message.count,
-                done: 0 
-            };
-        } else if(message.type=="task_done") {
-            service.tasks.done++;
-
-        } else */
-    };
+    */
 
     return service;
 });

@@ -2,60 +2,75 @@
     Projet {{projectsApi.project.name}}
 </div>
 
-<div class="col-md-8">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Développement</h3>
-        </div>
-        <div class="panel-body">
-            <div class="btn-group btn-group-justified" role="group">
-                <a href disabled class="btn" ng-class="{'btn-success': app.status=='up', 'btn-danger': app.status=='down'}" ng-repeat="app in serverApi.apps">
-                    {{app.name}}
-                </a>
-            </div>
+<pre>{{type|json}}</pre>
 
-            <div ng-if="tasksApi.tasks">
-                <h2 class="text-center" ng-if="tasksApi.tasks.count">
-                    <span ng-if="!tasksApi.tasks.seconds">Executing {{tasksApi.tasks.count}} tasks.</span>
-                    <span ng-if="tasksApi.tasks.seconds">Done in {{tasksApi.tasks.seconds}} seconds.</span>
-                </h2>
-                <h2 class="text-center" ng-if="!tasksApi.tasks.count">-</h2>
 
-                <div class="progress">
-                  <div class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="width: {{(tasksApi.tasks.done/tasksApi.tasks.count)*100}}%;">
+
+
+<div ng-if="tasksApi.isProcessing || serverApi.isProcessing">
+    <div class="col-md-8">
+        <div>
+            <h2 class="text-center" ng-if="tasksApi.tasks.count">
+                <span ng-if="!tasksApi.tasks.seconds">Executing {{tasksApi.tasks.count}} tasks.</span>
+                <span ng-if="tasksApi.tasks.seconds">Done in {{tasksApi.tasks.seconds}} seconds.</span>
+            </h2>
+            <h2 class="text-center" ng-if="!tasksApi.tasks.count">-</h2>
+
+            <div class="progress" style="margin-bottom:0;">
+                <div class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="width: {{(tasksApi.tasks.done/tasksApi.tasks.count)*100}}%;">
                     <span ng-if="tasksApi.tasks.count">{{((tasksApi.tasks.done/tasksApi.tasks.count)*100).toFixed(0)}}%</span>
                     <span ng-if="!tasksApi.tasks.count">0%</span>
-                  </div>
                 </div>
             </div>
-            
+        </div>
+        <div class="btn-group btn-group-justified" role="group">
+            <a href ng-disabled="!app.port" class="btn" ng-class="{'btn-success': app.status=='up', 'btn-danger': app.status=='down'}" ng-repeat="app in serverApi.apps">
+                {{app.name}} <span ng-if="app.port">({{app.port}})</span>
+            </a>
+            <a href class="btn btn-default btn-block" ng-click="tasksApi.kill();serverApi.kill()"><i class="fa fa-remove"></i></a>
+        </div>
 
 
 
-
-            <a href class="btn btn-default" ng-click="tasksApi.development()" ng-if="!tasksApi.isProcessing">Build / Server</a>
-            <a href class="btn btn-danger" ng-click="tasksApi.kill()" ng-if="tasksApi.isProcessing"><i class="fa fa-remove"></i></a>
-            
-            <div class="checkbox" ng-repeat="app in appsApi.frontendApps">
-                <label>
-                    <input type="checkbox" value="" ng-model="app.checked" ng-change="appsApi.frontendAppsChange()">
-                    {{app.name}}
-                </label>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Développement</h3>
             </div>
-            {{tasksApi.tasks.done}} <br> {{tasksApi.tasks.count}}
+            <div class="panel-body">
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Messages</h3>
+            </div>
+            <div class="panel-body">
+                <pre>{{serverApi|json}}</pre>
+                <pre>{{tasksApi|json}}</pre>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="col-md-4">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Messages</h3>
-        </div>
-        <div class="panel-body">
-            <ul>
-                <li ng-repeat="msg in msgs">{{msg}}</li>
-            </ul>
+
+<div ng-if="!tasksApi.isProcessing && !serverApi.isProcessing">
+    <div class="col-md-3 col-md-offset-3">
+        <div class="well" style="height:200px;">
+            <br><br><br>
+            <a href class="btn btn-default btn-block" ng-click="startFrontend();">Start Frontend</a>
         </div>
     </div>
+    <div class="col-md-3">
+        <div class="well" style="height:200px;">
+            <br><br><br>
+            <a href class="btn btn-default btn-block" ng-click="startBackend();">Start Backend</a>
+        </div>
+    </div>
+
 </div>
+
+

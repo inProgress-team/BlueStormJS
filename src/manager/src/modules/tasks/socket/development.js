@@ -1,13 +1,13 @@
 var async = require('async'),
-    gulp = require('bluestorm').gulp,
-    childProcess = require('child_process');
+gulp = require('bluestorm').gulp,
+childProcess = require('child_process');
 
 
 var child;
 module.exports = function(socket) {
 
 
-    socket.on('tasks:development:build-server', function(req, callback) {
+    socket.on('tasks:development:build', function(req, callback) {
         if (typeof callback == 'function') {
             process.env.NODE_ENV = 'development';
 
@@ -18,7 +18,7 @@ module.exports = function(socket) {
                 cwd: req.data.path
             });
             child.on('message', function(message){
-                socket.emit('message', message);
+                socket.emit('message_tasks', message);
             });
             child.send({
                 debug: true

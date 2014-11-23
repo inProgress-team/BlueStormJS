@@ -1,9 +1,8 @@
 angular.module('bs.tasks', [
-    'bs.tasks.development'
-])
+    ])
 
 
-.service('tasksApi', function (socket, appsApi, projectsApi, serverApi) {
+.service('tasksApi', function (socket, frontendAppsApi, projectsApi, serverApi) {
 
     var service = {};
     service.tasks = {
@@ -14,12 +13,13 @@ angular.module('bs.tasks', [
     socket.emit('tasks:isProcessing', function(err, res) {
         if(err) return console.log(err);
         service.isProcessing = res;
+        console.log(res);
     });
 
     service.development = function() {
-        socket.emit('tasks:development:build-server', {
+        socket.emit('tasks:development:build', {
             path: projectsApi.project.path,
-            apps: appsApi.getFrontendApps()
+            apps: frontendAppsApi.getApps()
         }, function () {
             service.isProcessing = true;
         });
@@ -33,8 +33,7 @@ angular.module('bs.tasks', [
         });
     };
 
-    service.on = function (message) {
-        console.log(message);
+    socket.on('message_tasks', function (message) {
         if(message.type=="tasks_executing") {
             service.tasks = {
                 count: message.count,
@@ -47,7 +46,7 @@ angular.module('bs.tasks', [
             service.tasks.seconds = message.seconds;
             serverApi.development.start();
         }   
-    };
+    });
 
     return service;
 });
