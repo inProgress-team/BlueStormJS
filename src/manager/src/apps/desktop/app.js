@@ -17,7 +17,9 @@ var songpeek = angular.module('bs', [
     'bs.projects',
     'bs.home',
     'bs.quality',
-    'bs.config'
+    'bs.config',
+    'bs.tasks',
+    'bs.server'
 
 
 ])
@@ -26,7 +28,7 @@ var songpeek = angular.module('bs', [
  * @name AppCtrl
  * @description The controller which contains languages and url states
  */
-.controller('AppCtrl', function AppCtrl($scope, titleApi, $rootScope, $document, $translate, $state, hotkeys, projectsApi, configApi) {
+.controller('AppCtrl', function AppCtrl($scope, titleApi, $rootScope, $document, $translate, $state, hotkeys, projectsApi, configApi, socket, serverApi, tasksApi) {
 
 
     $rootScope.$state = $state;
@@ -37,5 +39,10 @@ var songpeek = angular.module('bs', [
 
     $scope.$on('$stateChangeSuccess', function(event, toState) {
         titleApi.setPageTitle(toState.data.pageTitle);
+    });
+
+    socket.on('message', function (message) {
+        serverApi.on(message);
+        tasksApi.on(message);
     });
 });

@@ -10,11 +10,20 @@ module.exports = {
             timer = new Date;
             var tasks = e.message.split(': ')[1].split(',');
 
-            logger.log("Executing ", tasks.length, ['red'], " tasks.");
+            process.send({
+                type:"tasks_executing",
+                count: tasks.length
+            });
         });
         gulp.on('stop', function (e) {
             var seconds = (new Date - timer)/1000;
-            logger.log('Gulp done in ' , ['blue'], seconds, ['yellow'], " seconds.", ['blue']);
+
+            process.send({
+                type:"tasks_done",
+                seconds: seconds
+            });
+
+            //logger.log('Gulp done in ' , ['blue'], seconds, ['yellow'], " seconds.", ['blue']);
         });
 
 
@@ -24,10 +33,13 @@ module.exports = {
 
 
         gulp.on('task_start', function (e) {
-            logger.log("Starting '",  e.task, ['green'], "'...");
+            //logger.log("Starting '",  e.task, ['green'], "'...");
         });
         gulp.on('task_stop', function (e) {
-            logger.log("Finished '", e.task, ['green', 'underline'], "' after ", parseInt(e.duration * 1000, 10), ['yellow'], " ms");
+            process.send({
+                type:"task_done"
+            });
+            //logger.log("Finished '", e.task, ['green', 'underline'], "' after ", parseInt(e.duration * 1000, 10), ['yellow'], " ms");
         });
         gulp.on('task_err', function (e) {
             console.log(e);

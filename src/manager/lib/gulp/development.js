@@ -29,15 +29,14 @@ var async = require('async'),
 process.on('message',function(data){
     console.log(data);
     logger.log('Starting ', 'development', ['yellow'], ' mode.');
-    loadTasks(true);
-
+    loadTasks(data.debug);
     var first = true;
     gulp.start('watch', function() {
-        if(first) {
+        /*if(first) {
             var d = data.debug;
             server.supervisor.development(d);
         }
-        first = false;
+        first = false;*/
     });
 });
 

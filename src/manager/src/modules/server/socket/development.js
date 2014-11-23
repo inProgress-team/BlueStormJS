@@ -2,16 +2,14 @@ var async = require('async'),
     gulp = require('bluestorm').gulp,
     childProcess = require('child_process');
 
-
 var child;
+
 module.exports = function(socket) {
-
-
-    socket.on('tasks:development:build-server', function(req, callback) {
+    socket.on('server:development:start', function(req, callback) {
         if (typeof callback == 'function') {
             process.env.NODE_ENV = 'development';
 
-            if(child) {
+            /*if(child) {
                 child.kill('SIGHUP');
             }
             child = childProcess.fork(__dirname+'/../../../../lib/gulp/development', {
@@ -22,11 +20,14 @@ module.exports = function(socket) {
             });
             child.send({
                 debug: true
-            });
+            });*/
 
             callback();
         }
     });
+    /*
+
+    
     socket.on('tasks:kill', function(req, callback) {
         if (typeof callback == 'function') {
             if(child) {
@@ -47,5 +48,5 @@ module.exports = function(socket) {
                 callback(null, false)
             }
         }
-    });
+    });*/
 };

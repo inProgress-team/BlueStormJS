@@ -8,8 +8,33 @@
             <h3 class="panel-title">Développement</h3>
         </div>
         <div class="panel-body">
-            <a href class="btn btn-default" ng-click="development()" ng-if="!processing">Build / Server</a>
-            <a href class="btn btn-danger" ng-click="kill()" ng-if="processing"><i class="fa fa-remove"></i></a>
+            <div class="btn-group btn-group-justified" role="group">
+                <a href disabled class="btn" ng-class="{'btn-success': app.status=='up', 'btn-danger': app.status=='down'}" ng-repeat="app in serverApi.apps">
+                    {{app.name}}
+                </a>
+            </div>
+
+            <div ng-if="tasksApi.tasks">
+                <h2 class="text-center" ng-if="tasksApi.tasks.count">
+                    <span ng-if="!tasksApi.tasks.seconds">Executing {{tasksApi.tasks.count}} tasks.</span>
+                    <span ng-if="tasksApi.tasks.seconds">Done in {{tasksApi.tasks.seconds}} seconds.</span>
+                </h2>
+                <h2 class="text-center" ng-if="!tasksApi.tasks.count">-</h2>
+
+                <div class="progress">
+                  <div class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="width: {{(tasksApi.tasks.done/tasksApi.tasks.count)*100}}%;">
+                    <span ng-if="tasksApi.tasks.count">{{((tasksApi.tasks.done/tasksApi.tasks.count)*100).toFixed(0)}}%</span>
+                    <span ng-if="!tasksApi.tasks.count">0%</span>
+                  </div>
+                </div>
+            </div>
+            
+
+
+
+
+            <a href class="btn btn-default" ng-click="tasksApi.development()" ng-if="!tasksApi.isProcessing">Build / Server</a>
+            <a href class="btn btn-danger" ng-click="tasksApi.kill()" ng-if="tasksApi.isProcessing"><i class="fa fa-remove"></i></a>
             
             <div class="checkbox" ng-repeat="app in appsApi.frontendApps">
                 <label>
@@ -17,11 +42,7 @@
                     {{app.name}}
                 </label>
             </div>
-
-
-            <p>
-                <pre>{{appsApi | json}}</pre>
-            </p>
+            {{tasksApi.tasks.done}} <br> {{tasksApi.tasks.count}}
         </div>
     </div>
 </div>
