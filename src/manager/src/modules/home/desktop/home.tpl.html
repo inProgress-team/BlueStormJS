@@ -8,7 +8,20 @@
             <h3 class="panel-title">Développement</h3>
         </div>
         <div class="panel-body">
-            Panel content
+            <a href class="btn btn-default" ng-click="development()" ng-if="!processing">Build / Server</a>
+            <a href class="btn btn-danger" ng-click="kill()" ng-if="processing"><i class="fa fa-remove"></i></a>
+            
+            <div class="checkbox" ng-repeat="app in appsApi.frontendApps">
+                <label>
+                    <input type="checkbox" value="" ng-model="app.checked" ng-change="appsApi.frontendAppsChange()">
+                    {{app.name}}
+                </label>
+            </div>
+
+
+            <p>
+                <pre>{{appsApi | json}}</pre>
+            </p>
         </div>
     </div>
 </div>
@@ -16,10 +29,12 @@
 <div class="col-md-4">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title">Production</h3>
+            <h3 class="panel-title">Messages</h3>
         </div>
         <div class="panel-body">
-            Panel content
+            <ul>
+                <li ng-repeat="msg in msgs">{{msg}}</li>
+            </ul>
         </div>
     </div>
 </div>

@@ -15,7 +15,9 @@ var songpeek = angular.module('bs', [
     'angularMoment',
 
     'bs.projects',
-    'bs.home'
+    'bs.home',
+    'bs.quality',
+    'bs.config'
 
 
 ])
@@ -24,7 +26,7 @@ var songpeek = angular.module('bs', [
  * @name AppCtrl
  * @description The controller which contains languages and url states
  */
-.controller('AppCtrl', function AppCtrl($scope, titleApi, $rootScope, $document, $translate, $state, hotkeys, projectsApi) {
+.controller('AppCtrl', function AppCtrl($scope, titleApi, $rootScope, $document, $translate, $state, hotkeys, projectsApi, configApi) {
 
 
     $rootScope.$state = $state;

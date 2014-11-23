@@ -95,6 +95,9 @@ module.exports = {
                 watch: false,
                 options: options
             });
+            process.on('SIGHUP', function(msg) {
+                server.monitor.stop();
+            });
         },
         load: function(options) {
             server.monitor = new (forever.Monitor)('cli.js', options);

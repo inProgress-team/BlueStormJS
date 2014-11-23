@@ -1,9 +1,9 @@
 {
     "development": {
         "main": "localhost",
-        "socket": 8060,
-        "api": 8000,
-        "desktop": 8080
+        "socket": 8002,
+        "api": 8003,
+        "desktop": 8000
     },
     "test": {
         "main": 8080,
