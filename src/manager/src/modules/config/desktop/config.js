@@ -7,14 +7,16 @@ angular.module('bs.config', [
 .service('configApi', function(socket, $cookieStore, frontendAppsApi, projectsApi){
 	var service = {};
 
-	socket.emit('config:get', projectsApi.project.path, function (err, config) {
-		if(err) return console.log(err);
+	if(projectsApi.project) {
+		socket.emit('config:get', projectsApi.project.path, function (err, config) {
+			if(err) return console.log(err);
 
-		service.config = config;
+			service.config = config;
 
-		frontendAppsApi.setApps(config.frontendApps);
-
-	});
+			frontendAppsApi.setApps(config.frontendApps);
+		});
+	}
+	
 
 	return service;   
 })

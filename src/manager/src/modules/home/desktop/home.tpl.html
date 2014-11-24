@@ -2,14 +2,12 @@
     Projet {{projectsApi.project.name}}
 </div>
 
-<pre>{{type|json}}</pre>
-
-
 
 
 <div ng-if="tasksApi.isProcessing || serverApi.isProcessing">
     <div class="col-md-8">
-        <div>
+        <!-- TASKS -->
+        <div ng-if="tasksApi.isProcessing">
             <h2 class="text-center" ng-if="tasksApi.tasks.count">
                 <span ng-if="!tasksApi.tasks.seconds">Executing {{tasksApi.tasks.count}} tasks.</span>
                 <span ng-if="tasksApi.tasks.seconds">Done in {{tasksApi.tasks.seconds}} seconds.</span>
@@ -23,15 +21,21 @@
                 </div>
             </div>
         </div>
+
+
+
+        <!-- SERVER -->
         <div class="btn-group btn-group-justified" role="group">
-            <a href ng-disabled="!app.port" class="btn" ng-class="{'btn-success': app.status=='up', 'btn-danger': app.status=='down'}" ng-repeat="app in serverApi.apps">
-                {{app.name}} <span ng-if="app.port">({{app.port}})</span>
-            </a>
-            <a href class="btn btn-default btn-block" ng-click="tasksApi.kill();serverApi.kill()"><i class="fa fa-remove"></i></a>
-        </div>
+            <a href ng-disabled="!app.port || app.name=='socket'" ng-href="http://localhost:{{app.port}}" target="_blank"
+            class="btn" ng-class="{'btn-success': app.status=='up', 'btn-danger': app.status=='down'}"
+            ng-repeat="app in serverApi.apps">
+            {{app.name}} <span ng-if="app.port">({{app.port}})</span>
+        </a>
+        <a href class="btn btn-default btn-block" ng-click="tasksApi.kill();serverApi.kill()"><i class="fa fa-remove"></i></a>
+    </div>
 
 
-
+<!--
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Développement</h3>
@@ -40,7 +44,7 @@
 
 
             </div>
-        </div>
+        </div> -->
     </div>
 
     <div class="col-md-4">
@@ -49,7 +53,6 @@
                 <h3 class="panel-title">Messages</h3>
             </div>
             <div class="panel-body">
-                <pre>{{serverApi|json}}</pre>
                 <pre>{{tasksApi|json}}</pre>
             </div>
         </div>
@@ -67,8 +70,12 @@
     <div class="col-md-3">
         <div class="well" style="height:200px;">
             <br><br><br>
-            <a href class="btn btn-default btn-block" ng-click="startBackend();">Start Backend</a>
+            <a href class="btn btn-default btn-block" ng-click="serverApi.development.start();">Start Backend</a>
         </div>
+    </div>
+
+    <div class="col-md-12 col-md-offset-3">
+        <div data-frontend-apps-chooser></div>
     </div>
 
 </div>

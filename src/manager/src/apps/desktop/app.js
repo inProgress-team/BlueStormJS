@@ -39,5 +39,8 @@
 
     $scope.$on('$stateChangeSuccess', function(event, toState) {
         titleApi.setPageTitle(toState.data.pageTitle);
+        if(!projectsApi.project) {
+            $state.go('projects');
+        }
     });
 });

@@ -29,7 +29,8 @@ module.exports = {
             }, function (config) {
                 process.send({
                     type: 'app_started',
-                    name: config.name
+                    name: config.name,
+                    port: app
                 });
             });
         });
@@ -37,13 +38,15 @@ module.exports = {
         api({ port: config.get('development', 'api'), debug: debug }, function () {
             process.send({
                 type: 'app_started',
-                name: 'api'
+                name: 'api',
+                port: config.get('development', 'api')
             });
         });
         socket({ port: config.get('development', 'socket'), debug: debug }, function () {
             process.send({
                 type: 'app_started',
-                name: 'socket'
+                name: 'socket',
+                port: config.get('development', 'socket')
             });
         });
 

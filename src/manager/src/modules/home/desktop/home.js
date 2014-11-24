@@ -26,13 +26,13 @@ angular.module('bs.home', [
     $scope.serverApi = serverApi;
 
     $scope.startFrontend = function () {
-        $scope.type = 'frontend';
-        tasksApi.development();
+        tasksApi.development(function () {
+            console.log('plouf');
+        });
     };
 
     $scope.startBackend = function () {
-        $scope.type = 'backend';
-        serverApi.development.start();
+        //serverApi.development.start();
     };
 
 

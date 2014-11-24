@@ -30,6 +30,10 @@ angular.module('bs.tasks', [
             if(err) return console.log(err);
 
             service.isProcessing = false;
+            service.tasks = {
+                count: 0,
+                done: 0 
+            };
         });
     };
 
@@ -44,6 +48,8 @@ angular.module('bs.tasks', [
 
         } else if(message.type=="tasks_done") {
             service.tasks.seconds = message.seconds;
+
+        }  else if(message.type=="start_server_request") {
             serverApi.development.start();
         }   
     });

@@ -6,11 +6,14 @@ angular.module('bs.server', [
 
     var service = {};
 
-    socket.emit('server:getApps', {path: projectsApi.project.path}, function (err, apps) {
-        if(err) return console.log(err);
 
-        service.apps = apps;
-    });
+    if(projectsApi.project) {
+        socket.emit('server:getApps', {path: projectsApi.project.path}, function (err, apps) {
+            if(err) return console.log(err);
+
+            service.apps = apps;
+        });
+    }
     socket.emit('server:isProcessing', function(err, res) {
         if(err) return console.log(err);
         service.isProcessing = res;
@@ -47,6 +50,11 @@ angular.module('bs.server', [
             if(err) return console.log(err);
 
             service.isProcessing = false;
+
+            angular.forEach(service.apps, function (app) {
+                app.status = 'down';
+                app.port = null;
+            });
         });
     };
 /*

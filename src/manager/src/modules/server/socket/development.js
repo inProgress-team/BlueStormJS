@@ -19,9 +19,11 @@ module.exports = function(socket) {
             });
             child.on('message', function(message){
                 if(message.type=='app_started') {
+                    console.log(message);
                     apps.forEach(function (app) {
                         if(app.name==message.name) {
-                            app.status = 'up'
+                            app.status = 'up';
+                            app.port = message.port;
                         };
                     });
                 }
