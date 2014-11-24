@@ -12,7 +12,7 @@ angular.module('bs.tasks', [
 
     projectsApi.initial(function (first) {
         if(!first) {
-
+            
             console.log('kill tasks');
             service.kill();
         }
@@ -24,7 +24,7 @@ angular.module('bs.tasks', [
     });
 
     service.development = function() {
-        if(service.isProcessing) return alert('is already processing');
+        if(service.isProcessing) return alert('tasks is already processing');
 
         socket.emit('tasks:development:build', {
             path: projectsApi.project.path,

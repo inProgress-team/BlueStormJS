@@ -23,9 +23,14 @@ process.on('message',function(data){
     loadTasks(data.debug);
     var first = true;
     gulp.start('watch', function() {
-        process.send({
-            type: 'start_server_request'
-        });
+        if(first) {
+
+            process.send({
+                type: 'start_server_request'
+            });
+            first = false;
+        }
+        console.log('watch done');
     });
 });
 

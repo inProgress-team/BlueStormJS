@@ -29,7 +29,7 @@ angular.module('bs.server', [
     service.development = {
         start: function () {
 
-            if(service.isProcessing) return alert('is already processing');
+            if(service.isProcessing) return alert('server is already processing');
 
             socket.emit('server:development:start', {
                 path: projectsApi.project.path,
