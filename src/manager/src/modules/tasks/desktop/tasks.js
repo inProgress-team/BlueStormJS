@@ -12,7 +12,6 @@ angular.module('bs.tasks', [
 
     projectsApi.initial(function (first) {
         if(!first) {
-            
             console.log('kill tasks');
             service.kill();
         }
@@ -20,7 +19,13 @@ angular.module('bs.tasks', [
 
     socket.emit('tasks:isProcessing', function(err, res) {
         if(err) return console.log(err);
-        service.isProcessing = res;
+
+        if(res) {
+            service.isProcessing = true;
+            service.type = res.type;
+        } else {
+            service.isProcessing = false;
+        }
     });
 
     service.development = function() {

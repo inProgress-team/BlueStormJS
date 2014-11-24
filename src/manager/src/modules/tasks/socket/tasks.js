@@ -3,7 +3,8 @@ gulp = require('bluestorm').gulp,
 childProcess = require('child_process');
 
 
-var child;
+var child,
+    type;
 module.exports = function(socket) {
 
 
@@ -14,6 +15,7 @@ module.exports = function(socket) {
             if(child) {
                 child.kill('SIGHUP');
             }
+            type = 'development';
             child = childProcess.fork(__dirname+'/../../../../lib/gulp/development', {
                 cwd: req.data.path
             });
@@ -34,6 +36,7 @@ module.exports = function(socket) {
             if(child) {
                 child.kill('SIGHUP');
             }
+            type = 'production';
             child = childProcess.fork(__dirname+'/../../../../lib/gulp/production', {
                 cwd: req.data.path
             });
@@ -55,6 +58,7 @@ module.exports = function(socket) {
     socket.on('tasks:kill', function(req, callback) {
         if (typeof callback == 'function') {
             if(child) {
+                type = null;
                 child.kill('SIGHUP');
                 child = null;
             } else {
@@ -67,7 +71,7 @@ module.exports = function(socket) {
     socket.on('tasks:isProcessing', function(req, callback) {
         if (typeof callback == 'function') {
             if(child) {
-                callback(null, true)
+                callback(null, { type: type })
             } else {
                 callback(null, false)
             }
