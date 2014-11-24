@@ -19,7 +19,8 @@
     'bs.quality',
     'bs.config',
     'bs.tasks',
-    'bs.server'
+    'bs.server',
+    'bs.production'
 
 
     ])

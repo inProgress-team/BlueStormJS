@@ -50,6 +50,7 @@ angular.module('bs.projects', [])
 
     service.project = $cookieStore.get('project') || null;
     service.projects = $cookieStore.get('projects') || [];
+    service.changeProjectCallbacks = [];
 
     service.add = function(project) {
         service.projects.push({
@@ -66,13 +67,28 @@ angular.module('bs.projects', [])
         service.projects[index].active = true;
         service.project = service.projects[index];
         $cookieStore.put('project', service.project);
-        $state.go('home');
+        $cookieStore.put('projects', service.projects);
+        
+        angular.forEach(service.changeProjectCallbacks, function (cb) {
+            if(service.project) {
+                cb();
+            }
+        });
     };
 
     service.remove = function(index) {
         service.projects.splice(index,1);
         $cookieStore.put('projects', service.projects);
     };
+
+    service.initial = function (cb) {
+        if(typeof cb=='function') {
+            if(service.project) {
+                cb(true);
+            }
+            service.changeProjectCallbacks.push(cb);
+        }
+    }
 
 
 

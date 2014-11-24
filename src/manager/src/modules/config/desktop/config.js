@@ -1,13 +1,12 @@
 angular.module('bs.config', [
 	'ui.router',
-	'bs.config.apps',
 	'bs.config.frontend-apps'
 	])
 
 .service('configApi', function(socket, $cookieStore, frontendAppsApi, projectsApi){
 	var service = {};
 
-	if(projectsApi.project) {
+	projectsApi.initial(function () {
 		socket.emit('config:get', projectsApi.project.path, function (err, config) {
 			if(err) return console.log(err);
 
@@ -15,7 +14,7 @@ angular.module('bs.config', [
 
 			frontendAppsApi.setApps(config.frontendApps);
 		});
-	}
+	});
 	
 
 	return service;   

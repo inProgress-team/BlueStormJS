@@ -19,22 +19,9 @@ angular.module('bs.home', [
     });
 })
 
-.controller('HomeCtrl', function HomeController($scope, socket, projectsApi, appsApi, tasksApi, serverApi) {
+.controller('HomeCtrl', function HomeController($scope, socket, projectsApi, tasksApi, serverApi) {
 
-    $scope.appsApi = appsApi;
     $scope.tasksApi = tasksApi;
     $scope.serverApi = serverApi;
-
-    $scope.startFrontend = function () {
-        tasksApi.development(function () {
-            console.log('plouf');
-        });
-    };
-
-    $scope.startBackend = function () {
-        //serverApi.development.start();
-    };
-
-
 
 });

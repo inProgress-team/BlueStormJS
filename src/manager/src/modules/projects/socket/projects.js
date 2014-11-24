@@ -59,7 +59,7 @@ module.exports = function(socket) {
                             if(!err) {
                                 res.push({
                                     path: dir,
-                                    name: 'Songpeek'
+                                    name: dir.substring(dir.lastIndexOf('/')+1, dir.length)
                                 });
                             }
                             callback();

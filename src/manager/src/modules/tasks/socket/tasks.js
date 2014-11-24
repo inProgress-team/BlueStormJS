@@ -27,6 +27,31 @@ module.exports = function(socket) {
             callback();
         }
     });
+    socket.on('tasks:production:build', function(req, callback) {
+        if (typeof callback == 'function') {
+            process.env.NODE_ENV = 'production';
+
+            if(child) {
+                child.kill('SIGHUP');
+            }
+            child = childProcess.fork(__dirname+'/../../../../lib/gulp/production', {
+                cwd: req.data.path
+            });
+            child.on('message', function(message){
+                if(message.type=="production_built")  {
+                    child.kill('SIGHUP');
+                    child = null;
+                    console.log('killed');
+                }
+                socket.emit('message_tasks', message);
+            });
+            child.send({
+                debug: true
+            });
+
+            callback();
+        }
+    });
     socket.on('tasks:kill', function(req, callback) {
         if (typeof callback == 'function') {
             if(child) {

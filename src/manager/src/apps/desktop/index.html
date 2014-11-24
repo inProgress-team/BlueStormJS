@@ -9,11 +9,11 @@
     <link rel="icon" type="image/png" href="/public/assets/images/favicon.png" />
 
 
-	<link href="/public/assets/css/font-awesome.min.css" rel="stylesheet">
-	<!-- inject:css -->
-	<!-- endinject -->
-	<!-- inject:js -->
-	<!-- endinject -->
+    <link href="/public/assets/css/font-awesome.min.css" rel="stylesheet">
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- inject:js -->
+    <!-- endinject -->
 
     <base href="/">
 </head>
@@ -35,14 +35,19 @@
                     <i class="fa fa-home fa-lg"></i>
                 </a>
             </li>
-            <li>
-                <a href="#" tooltip="dependencies" tooltip-placement="right" ui-sref="home">
-                    <i class="fa fa-book fa-lg"></i>
+            <li ui-sref-active="active">
+                <a href="#" tooltip="{{'production' | translate}}" tooltip-placement="right" ui-sref="production">
+                    <i class="fa fa-cloud fa-lg"></i>
                 </a>
             </li>
             <li ui-sref-active="active">
                 <a href="#" tooltip="quality" tooltip-placement="right" ui-sref="quality">
                     <i class="fa fa-check fa-lg"></i>
+                </a>
+            </li>
+            <li>
+                <a href="#" tooltip="dependencies" tooltip-placement="right" ui-sref="home">
+                    <i class="fa fa-book fa-lg"></i>
                 </a>
             </li>
             <!--
@@ -56,6 +61,11 @@
             </li>-->
         </ul>
         <ul class="nav menus menus-bottom">
+            <li>
+                <a href="#" tooltip="documentation" tooltip-placement="right" ui-sref="home">
+                    <i class="fa fa-book fa-lg"></i>
+                </a>
+            </li>
             <li ui-sref-active="active">
                 <a href="#" tooltip="{{'projects' | translate}}" tooltip-placement="right" ui-sref="projects">
                     <i class="fa fa-ellipsis-v fa-lg"></i>

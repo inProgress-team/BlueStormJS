@@ -1,0 +1,14 @@
+<div ng-if="tasksApi.isProcessing && type==tasksApi.type">
+    <h2 class="text-center" ng-if="tasksApi.tasks.count">
+        <span ng-if="!tasksApi.tasks.seconds">Executing {{tasksApi.tasks.count}} tasks.</span>
+        <span ng-if="tasksApi.tasks.seconds">Done in {{tasksApi.tasks.seconds}} seconds.</span>
+    </h2>
+    <h2 class="text-center" ng-if="!tasksApi.tasks.count">-</h2>
+
+    <div class="progress" style="margin-bottom:0;">
+        <div class="progress-bar" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" style="width: {{(tasksApi.tasks.done/tasksApi.tasks.count)*100}}%;">
+            <span ng-if="tasksApi.tasks.count">{{((tasksApi.tasks.done/tasksApi.tasks.count)*100).toFixed(0)}}%</span>
+            <span ng-if="!tasksApi.tasks.count">0%</span>
+        </div>
+    </div>
+</div>

@@ -2,26 +2,35 @@ angular.module('bs.server', [
     ])
 
 
-.service('serverApi', function (socket, frontendAppsApi, projectsApi) {
+.service('serverApi', function (socket, frontendAppsApi, projectsApi, $state) {
 
     var service = {};
 
 
-    if(projectsApi.project) {
+    projectsApi.initial(function (first) {
         socket.emit('server:getApps', {path: projectsApi.project.path}, function (err, apps) {
             if(err) return console.log(err);
 
             service.apps = apps;
         });
-    }
+        if(!first) {
+            console.log('kill server');
+            service.kill(function () {
+                $state.go('home');
+            });
+        }
+        
+    });
+
     socket.emit('server:isProcessing', function(err, res) {
         if(err) return console.log(err);
         service.isProcessing = res;
-        console.log(false);
     });
-
     service.development = {
         start: function () {
+
+            if(service.isProcessing) return alert('is already processing');
+
             socket.emit('server:development:start', {
                 path: projectsApi.project.path,
                 apps: frontendAppsApi.getApps()
@@ -45,7 +54,7 @@ angular.module('bs.server', [
             });
         }
     });
-    service.kill = function() {
+    service.kill = function(cb) {
         socket.emit('server:kill', function(err) {
             if(err) return console.log(err);
 
@@ -55,6 +64,8 @@ angular.module('bs.server', [
                 app.status = 'down';
                 app.port = null;
             });
+            if(typeof cb=='function')
+                cb();
         });
     };
 /*
