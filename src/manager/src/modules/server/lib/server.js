@@ -10,7 +10,8 @@ config = require(__dirname+'/../../../../../config');
 var express = require('express'),
 forever = require('forever-monitor'),
 vhost = require('vhost'),
-fs = require('fs');
+fs = require('fs'),
+gulp = require('gulp');
 
 var sticky = require(__dirname+'/../../../../../server/sticky-session');
 
@@ -53,6 +54,10 @@ module.exports = {
         logger.log('Forever started.', ['blue', 'inverse']);
         logger.log('Webapp is online (', 'development', ['yellow'], ').');
         fs.writeFile('dist/build/livereload.log', Math.random()+"");
+
+
+
+        
     },
     startProd: function(debug, test) {
         var type = 'production';
@@ -102,7 +107,7 @@ module.exports = {
 
         });
     },
-    supervisor: {
+    /*supervisor: {
         development: function(debug) {
             var options = ['server-dev'];
             if(debug) options.push('-d');
@@ -144,6 +149,6 @@ module.exports = {
             server.monitor.start();
         },
         monitor: null
-    }
+    }*/
 };
 var server = module.exports;

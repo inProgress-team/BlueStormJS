@@ -44,13 +44,17 @@ angular.module('bs.server', [
     };
 
     socket.on('message_server', function (data) {
-        console.log(data);
         if(data.type=="app_started") {
             angular.forEach(service.apps, function (app) {
                 if(data.name==app.name) {
                     app.status = 'up';
                     app.port = data.port;
                 }
+            });
+        } else if(data.type=="server_down") {
+            angular.forEach(service.apps, function (app) {
+                app.status = 'down';
+                app.port = null;
             });
         }
     });

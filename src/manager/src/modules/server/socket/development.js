@@ -1,37 +1,68 @@
 var async = require('async'),
-gulp = require('bluestorm').gulp,
+gulp = require('gulp'),
 childProcess = require('child_process'),
 config = require(__dirname+'/../../config/lib/config');
 
 var child,
 apps;
 
+var loadDev = function (socket, data) {
+    console.log('load dev');
+    if(child) {
+        socket.emit('message_server', {
+            type: 'server_down'
+        });
+        child.kill('SIGHUP');
+        child = null;
+    }
+    child = childProcess.fork(__dirname+'/../lib/development', {
+        cwd: data.path
+    });
+    child.on('message', function(message){
+        if(message.type=='app_started') {
+            apps.forEach(function (app) {
+                if(app.name==message.name) {
+                    app.status = 'up';
+                    app.port = message.port;
+                };
+            });
+        }
+        socket.emit('message_server', message);
+    });
+    child.send({
+        debug: true,
+        apps: data.apps
+    });
+}
+
 module.exports = function(socket) {
     socket.on('server:development:start', function(req, callback) {
         if (typeof callback == 'function') {
             process.env.NODE_ENV = 'development';
 
-            if(child) {
-                child.kill('SIGHUP');
-            }
-            child = childProcess.fork(__dirname+'/../lib/development', {
-                cwd: req.data.path
-            });
-            child.on('message', function(message){
-                if(message.type=='app_started') {
-                    console.log(message);
-                    apps.forEach(function (app) {
-                        if(app.name==message.name) {
-                            app.status = 'up';
-                            app.port = message.port;
-                        };
-                    });
-                }
-                socket.emit('message_server', message);
-            });
-            child.send({
-                debug: true,
+            loadDev(socket, {
+                path: req.data.path,
                 apps: req.data.apps
+            });
+
+
+            var jsFiles = [
+            req.data.path+'/src/modules/**/socket/**/*.js',
+            req.data.path+'/src/modules/**/api/**/*.js',
+            req.data.path+'/src/modules/**/models/**/*.js'
+            ];
+
+            gulp.task('server-restart@backend', function () {
+                loadDev(socket, {
+                    path: req.data.path,
+                    apps: req.data.apps
+                });
+            });
+            var w = gulp.watch(jsFiles, ['server-restart@backend']);
+            process.on('SIGHUP', function(msg) {
+                if(w) {
+                    w.end();
+                }
             });
 
             callback();

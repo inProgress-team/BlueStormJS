@@ -1,26 +1,25 @@
 
 var gulp = require('gulp'),
-    livereload = require('gulp-livereload'),
-    del = require('del'),
-    async = require('async'),
-    slug = require('slug');
+livereload = require('gulp-livereload'),
+del = require('del'),
+async = require('async'),
+slug = require('slug');
 
 var gulpLogger = require(__dirname+'/old/logger'),
-    server = require(__dirname+'/../../../server/server'),
-    logger = require(__dirname+'/../../../logger/logger'),
-    frontendBuild = require(__dirname+'/frontend/build'),
-    frontendCompile = require(__dirname+'/frontend/compile'),
-    backend = require(__dirname+'/old/backend'),
-    beautifier = require(__dirname+'/old/beautifier'),
-    gulpOld = require(__dirname+'/old/gulp');
+server = require(__dirname+'/../../../server/server'),
+logger = require(__dirname+'/../../../logger/logger'),
+frontendBuild = require(__dirname+'/frontend/build'),
+frontendCompile = require(__dirname+'/frontend/compile'),
+beautifier = require(__dirname+'/old/beautifier'),
+gulpOld = require(__dirname+'/old/gulp');
 
 
 var config = require(__dirname+'/../../../config');
 
 
 var frontendApps = config.frontend.list(),
-    builds = ['build@backend'],
-    compiles = [];
+builds = [],
+compiles = [];
 frontendApps.forEach(function(app) {
     builds.push('build@'+app);
     compiles.push('compile@'+app);
@@ -35,7 +34,6 @@ module.exports = function(debug) {
         frontendBuild(app);
         frontendCompile(app);
     });
-    backend();
 
     gulp.task('watch', builds, function() {
         var options = {};
