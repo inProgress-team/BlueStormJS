@@ -17,27 +17,36 @@ gulpOld = require(__dirname+'/old/gulp');
 var config = require(__dirname+'/../../../config');
 
 
-var frontendApps = config.frontend.list(),
-builds = [],
-compiles = [];
-frontendApps.forEach(function(app) {
-    builds.push('build@'+app);
-    compiles.push('compile@'+app);
-});
+var frontendApps = config.frontend.list();
 
 
-module.exports = function(debug) {
 
-    gulpLogger.gulp(gulp, debug);
 
-    frontendApps.forEach(function(app) {
+module.exports = function(data) {
+
+    gulpLogger.gulp(gulp, data.debug);
+    console.log(data);
+    var apps;
+    if(data.apps) {
+        apps = data.apps;
+    } else {
+        apps = frontendApps;    
+    }
+
+    var builds = [],
+    compiles = [];
+
+    apps.forEach(function(app) {
         frontendBuild(app);
         frontendCompile(app);
+        builds.push('build@'+app);
+        compiles.push('compile@'+app);
     });
+    console.log(builds);
 
     gulp.task('watch', builds, function() {
         var options = {};
-        if(!debug) options.silent = true;
+        if(!data.debug) options.silent = true;
         livereload.listen(options);
         var w = gulp.watch('dist/build/**/*', function(file) {
             livereload.changed(file.path);

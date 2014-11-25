@@ -20,7 +20,7 @@ slug = require('slug');
 process.on('message',function(data){
     console.log(data);
     logger.log('Starting ', 'development', ['yellow'], ' mode.');
-    loadTasks(data.debug);
+    loadTasks(data);
     var first = true;
     gulp.start('watch', function() {
         if(first) {
@@ -30,7 +30,6 @@ process.on('message',function(data){
             });
             first = false;
         }
-        console.log('watch done');
     });
 });
 

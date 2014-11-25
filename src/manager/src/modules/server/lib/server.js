@@ -19,14 +19,14 @@ var frontendApps = config.frontend.list();
 
 
 module.exports = {
-    startDev: function(debug) {
-        frontendApps.forEach(function(name) {
+    startDev: function(data) {
 
+        data.apps.forEach(function(name) {
             var app = config.get('development', name);
             statics({
                 port: app,
                 name: name,
-                debug: debug
+                debug: data.debug
             }, function (config) {
                 process.send({
                     type: 'app_started',
@@ -36,14 +36,14 @@ module.exports = {
             });
         });
 
-        api({ port: config.get('development', 'api'), debug: debug }, function () {
+        api({ port: config.get('development', 'api'), debug: data.debug }, function () {
             process.send({
                 type: 'app_started',
                 name: 'api',
                 port: config.get('development', 'api')
             });
         });
-        socket({ port: config.get('development', 'socket'), debug: debug }, function () {
+        socket({ port: config.get('development', 'socket'), debug: data.debug }, function () {
             process.send({
                 type: 'app_started',
                 name: 'socket',
@@ -54,8 +54,6 @@ module.exports = {
         logger.log('Forever started.', ['blue', 'inverse']);
         logger.log('Webapp is online (', 'development', ['yellow'], ').');
         fs.writeFile('dist/build/livereload.log', Math.random()+"");
-
-
 
         
     },

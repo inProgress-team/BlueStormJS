@@ -4,7 +4,7 @@ childProcess = require('child_process');
 
 
 var child,
-    type;
+type;
 module.exports = function(socket) {
 
 
@@ -23,7 +23,8 @@ module.exports = function(socket) {
                 socket.emit('message_tasks', message);
             });
             child.send({
-                debug: true
+                debug: true,
+                apps: req.data.apps
             });
 
             callback();
