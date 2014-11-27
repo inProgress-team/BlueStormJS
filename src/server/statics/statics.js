@@ -7,7 +7,7 @@ seo = require(__dirname+'/seo');
 
 module.exports = function(config) {
     var dir = 'build';
-    if(process.env.NODE_ENV=='production') {
+    if(process.env.NODE_ENV=='production' || process.env.NODE_LOCALPROD=="true") {
         dir = 'bin';
     }
 

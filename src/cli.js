@@ -14,7 +14,9 @@ var argv = require('yargs')
     .alias('h', 'help')
     .describe('h', 'See help for a particular command.');
 
-var commands = ['dev', 'test', 'prod', 'server-dev', 'server-test', 'server-prod', 'beautify', 'logs'];
+var commands = ['dev', 'test', 'prod',
+    'local-prod', 'server-dev', 'server-test',
+    'server-prod', 'server-local-prod', 'beautify', 'logs'];
 
 var server = require(__dirname+'/server/server'),
     logger = require(__dirname+'/logger/logger'),
@@ -43,6 +45,12 @@ module.exports = {
             gulp.production(debug);
 
 
+        } else if(command=="local-prod") {
+            process.env.NODE_ENV = 'development';
+            process.env.NODE_LOCALPROD = true;
+            gulp.production(debug);
+
+
 
         } else if(command=="server-dev") {
             process.env.NODE_ENV = 'development';
@@ -56,6 +64,11 @@ module.exports = {
         } else if(command=="server-prod") {
             process.env.NODE_ENV = 'production';
             server.startProd(debug);
+
+        } else if(command=="server-local-prod") {
+            process.env.NODE_ENV = 'development';
+            process.env.NODE_LOCALPROD = true;
+            server.startDev(debug);
 
 
         } else if(command=="beautify") {
