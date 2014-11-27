@@ -157,8 +157,17 @@ module.exports = function(config) {
                         }
                         if (typeof data == 'function')
                             return options(callback);
-                        else
-                            return options(data, callback);
+                        else {
+                            if (data.data)
+                                return options(data, callback);
+                            else {
+                                var d = {};
+                                d.data = data;
+                                d.token = data.token;
+                                delete d.data.token;
+                                return options(d, callback);
+                            }
+                        }
                     });
                 }
             };
