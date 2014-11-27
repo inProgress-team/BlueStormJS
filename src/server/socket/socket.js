@@ -155,13 +155,12 @@ module.exports = function(config) {
                         if(config.debug) {
                             logger.log('SOCKET : ' + url);
                         }
-                        if (typeof data == 'function')
+                        if (!data || typeof data == 'function')
                             return options(callback);
                         else {
-                            if (data && data.data)
+                            if (data.data)
                                 return options(data, callback);
                             else {
-                                //console.log(data);
                                 var d = {};
                                 d.data = data;
                                 d.token = data.token;
