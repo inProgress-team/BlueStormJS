@@ -7,7 +7,6 @@ server = require(__dirname+'/../../../server/server'),
 logger = require(__dirname+'/../../../logger/logger'),
 frontendBuild = require(__dirname+'/frontend/build'),
 frontendCompile = require(__dirname+'/frontend/compile'),
-backend = require(__dirname+'/old/backend'),
 beautifier = require(__dirname+'/old/beautifier'),
 loadTasks = require(__dirname+'/loadTasks');
 
@@ -16,7 +15,7 @@ var config = require(__dirname+'/../../../config');
 
 
 var frontendApps = config.frontend.list(),
-builds = ['build@backend'],
+builds = [],
 compiles = [];
 frontendApps.forEach(function(app) {
     builds.push('build@'+app);
