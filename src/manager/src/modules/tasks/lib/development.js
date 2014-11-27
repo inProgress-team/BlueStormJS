@@ -3,15 +3,15 @@ livereload = require('gulp-livereload'),
 del = require('del');
 
 var //gulpLogger = require(__dirname+'/oldlogger'),
-server = require(__dirname+'/../../../server/server'),
-logger = require(__dirname+'/../../../logger/logger'),
+server = require(__dirname+'/../../../../../server/server'),
+logger = require(__dirname+'/../../../../../logger/logger'),
 frontendBuild = require(__dirname+'/frontend/build'),
 frontendCompile = require(__dirname+'/frontend/compile'),
 beautifier = require(__dirname+'/old/beautifier'),
 loadTasks = require(__dirname+'/loadTasks');
 
 
-var config = require(__dirname+'/../../../config');
+var config = require(__dirname+'/../../../../../config');
 
 
 var async = require('async'),

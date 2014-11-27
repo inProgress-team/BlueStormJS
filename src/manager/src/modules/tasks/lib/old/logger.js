@@ -1,4 +1,4 @@
-var logger = require(__dirname+'/../../../../logger/logger');
+var logger = require(__dirname+'/../../../../../../logger/logger');
 
 
 

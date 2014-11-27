@@ -16,7 +16,7 @@ module.exports = function(socket) {
                 child.kill('SIGHUP');
             }
             type = 'development';
-            child = childProcess.fork(__dirname+'/../../../../lib/gulp/development', {
+            child = childProcess.fork(__dirname+'/../lib/development', {
                 cwd: req.data.path
             });
             child.on('message', function(message){
@@ -38,7 +38,7 @@ module.exports = function(socket) {
                 child.kill('SIGHUP');
             }
             type = 'production';
-            child = childProcess.fork(__dirname+'/../../../../lib/gulp/production', {
+            child = childProcess.fork(__dirname+'/../lib/production', {
                 cwd: req.data.path
             });
             child.on('message', function(message){

@@ -6,15 +6,15 @@ async = require('async'),
 slug = require('slug');
 
 var gulpLogger = require(__dirname+'/old/logger'),
-server = require(__dirname+'/../../../server/server'),
-logger = require(__dirname+'/../../../logger/logger'),
+server = require(__dirname+'/../../../../../server/server'),
+logger = require(__dirname+'/../../../../../logger/logger'),
 frontendBuild = require(__dirname+'/frontend/build'),
 frontendCompile = require(__dirname+'/frontend/compile'),
 beautifier = require(__dirname+'/old/beautifier'),
 gulpOld = require(__dirname+'/old/gulp');
 
 
-var config = require(__dirname+'/../../../config');
+var config = require(__dirname+'/../../../../../config');
 
 
 var frontendApps = config.frontend.list();

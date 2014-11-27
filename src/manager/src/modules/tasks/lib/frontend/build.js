@@ -1,113 +1,113 @@
 var gulp = require('gulp'),
-    del = require('del'),
-    mainBowerFiles = require('main-bower-files'),
-    rename = require("gulp-rename"),
-    inject = require("gulp-inject"),
-    less = require('gulp-less'),
-    concat = require('gulp-concat'),
-    html2js = require('gulp-html2js'),
-    stylish = require('jshint-stylish'),
-    jshint = require('gulp-jshint'),
-    cache = require('gulp-cached'),
-    watch = require('gulp-watch'),
-    preprocess = require('gulp-preprocess'),
-    gulpFilter = require('gulp-filter');
+del = require('del'),
+mainBowerFiles = require('main-bower-files'),
+rename = require("gulp-rename"),
+inject = require("gulp-inject"),
+less = require('gulp-less'),
+concat = require('gulp-concat'),
+html2js = require('gulp-html2js'),
+stylish = require('jshint-stylish'),
+jshint = require('gulp-jshint'),
+cache = require('gulp-cached'),
+watch = require('gulp-watch'),
+preprocess = require('gulp-preprocess'),
+gulpFilter = require('gulp-filter');
 var debug = require('gulp-debug');
 var changed = require('gulp-changed');
 var Multistream = require('multistream');
 
-var config = require(__dirname+'/../../../../config');
+var config = require(__dirname+'/../../../../../../config');
 
 module.exports = function(name) {
     var dependencies = require(process.cwd()+'/src/apps/'+name+'/dependencies.json');
 
     var cleanTask = 'clean@'+name,
-        jsFiles = [
-            'src/apps/'+name+'/**/*.js',
-            'src/modules/**/'+name+'/**/*.js'
-        ],
-        commonJsFiles= [],
-        commonJsFilesAll = ['src/common/frontend/**/*.js'];
+    jsFiles = [
+    'src/apps/'+name+'/**/*.js',
+    'src/modules/**/'+name+'/**/*.js'
+    ],
+    commonJsFiles= [],
+    commonJsFilesAll = ['src/common/frontend/**/*.js'];
     dependencies.common.forEach(function (dep) {
         commonJsFiles.push(dep+'/**/*.js')
     });
 
     var templatesFiles = [
-            'src/apps/'+name+'/**/*.tpl.html',
-            'src/common/frontend/**/*.tpl.html',
-            'src/modules/**/'+name+'/**/*.tpl.html'
-        ],
-        htmlFile = 'src/apps/'+name+'/index.html',
-        i18nFiles = [
-            'src/common/i18n/*.json'
-        ],
-        lessFile = 'src/apps/'+name+'/main.less',
-        lessFiles = [
-            'src/apps/'+name+'/**/*.less',
-            'src/common/**/*.less',
-            'src/modules/**/'+name+'/**/*.less'
-        ],
-        sourcesIndex = [
+    'src/apps/'+name+'/**/*.tpl.html',
+    'src/common/frontend/**/*.tpl.html',
+    'src/modules/**/'+name+'/**/*.tpl.html'
+    ],
+    htmlFile = 'src/apps/'+name+'/index.html',
+    i18nFiles = [
+    'src/common/i18n/*.json'
+    ],
+    lessFile = 'src/apps/'+name+'/main.less',
+    lessFiles = [
+    'src/apps/'+name+'/**/*.less',
+    'src/common/**/*.less',
+    'src/modules/**/'+name+'/**/*.less'
+    ],
+    sourcesIndex = [
 
-            'dist/build/'+name+'/public/lib/jquery.js',
-            'dist/build/'+name+'/public/lib/angular.js',
-            'dist/build/'+name+'/public/lib/socket.io.js',
+    'dist/build/'+name+'/public/lib/jquery.js',
+    'dist/build/'+name+'/public/lib/angular.js',
+    'dist/build/'+name+'/public/lib/socket.io.js',
 
-            'dist/build/'+name+'/public/bower_components/**/*.js',
-            'dist/build/'+name+'/public/js/templates.js',
-            'dist/build/'+name+'/public/js/**/*.js',
-            'dist/build/'+name+'/public/css/main.css'
-        ],
-        assets = 'src/common/assets/**/*';
+    'dist/build/'+name+'/public/bower_components/**/*.js',
+    'dist/build/'+name+'/public/js/templates.js',
+    'dist/build/'+name+'/public/js/**/*.js',
+    'dist/build/'+name+'/public/css/main.css'
+    ],
+    assets = 'src/common/assets/**/*';
 
     var tasks = {
         jsFiles: function(){
             var dest = 'dist/build/'+name+'/public/js/modules';
             return gulp.src(jsFiles)
-                .pipe(changed(dest))
-                .pipe(gulp.dest(dest));
+            .pipe(changed(dest))
+            .pipe(gulp.dest(dest));
         },
         commonJsFiles: function(){
             var dest = 'dist/build/'+name+'/public/js/common';
             return gulp.src(commonJsFilesAll)
-                .pipe(gulpFilter(commonJsFiles))
-                .pipe(changed(dest))
-                .pipe(gulp.dest(dest));
+            .pipe(gulpFilter(commonJsFiles))
+            .pipe(changed(dest))
+            .pipe(gulp.dest(dest));
         },
         libJsFiles: function(){
             return gulp.src([
-                    'bower_components/jquery/dist/jquery.js',
-                    'bower_components/angular/angular.js',
-                    'bower_components/socket.io-client/socket.io.js'
+                'bower_components/jquery/dist/jquery.js',
+                'bower_components/angular/angular.js',
+                'bower_components/socket.io-client/socket.io.js'
                 ])
-                .pipe(gulp.dest('dist/build/'+name+'/public/lib'));
+            .pipe(gulp.dest('dist/build/'+name+'/public/lib'));
         },
         html2js: function() {
             return gulp.src(templatesFiles)
-                .pipe(html2js({
-                    outputModuleName: 'templates',
-                    base: 'src/'
-                }))
-                .pipe(concat('templates.js'))
-                .pipe(gulp.dest('./dist/build/'+name+'/public/js'));
+            .pipe(html2js({
+                outputModuleName: 'templates',
+                base: 'src/'
+            }))
+            .pipe(concat('templates.js'))
+            .pipe(gulp.dest('./dist/build/'+name+'/public/js'));
         },
         i18n: function(){
             return gulp.src(i18nFiles)
-                .pipe(gulp.dest('dist/build/'+name+'/public/i18n'));
+            .pipe(gulp.dest('dist/build/'+name+'/public/i18n'));
         },
         bowerFiles: function(){
             return gulp.src(mainBowerFiles(), { base: 'bower_components' })
-                .pipe(gulp.dest('dist/build/'+name+'/public/bower_components'))
+            .pipe(gulp.dest('dist/build/'+name+'/public/bower_components'))
         },
         frameworkFiles: function(){
             var env = process.env.NODE_ENV,
-                envConfig = env;
+            envConfig = env;
             if(process.env.NODE_TEST!==undefined) {
                 envConfig = 'test';
             }
 
             var appsUrl = "",
-                apps = config.frontend.list();
+            apps = config.frontend.list();
 
             apps.forEach(function (app) {
                 if(env=="production") {
@@ -120,14 +120,14 @@ module.exports = function(name) {
             
 
             return gulp.src(__dirname+'/library/*.js')
-                .pipe(preprocess({context: {
-                    NODE_ENV: env,
-                    socketConf: config.get(envConfig, 'socket'),
-                    apiConf: config.get(envConfig, 'api'),
-                    mainPort: config.get(envConfig, 'main'),
-                    appsUrl: appsUrl
-                }}))
-                .pipe(gulp.dest('dist/build/'+name+'/public/js/bluestorm'))
+            .pipe(preprocess({context: {
+                NODE_ENV: env,
+                socketConf: config.get(envConfig, 'socket'),
+                apiConf: config.get(envConfig, 'api'),
+                mainPort: config.get(envConfig, 'main'),
+                appsUrl: appsUrl
+            }}))
+            .pipe(gulp.dest('dist/build/'+name+'/public/js/bluestorm'))
         },
         less: function(){
             var l = less({});
@@ -136,8 +136,8 @@ module.exports = function(name) {
                 l.emit('end');
             });
             return gulp.src(lessFile)
-                .pipe(l)
-                .pipe(gulp.dest('./dist/build/'+name+'/public/css'));
+            .pipe(l)
+            .pipe(gulp.dest('./dist/build/'+name+'/public/css'));
 
             return less;
         },
@@ -147,15 +147,15 @@ module.exports = function(name) {
             });
 
             return gulp.src(htmlFile)
-                .pipe(rename(function (path) { path.basename = "main"; }))
-                .pipe(inject(sources, { ignorePath: 'dist/build/'+name }))
-                .pipe(gulp.dest('dist/build/'+name));
+            .pipe(rename(function (path) { path.basename = "main"; }))
+            .pipe(inject(sources, { ignorePath: 'dist/build/'+name }))
+            .pipe(gulp.dest('dist/build/'+name));
         },
         assets: function() {
             var dest = 'dist/build/'+name+'/public/assets';
             return gulp.src(assets)
-                .pipe(changed(dest))
-                .pipe(gulp.dest(dest))
+            .pipe(changed(dest))
+            .pipe(gulp.dest(dest))
         }
     };
 
@@ -201,7 +201,7 @@ module.exports = function(name) {
         'less@'+name,
         'html2js@'+name,
         'framework-files@'+name
-    ], tasks.indexHtml);
+        ], tasks.indexHtml);
     gulp.task('index.html-watch@'+name, tasks.indexHtml);
 
 
