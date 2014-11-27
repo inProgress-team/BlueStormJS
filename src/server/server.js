@@ -34,7 +34,11 @@ module.exports = {
 
         logger.log('Forever started.', ['blue', 'inverse']);
         logger.log('Webapp is online (', 'development', ['yellow'], ').');
-        fs.writeFile('dist/build/livereload.log', Math.random()+"");
+        fs.exists('dist/build/livereload.log', function (exists) {
+            if(exists)
+                fs.writeFile('dist/build/livereload.log', Math.random()+"");
+        });
+        
     },
     startProd: function(debug, test) {
         var type = 'production';
@@ -66,8 +70,9 @@ module.exports = {
             var apiApp = api({ debug: debug }),
                 socketApp = socket({ debug: debug });
 
-            server.use(vhost(config.get(type, 'socket'), socketApp))
-                .use(vhost(config.get(type, 'api'), apiApp));
+            server
+                .use(vhost(config.get(type, 'api'), apiApp))
+                .use(vhost(config.get(type, 'socket'), socketApp));
 
             if(process.env.NODE_WORKER_ID=='MASTER') {
                 cron({debug: debug});
@@ -75,7 +80,7 @@ module.exports = {
 
             return server.listen(3333);
 
-        }).listen(3334, function() {
+        }).listen(8060, function() {
             if(process.env.NODE_WORKER_ID=='MASTER') {
                 logger.log('Master started on ', config.get(type, 'main'), ['red'], ' port');
             } else {

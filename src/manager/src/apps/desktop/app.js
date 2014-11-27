@@ -29,7 +29,7 @@
  * @name AppCtrl
  * @description The controller which contains languages and url states
  */
- .controller('AppCtrl', function AppCtrl($scope, titleApi, $rootScope, $document, $translate, $state, hotkeys, projectsApi, configApi) {
+ .controller('AppCtrl', function AppCtrl($scope, titleApi, $rootScope, $document, $translate, $state, hotkeys, projectsApi, configApi, serverApi, tasksApi) {
 
 
     $rootScope.$state = $state;

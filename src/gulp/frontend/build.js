@@ -105,14 +105,17 @@ module.exports = function(name) {
             if(process.env.NODE_TEST!==undefined) {
                 envConfig = 'test';
             }
+            if(process.env.NODE_LOCALPROD!==undefined) {
+                envConfig = 'local-prod';
+            }
 
             var appsUrl = "",
                 apps = config.frontend.list();
 
             apps.forEach(function (app) {
-                if(env=="production") {
+                if(env=="production" && envConfig!='local-prod') {
                     appsUrl += "service.urls."+app+" = 'http://" + config.get(envConfig, app) + ":" + config.get(envConfig, 'main') + "';\n";
-                } else if(env=="development") {
+                } else if(env=="development" || envConfig=='local-prod') {
                     appsUrl += "service.urls."+app+" = 'http://" + config.get(envConfig, 'main') + ":" + config.get(envConfig, app) + "';\n";
                 }
                 
@@ -122,6 +125,7 @@ module.exports = function(name) {
             return gulp.src(__dirname+'/../../frontend/*.js')
                 .pipe(preprocess({context: {
                     NODE_ENV: env,
+                    localProd: process.env.NODE_LOCALPROD || false,
                     socketConf: config.get(envConfig, 'socket'),
                     apiConf: config.get(envConfig, 'api'),
                     mainPort: config.get(envConfig, 'main'),

@@ -155,10 +155,19 @@ module.exports = function(config) {
                         if(config.debug) {
                             logger.log('SOCKET : ' + url);
                         }
-                        if (typeof data == 'function')
+                        if (!data || typeof data == 'function')
                             return options(callback);
-                        else
-                            return options(data, callback);
+                        else {
+                            if (data.data)
+                                return options(data, callback);
+                            else {
+                                var d = {};
+                                d.data = data;
+                                d.token = data.token;
+                                delete d.data.token;
+                                return options(d, callback);
+                            }
+                        }
                     });
                 }
             };

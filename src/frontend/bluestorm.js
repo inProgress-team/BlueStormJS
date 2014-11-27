@@ -60,7 +60,6 @@ angular.module('bluestorm', [
                     token: $cookies.bluestorm_token,
                     data: data
                 };
-                
                 socket.emit(eventName, res, function() {
                     var args = arguments;
                     $rootScope.$apply(function() {

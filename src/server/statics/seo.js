@@ -1,7 +1,9 @@
-var phridge = require('phridge');
+var phridge = require('phridge'),
+    redis = require("redis");
 
 var htmlcleaner = require(__dirname+'/htmlcleaner');
 
+var client = redis.createClient();
 
 module.exports = {
     middleware: function(req, res, next) {
@@ -24,21 +26,35 @@ module.exports = {
         var sys = require('sys');
         var exec = require('child_process').exec;
 
-        exec("phantomjs node_modules/bluestorm/phantom.js "+url, function (error, stdout, stderr) {
+        client.select(15, function(err) {
+            if (err)
+                res.send();
 
-            if(stdout) {
-                htmlcleaner.clean(stdout, function(html) {
-                    res.set('Content-Type', 'text/html');
-                    res.send(html);
-                });
-            }
+            client.get(url, function(err, result) {
+                if (err)
+                    res.send();
 
-            /*sys.print('stderr: ' + stderr);
-            if (error !== null) {
-                console.log('exec error: ' + error);
-            }*/
+                if (res)
+                    res.send(JSON.parse(result));
+                else {
+                    exec("phantomjs node_modules/bluestorm/phantom.js "+url, function (error, stdout, stderr) {
+
+                        if(stdout) {
+                            htmlcleaner.clean(stdout, function(html) {
+                                client.set(url, JSON.stringify(html));
+                                res.set('Content-Type', 'text/html');
+                                res.send(html);
+                            });
+                        }
+
+                        /*sys.print('stderr: ' + stderr);
+                         if (error !== null) {
+                         console.log('exec error: ' + error);
+                         }*/
+                    });
+                }
+            });
         });
-
     }
 };
 

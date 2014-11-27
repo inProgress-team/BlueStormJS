@@ -4,7 +4,7 @@ childProcess = require('child_process'),
 config = require(__dirname+'/../../config/lib/config');
 
 var child,
-apps;
+    apps;
 
 var loadDev = function (socket, data) {
     console.log('load dev');
@@ -74,7 +74,6 @@ module.exports = function(socket) {
             if(apps) {
                 callback(null, apps);
             } else {
-
                 apps = [{
                     name: 'api',
                     status: 'down'
@@ -106,6 +105,7 @@ module.exports = function(socket) {
             if(child) {
                 child.kill('SIGHUP');
                 child = null;
+                apps = null;
             } else {
                 return callback('no_child');
             }
