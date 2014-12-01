@@ -80,7 +80,7 @@ module.exports = {
 
             return server.listen(3333);
 
-        }).listen(8060, function() {
+        }).listen(3334, function() {
             if(process.env.NODE_WORKER_ID=='MASTER') {
                 logger.log('Master started on ', config.get(type, 'main'), ['red'], ' port');
             } else {
