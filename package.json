@@ -1,14 +1,14 @@
 {
   "name": "bluestorm",
-  "version": "0.0.3",
-  "description": "Node framework with angular ;)",
+  "version": "0.0.4",
+  "description": "Node framework with angular",
   "main": "index.js",
   "scripts": {
     "test": "tescommand"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Bluestorm-Team/BlueStormJS"
+    "url": "https://github.com/inProgress-team/BlueStormJS"
   },
   "keywords": [
     "keywords"
@@ -16,12 +16,12 @@
   "author": "auth",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Bluestorm-Team/BlueStormJS/issues"
+    "url": "https://github.com/inProgress-team/BlueStormJS/issues"
   },
   "engines": {
     "node": "0.10.31"
   },
-  "homepage": "https://github.com/Bluestorm-Team/BlueStormJS",
+  "homepage": "https://github.com/inProgress-team/BlueStormJS",
   "dependencies": {
     "async": "^0.9.0",
     "bcrypt": "^0.8.0",
@@ -80,6 +80,7 @@
     "nodemailer-smtp-transport": "^0.1.13",
     "password-generator": "^0.2.2",
     "phridge": "^1.0.7",
+    "redis": "^0.12.1",
     "shell": "^0.3.2",
     "socket.io": "^1.1.0",
     "socket.io-redis": "^0.1.3",
