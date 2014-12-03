@@ -1,7 +1,8 @@
 var fs = require('fs'),
     fse = require('fs.extra'),
     async = require('async'),
-    uuid = require('node-uuid');
+    uuid = require('node-uuid'),
+    slug = require('slug');
 
 var config = require(__dirname + '/../config');
 
@@ -26,6 +27,7 @@ module.exports = {
         if (!apps || apps.length == 0)
             apps = config.frontend.list();
 
+        name = slug(name);
         async.each(apps, function(app, callback) {
             fse.mkdirp(basePath + app + '/public/upload', function(err) {
                 if (err)
