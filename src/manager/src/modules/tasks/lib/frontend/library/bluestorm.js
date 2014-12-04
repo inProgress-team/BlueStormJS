@@ -3,11 +3,11 @@ angular.module('bluestorm', [
     'bluestorm.http',
     'bluestorm.user'
     ])
-    .service('bluestorm', function(){
-        var service = {
-            urls: {}
-        };
-        /* @echo appsUrl */
+.service('bluestorm', function(){
+    var service = {
+        urls: {}
+    };
+    /* @echo appsUrl */
 
         // @if NODE_ENV='production'
         service.urls['api'] = window.location.protocol + '///* @echo apiConf */:/* @echo mainPort */';
@@ -23,9 +23,13 @@ angular.module('bluestorm', [
         service.urls['socket'] = window.location.protocol + '//' + window.location.hostname+":/* @echo socketConf */";
         // @endif
 
+        service.env = '/* @echo NODE_ENV */';
+
+        service.app = '/* @echo app */';
+
         return service;
     })
-    .factory('socket', function($rootScope, $cookies) {
+.factory('socket', function($rootScope, $cookies) {
 
         // @if NODE_ENV='production'
         var server = window.location.protocol + '///* @echo socketConf */:/* @echo mainPort */';
@@ -60,7 +64,6 @@ angular.module('bluestorm', [
                     token: $cookies.bluestorm_token,
                     data: data
                 };
-                
                 socket.emit(eventName, res, function() {
                     var args = arguments;
                     $rootScope.$apply(function() {

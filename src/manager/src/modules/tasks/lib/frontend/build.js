@@ -125,7 +125,8 @@ module.exports = function(name) {
                 socketConf: config.get(envConfig, 'socket'),
                 apiConf: config.get(envConfig, 'api'),
                 mainPort: config.get(envConfig, 'main'),
-                appsUrl: appsUrl
+                appsUrl: appsUrl,
+                app: name
             }}))
             .pipe(gulp.dest('dist/build/'+name+'/public/js/bluestorm'))
         },
