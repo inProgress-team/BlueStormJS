@@ -6,10 +6,14 @@ var fs = require('fs'),
 
 var config = require(__dirname + '/../config');
 
-var basePath = process.cwd()+'/dist/build/';
-
 module.exports = {
     addPublic: function(file, apps, callback) {
+        var basePath;
+        if (process.env.NODE_ENV == 'development' && !process.env.NODE_LOCALPROD)
+            basePath = process.cwd()+'/dist/build/';
+        else
+            basePath = process.cwd()+'/dist/bin/';
+
         var hash = uuid.v4();
         var name = file.originalname;
         var ext = file.extension;
