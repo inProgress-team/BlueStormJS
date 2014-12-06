@@ -3,7 +3,8 @@ var express = require('express'),
     async = require('async'),
     fs = require('fs'),
     domain = require('domain'),
-    compression = require('compression');
+    compression = require('compression'),
+    _ = require('underscore');
 
 var logger = require(__dirname+'/../../logger/logger'),
     arborescence = require(__dirname+'/../../arborescence'),
@@ -159,7 +160,7 @@ module.exports = function(config, cb) {
      * Override GET
      */
     app.getAux = app.get;
-    app.get = function(url, callbacks, callback) {
+    app.get = function(url, options, next) {
         for (var i=1; i<arguments.length; i++) {
             if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].roles)) {
                 if (arguments[i].roles)
@@ -227,12 +228,38 @@ module.exports = function(config, cb) {
     });
 
     d.run(function() {
-
         if (process.env.NODE_ENV != 'development') {
             app.use(compression());
         }
         app.use(multer());
         app.use(bodyParser.json());
+
+        app.use(function(req, res, next) {
+            return next();
+            var data = req.body;
+            var size = 0;
+
+            for (var i in data) {
+                if (data.hasOwnProperty(i))
+                    size++;
+            }
+
+            if (size == 0)
+                return next();
+            else {
+                if (data.data) {
+                    return next();
+                }
+                else {
+                    var d = {};
+                    d.data = data;
+                    d.token = data.token;
+                    delete d.data.token;
+                    req.body = d;
+                    return next();
+                }
+            }
+        });
 
         /**
          * CORS
