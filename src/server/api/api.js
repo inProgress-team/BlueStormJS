@@ -92,27 +92,23 @@ var checkRoles = function(userRole, requiredRoles, callback) {
 };
 
 var checkAuthentification = function(req, res, next) {
-    var token = req.headers['x-auth-token'] || req.body.token;
-    user.tokenIsValid(token, function(err, user) {
-        if (err)
-            return next(err);
+    if (!req.user)
+        return next('access_denied');
 
-        req.user = user;
-        if (!req.roles) {
+    if (!req.roles) {
+        return next();
+    }
+    else {
+        if (req.roles.indexOf(req.user.role) > -1)
             return next();
-        }
-        else {
-            if (req.roles.indexOf(req.user.role) > -1)
-                return next();
 
-            checkRoles(req.user.role, req.roles, function(err) {
-                if (err)
-                    return res.send({"err": err});
+        checkRoles(req.user.role, req.roles, function(err) {
+            if (err)
+                return res.send({"err": err});
 
-                return next();
-            });
-        }
-    });
+            return next();
+        });
+    }
 };
 
 var checkAuthentificationPost = function(req, res, next) {
@@ -235,30 +231,15 @@ module.exports = function(config, cb) {
         app.use(bodyParser.json());
 
         app.use(function(req, res, next) {
-            return next();
-            var data = req.body;
-            var size = 0;
+            var token = req.headers['x-auth-token'] || req.body.token;
 
-            for (var i in data) {
-                if (data.hasOwnProperty(i))
-                    size++;
-            }
+            user.tokenIsValid(token, function (err, user) {
+                if (!err && user) {
+                    req.user = user;
+                }
 
-            if (size == 0)
                 return next();
-            else {
-                if (data.data) {
-                    return next();
-                }
-                else {
-                    var d = {};
-                    d.data = data;
-                    d.token = data.token;
-                    delete d.data.token;
-                    req.body = d;
-                    return next();
-                }
-            }
+            });
         });
 
         /**
