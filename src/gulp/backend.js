@@ -2,10 +2,9 @@
 
 
 var gulp = require('gulp'),
-    stylish = require('jshint-stylish'),
-    jshint = require('gulp-jshint'),
-    cache = require('gulp-cached'),
-    watch = require('gulp-watch');
+stylish = require('jshint-stylish'),
+cache = require('gulp-cached'),
+watch = require('gulp-watch');
 
 var server = require(__dirname+'/../server/server');
 
@@ -14,25 +13,17 @@ module.exports = function() {
     var jsFiles = ['src/modules/**/socket/**/*.js','src/modules/**/api/**/*.js','src/modules/**/models/**/*.js'];
 
     var tasks = {
-        lint: function() {
-            return gulp.src(jsFiles)
-                .pipe(cache('linting'))
-                .pipe(jshint())
-                .pipe(jshint.reporter(stylish));
-        },
         serverRestart: function() {
             server.monitor.restart();
         }
     };
 
 
-
-    gulp.task('lint@backend', tasks.lint);
     gulp.task('server-restart@backend', tasks.serverRestart);
 
-    gulp.task('build@backend', ['lint@backend'], function() {
+    gulp.task('build@backend', function() {
         if(process.env.NODE_ENV=='development') {
-            gulp.watch(jsFiles, ['lint@backend', 'server-restart@backend']);
+            gulp.watch(jsFiles, ['server-restart@backend']);
         }
     });
 };

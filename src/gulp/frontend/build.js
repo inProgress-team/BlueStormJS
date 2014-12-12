@@ -7,7 +7,6 @@ less = require('gulp-less'),
 concat = require('gulp-concat'),
 html2js = require('gulp-html2js'),
 stylish = require('jshint-stylish'),
-jshint = require('gulp-jshint'),
 cache = require('gulp-cached'),
 watch = require('gulp-watch'),
 preprocess = require('gulp-preprocess'),
@@ -156,12 +155,6 @@ module.exports = function(name) {
             .pipe(inject(sources, { ignorePath: 'dist/build/'+name }))
             .pipe(gulp.dest('dist/build/'+name));
         },
-        lint: function() {
-            return gulp.src(jsFiles)
-            .pipe(cache('linting'))
-            .pipe(jshint())
-            .pipe(jshint.reporter(stylish));
-        },
         assets: function() {
             var dest = 'dist/build/'+name+'/public/assets';
             return gulp.src(assets)
@@ -170,9 +163,6 @@ module.exports = function(name) {
         }
     };
 
-
-
-    gulp.task('lint@'+name, tasks.lint);
 
     gulp.task(cleanTask, function(cb) { del(['dist/build/'+name], cb); });
 
@@ -218,7 +208,7 @@ module.exports = function(name) {
     gulp.task('index.html-watch@'+name, tasks.indexHtml);
 
 
-    gulp.task('build@'+name, ['index.html@'+name,'assets@'+name,'lint@'+name], function() {
+    gulp.task('build@'+name, ['index.html@'+name,'assets@'+name], function() {
         if(process.env.NODE_ENV=='development') {
             gulp.watch(jsFiles, function(file) {
                 gulpWatch.jsFiles(file, name);
@@ -252,10 +242,10 @@ var gulpWatch = {
     },
     jsFiles: function(file, name) {
         if(file.type=='changed') {
-            gulp.start(['js-files-watch@'+name, 'lint@'+name]);
+            gulp.start(['js-files-watch@'+name]);
         }
         if(file.type=='added'||file.type=='renamed') {
-            gulp.start(['js-file-added@'+name, 'lint@'+name]);
+            gulp.start(['js-file-added@'+name]);
         }
         if(file.type=='deleted') {
             var pathToDelete = file.path.substring(file.path.indexOf('src/modules/')+12);
@@ -267,10 +257,10 @@ var gulpWatch = {
     },
     commonJsFilesAll: function(file, name) {
         if(file.type=='changed') {
-            gulp.start(['common-js-files-watch@'+name, 'lint@'+name]);
+            gulp.start(['common-js-files-watch@'+name]);
         }
         if(file.type=='added'||file.type=='renamed') {
-            gulp.start(['common-js-files-added@'+name, 'lint@'+name]);
+            gulp.start(['common-js-files-added@'+name]);
         }
         if(file.type=='deleted') {
             var pathToDelete = file.path.substring(file.path.indexOf('src/common/frontend')+20);
