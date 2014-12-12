@@ -85,27 +85,23 @@ var checkRoles = function(userRole, requiredRoles, callback) {
 };
 
 var checkAuthentification = function(data, callback) {
-    var token = data.token;
-    user.tokenIsValid(token, function(err, user) {
-        if (err)
-            return callback(err);
+    if (!data.user)
+        return next('access_denied');
 
-        data.user = user;
-        if (!data.roles) {
+    if (!data.roles) {
+        return callback();
+    }
+    else {
+        if (data.roles.indexOf(data.user.role) > -1)
             return callback();
-        }
-        else {
-            if (data.roles.indexOf(data.user.role) > -1)
-                return callback();
 
-            checkRoles(data.user.role, data.roles, function(err) {
-                if (err)
-                    return callback(err);
+        checkRoles(data.user.role, data.roles, function(err) {
+            if (err)
+                return callback(err);
 
-                return callback();
-            });
-        }
-    });
+            return callback();
+        });
+    }
 };
 
 
@@ -135,41 +131,35 @@ module.exports = function(config) {
              */
             socket.onAux = socket.on;
             socket.on = function(url, options, userCallback) {
-                if (typeof options == 'object' && (options.authentification || options.roles)) {
-                    socket.onAux(url, function(data, callback) {
-                        if(config.debug) {
-                            logger.log('SOCKET : ' + url);
-                        }
-                        if (options.roles)
-                            data.roles = options.roles;
-                        checkAuthentification(data, function(err) {
-                            if (err)
-                                return callback(err);
+                socket.onAux(url, function(data, callback) {
+                    if (typeof data == 'function') {
+                        callback = data;
+                        data = {};
+                    }
 
-                            return userCallback(data, callback);
-                        });
-                    });
-                }
-                else {
-                    socket.onAux(url, function(data, callback) {
+                    user.tokenIsValid(data.token, function(err, user) {
+                        if (!err && user)
+                            data.user = user;
+
                         if(config.debug) {
                             logger.log('SOCKET : ' + url);
                         }
-                        if (!data || typeof data == 'function')
-                            return options(callback);
+                        if (typeof options == 'object' && (options.authentification || options.roles)) {
+                            if (options.roles)
+                                data.roles = options.roles;
+
+                            checkAuthentification(data, function(err) {
+                                if (err)
+                                    return callback(err);
+
+                                return userCallback(data, callback);
+                            });
+                        }
                         else {
-                            if (data.data)
-                                return options(data, callback);
-                            else {
-                                var d = {};
-                                d.data = data;
-                                d.token = data.token;
-                                delete d.data.token;
-                                return options(d, callback);
-                            }
+                            return options(data, callback);
                         }
                     });
-                }
+                });
             };
 
             if (!cacheFiles) {

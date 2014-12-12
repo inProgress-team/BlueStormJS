@@ -238,6 +238,7 @@ module.exports = function(config, cb) {
                     req.user = user;
                 }
 
+                delete req.body.token;
                 return next();
             });
         });
