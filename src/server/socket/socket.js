@@ -86,7 +86,7 @@ var checkRoles = function(userRole, requiredRoles, callback) {
 
 var checkAuthentification = function(data, callback) {
     if (!data.user)
-        return next('access_denied');
+        return callback('access_denied');
 
     if (!data.roles) {
         return callback();
@@ -107,7 +107,6 @@ var checkAuthentification = function(data, callback) {
 
 module.exports = function(config) {
     var cacheFiles = null;
-
 
     var io;
     if(config.port) {
