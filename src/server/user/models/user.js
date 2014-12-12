@@ -9,7 +9,8 @@ var bcrypt = require('bcrypt'),
     generatePassword = require('password-generator'),
     async = require('async'),
     uuid = require('node-uuid'),
-    fs = require('fs');
+    fs = require('fs'),
+    _ = require('underscore');
 
 var dbConnection = require(__dirname + '/../../../../mongo'),
     logger = require(__dirname + '/../../../logger/logger'),
@@ -296,8 +297,8 @@ module.exports.resetPassword = function(data, callback) {
                 if (!res)
                     return callback('not_found');
 
-                var arguments = {};
-                arguments.firstName = res.firstName;
+                var arguments = _.clone(res);
+                delete arguments.password;
                 if (data.resetPasswordLink.slice(-1) == '/')
                     data.resetPasswordLink = data.resetPasswordLink.substring(0, data.resetPasswordLink.length - 1);
                 arguments.url = data.resetPasswordLink + '/' + data.email + '/' + res.hashPassword;

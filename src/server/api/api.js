@@ -93,7 +93,7 @@ var checkRoles = function(userRole, requiredRoles, callback) {
 
 var checkAuthentification = function(req, res, next) {
     if (!req.user)
-        return next('access_denied');
+        return res.send({err: 'access_denied'});
 
     if (!req.roles) {
         return next();
@@ -144,79 +144,6 @@ var checkAuthentificationDelete = function(req, res, next) {
 };
 
 module.exports = function(config, cb) {
-    /**
-     * Vars for methods
-     */
-    app.rolesForPost = [];
-    app.rolesForGet = [];
-    app.rolesForPut = [];
-    app.rolesForDelete = [];
-
-    /**
-     * Override GET
-     */
-    app.getAux = app.get;
-    app.get = function(url, options, next) {
-        for (var i=1; i<arguments.length; i++) {
-            if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].roles)) {
-                if (arguments[i].roles)
-                    app.rolesForGet[url] = arguments[i].roles;
-                arguments[i] = checkAuthentificationGet;
-            }
-        }
-
-        app.getAux.apply(this, arguments);
-    };
-
-    /**
-     * Override POST
-     */
-    app.postAux = app.post;
-    app.post = function(url, options, next) {
-        for (var i=1; i<arguments.length; i++) {
-            if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].roles)) {
-                if (arguments[i].roles)
-                    app.rolesForPost[url] = arguments[i].roles;
-                arguments[i] = checkAuthentificationPost;
-            }
-        }
-
-        app.postAux.apply(this, arguments);
-    };
-
-    /**
-     * Override PUT
-     */
-    app.putAux = app.put;
-    app.put = function(url, options, next) {
-        for (var i=1; i<arguments.length; i++) {
-            if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].roles)) {
-                if (arguments[i].roles)
-                    app.rolesForPut[url] = arguments[i].roles;
-                arguments[i] = checkAuthentificationPut;
-            }
-        }
-
-        app.putAux.apply(this, arguments);
-    };
-
-    /**
-     * Override DELETE
-     */
-    app.deleteAux = app.delete;
-    app.delete = function(url, options, next) {
-        for (var i=1; i<arguments.length; i++) {
-            if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].roles)) {
-                if (arguments[i].roles)
-                    app.rolesForDelete[url] = arguments[i].roles;
-                arguments[i] = checkAuthentificationDelete;
-            }
-        }
-
-        app.deleteAux.apply(this, arguments);
-    };
-
-
     var d = domain.create();
 
     d.on('error', function(err) {
@@ -224,9 +151,82 @@ module.exports = function(config, cb) {
     });
 
     d.run(function() {
+        /**
+         * Vars for methods
+         */
+        app.rolesForPost = [];
+        app.rolesForGet = [];
+        app.rolesForPut = [];
+        app.rolesForDelete = [];
+
+        /**
+         * Override GET
+         */
+        app.getAux = app.get;
+        app.get = function(url, options, next) {
+            for (var i=1; i<arguments.length; i++) {
+                if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].roles)) {
+                    if (arguments[i].roles)
+                        app.rolesForGet[url] = arguments[i].roles;
+                    arguments[i] = checkAuthentificationGet;
+                }
+            }
+
+            app.getAux.apply(this, arguments);
+        };
+
+        /**
+         * Override POST
+         */
+        app.postAux = app.post;
+        app.post = function(url, options, next) {
+            for (var i=1; i<arguments.length; i++) {
+                if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].roles)) {
+                    if (arguments[i].roles)
+                        app.rolesForPost[url] = arguments[i].roles;
+                    arguments[i] = checkAuthentificationPost;
+                }
+            }
+
+            app.postAux.apply(this, arguments);
+        };
+
+        /**
+         * Override PUT
+         */
+        app.putAux = app.put;
+        app.put = function(url, options, next) {
+            for (var i=1; i<arguments.length; i++) {
+                if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].roles)) {
+                    if (arguments[i].roles)
+                        app.rolesForPut[url] = arguments[i].roles;
+                    arguments[i] = checkAuthentificationPut;
+                }
+            }
+
+            app.putAux.apply(this, arguments);
+        };
+
+        /**
+         * Override DELETE
+         */
+        app.deleteAux = app.delete;
+        app.delete = function(url, options, next) {
+            for (var i=1; i<arguments.length; i++) {
+                if (typeof arguments[i] == 'object' && (arguments[i].authentification || arguments[i].roles)) {
+                    if (arguments[i].roles)
+                        app.rolesForDelete[url] = arguments[i].roles;
+                    arguments[i] = checkAuthentificationDelete;
+                }
+            }
+
+            app.deleteAux.apply(this, arguments);
+        };
+
         if (process.env.NODE_ENV != 'development') {
             app.use(compression());
         }
+
         app.use(multer());
         app.use(bodyParser.json());
 
