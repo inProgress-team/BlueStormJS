@@ -34,7 +34,8 @@ module.exports = {
         var defaultsFields = {
             "email": String,
             "password": String,
-            "role": String
+            "role": String,
+            "activated": Boolean
         };
         if (fields) {
             for (var i in fields) {
