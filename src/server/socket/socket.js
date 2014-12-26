@@ -134,15 +134,16 @@ module.exports = function(config) {
                     if (typeof data == 'function') {
                         callback = data;
                         data = {};
+                    } else if (!data) {
+                        data = {};                   
                     }
-
+                    if(config.debug) {
+                        logger.log('SOCKET : ' + url);
+                    }
                     user.tokenIsValid(data.token, function(err, user) {
                         if (!err && user)
                             data.user = user;
 
-                        if(config.debug) {
-                            logger.log('SOCKET : ' + url);
-                        }
                         if (typeof options == 'object' && (options.authentification || options.roles)) {
                             if (options.roles)
                                 data.roles = options.roles;
