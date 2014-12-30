@@ -27,7 +27,7 @@ module.exports = {
         var sys = require('sys');
         var exec = require('child_process').exec;
 
-        client.select(15, function(err) {
+        /*client.select(15, function(err) {
             if (err)
                 res.send();
 
@@ -38,20 +38,20 @@ module.exports = {
                 if (result) {
                     res.send(JSON.parse(result));
                 }
-                else {
+                else {*/
                     exec("phantomjs node_modules/bluestorm/phantom.js "+url, function (error, stdout, stderr) {
 
                         if(stdout) {
                             htmlcleaner.clean(stdout, function(html) {
-                                client.set(url, JSON.stringify(html));
+                                //client.set(url, JSON.stringify(html));
                                 res.set('Content-Type', 'text/html');
                                 res.send(html);
                             });
                         }
-                    });
+                    });/*
                 }
             });
-        });
+        });*/
     }
 };
 
