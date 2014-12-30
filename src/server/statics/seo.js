@@ -21,6 +21,7 @@ module.exports = {
         if(fragment=='')
             fragment = '/';
 
+
         var url = 'http://'+req.headers.host+fragment;
 
         var sys = require('sys');
@@ -32,10 +33,11 @@ module.exports = {
 
             client.get(url, function(err, result) {
                 if (err)
-                    res.send();
+                    return res.send(err);
 
-                if (res)
+                if (result) {
                     res.send(JSON.parse(result));
+                }
                 else {
                     exec("phantomjs node_modules/bluestorm/phantom.js "+url, function (error, stdout, stderr) {
 
@@ -46,11 +48,6 @@ module.exports = {
                                 res.send(html);
                             });
                         }
-
-                        /*sys.print('stderr: ' + stderr);
-                         if (error !== null) {
-                         console.log('exec error: ' + error);
-                         }*/
                     });
                 }
             });
