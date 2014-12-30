@@ -15,10 +15,12 @@ module.exports = {
             if(fragment===undefined||typeof fragment!='string')
                 return next();
         }
-                                console.log('plouf3');
 
         if(fragment=='')
             fragment = '/';
+        else if(fragment===undefined) {
+            fragment = req.originalUrl;
+        }
 
 
         var url = 'http://'+req.headers.host+fragment;
@@ -37,15 +39,12 @@ module.exports = {
                     res.send(JSON.parse(result));
                 }
                 else {*/
-                                console.log('plouf1');
                                 console.log(url);
                     exec("phantomjs node_modules/bluestorm/phantom.js "+url, function (error, stdout, stderr) {
-                        console.log('plouf4');
                         if(stdout) {
                             htmlcleaner.clean(stdout, function(html) {
                                 //client.set(url, JSON.stringify(html));
                                 res.set('Content-Type', 'text/html');
-                                console.log('plouf');
                                 res.send(html);
                             });
                         }
