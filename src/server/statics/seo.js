@@ -38,8 +38,9 @@ module.exports = {
                 }
                 else {*/
                                 console.log('plouf1');
+                                console.log(url);
                     exec("phantomjs node_modules/bluestorm/phantom.js "+url, function (error, stdout, stderr) {
-
+                        console.log('plouf4');
                         if(stdout) {
                             htmlcleaner.clean(stdout, function(html) {
                                 //client.set(url, JSON.stringify(html));
