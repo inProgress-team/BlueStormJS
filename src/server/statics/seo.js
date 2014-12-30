@@ -39,7 +39,6 @@ module.exports = {
                     res.send(JSON.parse(result));
                 }
                 else {*/
-                                console.log(url);
                     exec("phantomjs node_modules/bluestorm/phantom.js "+url, function (error, stdout, stderr) {
                         if(stdout) {
                             htmlcleaner.clean(stdout, function(html) {
