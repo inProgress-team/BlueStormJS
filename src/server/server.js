@@ -46,6 +46,22 @@ module.exports = {
             type = 'test';
         }
 
+        frontendApps.forEach(function(name) {
+
+            var app = config.get('development', name);
+            statics({
+                port: app,
+                name: name,
+                debug: debug
+            });
+        });
+
+        api({ port: config.get('development', 'api'), debug: debug });
+        socket({ port: config.get('development', 'socket'), debug: debug });
+        cron({debug: debug});
+
+        /*
+
         sticky(function() {
             var server = express();
 
@@ -86,7 +102,7 @@ module.exports = {
                 logger.log('Worker ' + process.env.NODE_WORKER_ID+ ' started');
             }
 
-        });
+        });*/
     },
     supervisor: {
         development: function(debug) {
