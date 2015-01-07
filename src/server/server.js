@@ -52,6 +52,7 @@ module.exports = {
 
             
             server.on('upgrade', function(client) {
+                console.log('UPGRADE VHOST')
                 socket.emit('upgrade', client);
             });
 
