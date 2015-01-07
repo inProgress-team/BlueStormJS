@@ -24,10 +24,10 @@ module.exports = {
 
 
         gulp.on('task_start', function (e) {
-            logger.log("Starting '",  e.task, ['green'], "'...");
+            //logger.log("Starting '",  e.task, ['green'], "'...");
         });
         gulp.on('task_stop', function (e) {
-            logger.log("Finished '", e.task, ['green', 'underline'], "' after ", parseInt(e.duration * 1000, 10), ['yellow'], " ms");
+            //logger.log("Finished '", e.task, ['green', 'underline'], "' after ", parseInt(e.duration * 1000, 10), ['yellow'], " ms");
         });
         gulp.on('task_err', function (e) {
             console.log(e);
