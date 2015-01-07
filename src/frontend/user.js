@@ -1,7 +1,7 @@
 angular.module('bluestorm.user', [
     'ngCookies'
     ])
-.service('userApi', function UserApi($state, $cookies, $http) {
+.service('userApi', function UserApi($state, $cookies, $http, bluestorm) {
     var service = {};
 
     service.token = $cookies.bluestorm_token;
@@ -9,22 +9,35 @@ angular.module('bluestorm.user', [
 
     service.setUser = function (user, token) {
         this.user = user;
-        this.token = $cookies.bluestorm_token = token;
-        $http.defaults.headers.common["X-AUTH-TOKEN"] = $cookies.bluestorm_token;
-    };
+        $http.defaults.headers.common["X-AUTH-TOKEN"] = token;
 
+        $.cookie('bluestorm_token', token, {expires: 30});
+
+        /*var domains = bluestorm.getDomains();
+
+        if(domains.length==1&&domains[0]=="localhost") {
+            $.cookie('bluestorm_token', token, {expires: 30});
+
+        } else {
+            angular.forEach(domains, function (domain) {
+                $.cookie('bluestorm_token', token, {expires: 30, domain: domain});
+            });
+        }*/
+    };
     service.getUser = function(url, cb) {
         if(!service.token) {
             service.user = null;
+            service.askedUser = true;
 
             if(typeof cb == 'function') {
                 cb(null, null);
             }
             return;
         }
-
         $http.get(url)
         .success(function (data) {
+            service.askedUser = true;
+
             if(!data.err) {
                 service.user = data.user;
             }
@@ -62,9 +75,7 @@ angular.module('bluestorm.user', [
         .success(function (data) {
             if(data.err) return cb(data.err);
 
-            service.token = $cookies.bluestorm_token = data.token;
-            service.user = data.user;
-            $http.defaults.headers.common["X-AUTH-TOKEN"] = $cookies.bluestorm_token;
+            service.setUser(data.user, data.token);
             cb(null, data.user);
 
         })
