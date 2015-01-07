@@ -50,13 +50,9 @@ module.exports = {
             var server = express();
 
 
-            /**
-             * CORS
-             */
-            server.use(function(req, res, next) {
-                res.header('Access-Control-Allow-Origin', "*");
-                console.log('Access-Control-Allow-Origin');
-                next();
+            
+            server.on('upgrade', function(client) {
+                socket.emit('upgrade', client);
             });
 
             frontendApps.forEach(function(name) {

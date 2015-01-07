@@ -182,9 +182,6 @@ module.exports = function(config) {
             if(typeof callback=='function') cb();
         });
     } else {
-        server.on('upgrade', function(client) {
-            socket.emit('upgrade', client);
-        });
         io.listen(8888, function() {
             if(typeof callback=='function') cb();
         });
