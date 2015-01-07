@@ -49,13 +49,6 @@ module.exports = {
         sticky(function() {
             var server = express();
 
-
-            
-            server.on('upgrade', function(client) {
-                console.log('UPGRADE VHOST')
-                socket.emit('upgrade', client);
-            });
-
             frontendApps.forEach(function(name) {
 
                 var app = statics({
