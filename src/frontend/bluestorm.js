@@ -78,7 +78,7 @@ angular.module('bluestorm', [
                     data = {};
                 }
                 var res = {
-                    token: $cookies.bluestorm_token,
+                    token: $.cookie('bluestorm_token'),
                     data: data
                 };
                 socket.emit(eventName, res, function() {

@@ -9,6 +9,8 @@ angular.module('bluestorm.user', [
 
     service.setUser = function (user, token) {
         this.user = user;
+        this.token = token;
+
         $http.defaults.headers.common["X-AUTH-TOKEN"] = token;
 
         $.cookie('bluestorm_token', token, {expires: 30});
@@ -74,7 +76,6 @@ angular.module('bluestorm.user', [
         })
         .success(function (data) {
             if(data.err) return cb(data.err);
-
             service.setUser(data.user, data.token);
             cb(null, data.user);
 
