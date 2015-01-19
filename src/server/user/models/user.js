@@ -159,7 +159,8 @@ module.exports.signUp = function(user, options, callback) {
     // If random password
     if (options.randomPassword) {
         password = generatePassword(8, false, /\w/);
-        options.sendPassword = true;
+        if (!options.resetPasswordLink)
+            options.sendPassword = true;
     }
     else {
         if(!user.password)
@@ -189,6 +190,8 @@ module.exports.signUp = function(user, options, callback) {
                     if (options.activationLink) {
                         user.hash = uuid.v4();
                         user.activated = false;
+                    } else if (options.resetPasswordLink) {
+                        user.hashPassword = generatePassword(8, false, /\w/);
                     } else {
                         user.activated = true;
                     }
@@ -196,7 +199,7 @@ module.exports.signUp = function(user, options, callback) {
                         if (err)
                             return callback(err);
 
-                        if (options.sendConfirmation || options.activationLink) {
+                        if (options.sendConfirmation || options.activationLink || options.resetPasswordLink) {
                             var arguments = {};
 
                             arguments.firstName = user.firstName;
@@ -212,6 +215,11 @@ module.exports.signUp = function(user, options, callback) {
                                     options.activationLink = options.activationLink.substring(0, options.activationLink.length - 1);
                                 arguments.url = options.activationLink + '/' + user.hash;
                                 mailer.mail(user.email, 'signupConfirm', 'user', 'fr', arguments);
+                            } else if (options.resetPasswordLink) {
+                                if (options.resetPasswordLink.slice(-1) == '/')
+                                    options.resetPasswordLink = options.resetPasswordLink.substring(0, options.resetPasswordLink.length - 1);
+                                arguments.url = options.resetPasswordLink + '/' + user.email + '/' + user.hashPassword;
+                                mailer.mail(user.email, 'signupAndResetPassword', 'user', 'fr', arguments);
                             }
                         }
 
