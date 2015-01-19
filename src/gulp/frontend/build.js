@@ -128,6 +128,7 @@ module.exports = function(name) {
                 socketConf: config.get(envConfig, 'socket'),
                 apiConf: config.get(envConfig, 'api'),
                 mainPort: config.get(envConfig, 'main'),
+                ssl: config.isSsl(),
                 appsUrl: appsUrl,
                 app: name
             }}))

@@ -23,6 +23,8 @@ angular.module('bluestorm', [
         service.urls['socket'] = window.location.protocol + '//' + window.location.hostname+":/* @echo socketConf */";
         // @endif
 
+        service.ssl = /* @echo ssl */;
+
         service.env = '/* @echo NODE_ENV */';
 
         service.app = '/* @echo app */';

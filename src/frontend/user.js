@@ -88,7 +88,8 @@ angular.module('bluestorm.user', [
     service.signout = function() {
         service.user = null;
         service.token = null;
-        delete $cookies.bluestorm_token;
+        $.removeCookie('bluestorm_token');
+        
     };
 
     return service;
