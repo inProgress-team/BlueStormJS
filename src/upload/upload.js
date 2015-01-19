@@ -54,6 +54,12 @@ module.exports = {
         });
     },
     removePublic: function(relativePath, apps, callback) {
+        var basePath;
+        if (process.env.NODE_ENV == 'development' && !process.env.NODE_LOCALPROD)
+            basePath = process.cwd()+'/dist/build/';
+        else
+            basePath = process.cwd()+'/dist/bin/';
+
         if (typeof apps == 'function') {
             callback = apps;
             apps = [];

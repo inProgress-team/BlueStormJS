@@ -134,9 +134,13 @@ module.exports = function(config) {
                 socket.onAux(url, function(data, callback) {
                     if (typeof data == 'function') {
                         callback = data;
-                        data = {};
+                        data = {
+                            data: {}
+                        };
                     } else if (!data) {
-                        data = {};                   
+                        data = {
+                            data: {}
+                        };
                     }
                     if(config.debug) {
                         logger.log('SOCKET : ' + url);
@@ -145,6 +149,8 @@ module.exports = function(config) {
                         if (!err && user)
                             data.user = user;
 
+                        if (!data.data)
+                            data.data = {};
                         if (typeof options == 'object' && (options.authentification || options.roles)) {
                             if (options.roles)
                                 data.roles = options.roles;
