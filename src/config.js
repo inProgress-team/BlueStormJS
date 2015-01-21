@@ -1,5 +1,5 @@
 var domains = require(process.cwd()+'/config/domains.json'),
-    main = require(process.cwd()+'/config/main.json');
+    mainConfig = require(process.cwd()+'/config/main.json');
 
 module.exports = {
     frontend: {
@@ -16,8 +16,13 @@ module.exports = {
         return domains[env][name];
     },
     isSsl: function () {
-        if(main.ssl) return true;
+        if (mainConfig.ssl) return true;
 
         return false;
+    },
+    main: {
+        get: function (name) {
+            return mainConfig[name];
+        }
     }
 };
