@@ -14,9 +14,11 @@ var bcrypt = require('bcrypt'),
 
 var dbConnection = require(__dirname + '/../../../../mongo'),
     logger = require(__dirname + '/../../../logger/logger'),
-    mailer = require(__dirname + '/../../../email/mailer');
+    mailer = require(__dirname + '/../../../email/mailer'),
+    config = require(__dirname + '/../../../config');
 
 var roles = require(ROLES_CONFIG_PATH);
+var tokenExpiration = config.main.get('tokenExpiration') || 31;
 
 // init roles
 try {
@@ -129,7 +131,7 @@ var comparePassword = function(password, hash, callback) {
 };
 
 module.exports.encodeToken = function(user) {
-    var expires = moment().add(1, 'months').valueOf();
+    var expires = moment().add(tokenExpiration, 'days').valueOf();
     return jwt.encode(
         {
             user: user,
