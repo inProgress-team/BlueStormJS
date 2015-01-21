@@ -113,9 +113,9 @@ module.exports = function(name) {
 
             apps.forEach(function (app) {
                 if(env=="production" && envConfig!='local-prod') {
-                    appsUrl += "service.urls."+app+" = 'http://" + config.get(envConfig, app) + ":" + config.get(envConfig, 'main') + "';\n";
+                    appsUrl += "service.urls."+app+" = window.location.protocol+'//" + config.get(envConfig, app) + ":" + config.get(envConfig, 'main') + "';\n";
                 } else if(env=="development" || envConfig=='local-prod') {
-                    appsUrl += "service.urls."+app+" = 'http://" + config.get(envConfig, 'main') + ":" + config.get(envConfig, app) + "';\n";
+                    appsUrl += "service.urls."+app+" = window.location.protocol+'://" + config.get(envConfig, 'main') + ":" + config.get(envConfig, app) + "';\n";
                 }
                 
             });
