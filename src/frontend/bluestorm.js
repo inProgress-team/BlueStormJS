@@ -17,7 +17,12 @@ angular.module('bluestorm', [
         // @endif
 
         // @if NODE_ENV='production'
-        service.urls['socket'] = window.location.protocol + '///* @echo socketConf */:/* @echo mainPort */';
+        if(/* @echo mainPort */==80) {
+            service.urls['socket'] = window.location.protocol + '///* @echo socketConf */';
+        } else {
+            service.urls['socket'] = window.location.protocol + '///* @echo socketConf */:/* @echo mainPort */';
+        }
+        
         // @endif
         // @if NODE_ENV='development'
         service.urls['socket'] = window.location.protocol + '//' + window.location.hostname+":/* @echo socketConf */";
@@ -48,17 +53,8 @@ angular.module('bluestorm', [
 
         return service;
     })
-.factory('socket', function($rootScope, $cookies) {
-
-        // @if NODE_ENV='production'
-        var server = window.location.protocol + '///* @echo socketConf */:/* @echo mainPort */';
-        // @endif
-
-        // @if NODE_ENV='development'
-        var server = window.location.protocol + '//' + window.location.hostname+":/* @echo socketConf */";
-        // @endif
-
-        var socket = io(server);
+.factory('socket', function($rootScope, $cookies, bluestorm) {
+        var socket = io(bluestorm.urls.socket);
         return {
             on: function(eventName, callback) {
                 for(var key in socket._callbacks) {
