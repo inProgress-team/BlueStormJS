@@ -10,11 +10,17 @@ angular.module('bluestorm', [
     /* @echo appsUrl */
 
         // @if NODE_ENV='production'
-        service.urls['api'] = window.location.protocol + '///* @echo apiConf */:/* @echo mainPort */';
+        if(/* @echo mainPort */==80) {
+            service.urls['api'] = window.location.protocol + '///* @echo apiConf */';
+        } else {
+            service.urls['api'] = window.location.protocol + '///* @echo apiConf */:/* @echo mainPort */';
+        }
         // @endif
         // @if NODE_ENV='development'
         service.urls['api'] = window.location.protocol + '//' + window.location.hostname+':/* @echo apiConf */';
         // @endif
+
+
 
         // @if NODE_ENV='production'
         if(/* @echo mainPort */==80) {
@@ -22,7 +28,6 @@ angular.module('bluestorm', [
         } else {
             service.urls['socket'] = window.location.protocol + '///* @echo socketConf */:/* @echo mainPort */';
         }
-        
         // @endif
         // @if NODE_ENV='development'
         service.urls['socket'] = window.location.protocol + '//' + window.location.hostname+":/* @echo socketConf */";
