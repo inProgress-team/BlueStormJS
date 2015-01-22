@@ -113,7 +113,9 @@ module.exports = function(name) {
 
             apps.forEach(function (app) {
                 if(env=="production" && envConfig!='local-prod') {
-                    appsUrl += "service.urls."+app+" = window.location.protocol+'//" + config.get(envConfig, app) + ":" + config.get(envConfig, 'main') + "';\n";
+                    var port = ((config.get(envConfig, 'main')!=80)?(":" + config.get(envConfig, 'main')):'');
+                    appsUrl += ("service.urls."+app+" = window.location.protocol+'//"+config.get(envConfig, app) + port + "';\n");
+
                 } else if(env=="development" || envConfig=='local-prod') {
                     appsUrl += "service.urls."+app+" = window.location.protocol+'//" + config.get(envConfig, 'main') + ":" + config.get(envConfig, app) + "';\n";
                 }
