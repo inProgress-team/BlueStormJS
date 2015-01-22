@@ -10,24 +10,21 @@ angular.module('bluestorm.http', [
                 'request': function (config) {
                     if(config.url.indexOf('api')===0) {
 
-                        /**
-                         * URLS
-                         */
-                        var url = config.url.substring(3);
+                        var begin;
+
                         // @if NODE_ENV='production'
-                        url = window.location.protocol + '///* @echo apiConf */:/* @echo mainPort */'+url;
+                        if(/* @echo mainPort */==80) {
+                            begin = window.location.protocol + '///* @echo apiConf */';
+                        } else {
+                            begin = window.location.protocol + '///* @echo apiConf */:/* @echo mainPort */';
+                        }
                         // @endif
-
                         // @if NODE_ENV='development'
-                        url = window.location.protocol + '//' + window.location.hostname+':/* @echo apiConf */'+url;
+                        begin = window.location.protocol + '//' + window.location.hostname+':/* @echo apiConf */';
                         // @endif
 
-                        config.url = url;
 
-
-                        /**
-                         * URLS
-                         */
+                        config.url = begin+config.url.substring(3);
                     }
                     return config || $q.when(config);
 
