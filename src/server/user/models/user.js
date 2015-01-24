@@ -355,7 +355,6 @@ module.exports.resetPasswordConfirm = function(data, callback) {
                             return callback('not_found');
 
                         delete res.password;
-                        delete res._id;
                         return callback(null, res, module.exports.encodeToken(res));
                     }
                 );
@@ -398,7 +397,6 @@ module.exports.changePassword = function(data, callback) {
                                 return callback(err);
 
                             delete res.password;
-                            delete res._id;
                             return callback(null, res, module.exports.encodeToken(res));
                         });
                     });
