@@ -231,7 +231,7 @@ module.exports = function(config, cb) {
         app.use(bodyParser.json());
 
         app.use(function(req, res, next) {
-            var token = req.headers['x-auth-token'] || req.body.token;
+            var token = req.headers['x-auth-token'] || req.query.token || req.body.token;
 
             user.tokenIsValid(token, function (err, user) {
                 if (!err && user) {

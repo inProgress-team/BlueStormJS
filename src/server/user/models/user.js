@@ -275,7 +275,6 @@ module.exports.signUpConfirm = function(hash, options, callback) {
                 }
 
                 delete res.password;
-                delete res._id;
                 return callback(null, res, module.exports.encodeToken(res));
             }
         );
