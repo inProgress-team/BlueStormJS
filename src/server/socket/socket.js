@@ -125,7 +125,6 @@ module.exports = function(config) {
     d.run(function() {
         io.adapter(redis({ host: 'localhost', port: 6379 }));
         io.on('connection', function (socket) {
-            console.log('connect');
             /**
              * Override socket.on
              */
