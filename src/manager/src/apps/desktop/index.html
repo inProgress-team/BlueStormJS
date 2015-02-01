@@ -8,7 +8,7 @@
 
     <link rel="icon" type="image/png" href="/public/assets/images/favicon.png" />
 
-
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/angular_material/0.7.0/angular-material.min.css">
     <link href="/public/assets/css/font-awesome.min.css" rel="stylesheet">
     <!-- inject:css -->
     <!-- endinject -->
@@ -18,33 +18,37 @@
     <base href="/">
 </head>
 
-<!-- NAVBAR LEFT -->
+<body layout="row">
+    
+    <div ng-if="!projectsApi.project" data-no-project flex>
+    </div>
+    
 
-<body>
+    <div data-layout-left ng-if="projectsApi.project"></div>
+
+    <div layout="column" flex id="content" ui-view="main" ng-if="projectsApi.project"></div>
+
+
+<!--
+    <md-toolbar layout="row">
+        <button ng-click="toggleSidenav('left')" hide-gt-sm class="menuBtn">
+            <span class="visuallyhidden">Menu</span>
+        </button>
+        <h1>Bluestorm</h1>
+    </md-toolbar>-->
+<!--
+         Use `flex` [below] to have the side bar and content area
+         fill the available vertical display area
+     -->
+
+        
+
+
+      <!--
+
+
     <div class="navbar-left">
-        <ul class="nav logo">
-            <li>
-                <a href="#" ui-sref="home" id="logo">
-                    <img src="/public/assets/images/icon.png" alt="Songpeek" />
-                </a>
-            </li>
-        </ul>
-        <ul class="nav menus" ng-if="projectsApi.project!=null">
-            <li ui-sref-active="active">
-                <a href="#" tooltip="{{'home' | translate}}" tooltip-placement="right" ui-sref="home">
-                    <i class="fa fa-home fa-lg"></i>
-                </a>
-            </li>
-            <li ui-sref-active="active">
-                <a href="#" tooltip="{{'production' | translate}}" tooltip-placement="right" ui-sref="production">
-                    <i class="fa fa-cloud fa-lg"></i>
-                </a>
-            </li>
-            <li ui-sref-active="active">
-                <a href="#" tooltip="quality" tooltip-placement="right" ui-sref="quality">
-                    <i class="fa fa-check fa-lg"></i>
-                </a>
-            </li>
+            
             <li>
                 <a href="#" tooltip="dependencies" tooltip-placement="right" ui-sref="home">
                     <i class="fa fa-book fa-lg"></i>
@@ -58,7 +62,7 @@
                 <ul class="dropdown-menu" role="menu">
                     <li><a href="#" ui-sref="legal.cgu"><i class="fa fa-legal"></i> <span translate="legal"></span></a></li>
                 </ul>
-            </li>-->
+            </li>--><!--
         </ul>
         <ul class="nav menus menus-bottom">
             <li>
@@ -75,9 +79,10 @@
     </div>
 
     <!-- CONTENT -->
+    <!--
     <div class="content-block" ui-view="main">
 
-    </div>
+    </div>-->
 </body>
 
 </html>

@@ -6,14 +6,10 @@ angular.module('bs.server', [
 
     var service = {};
 
-    console.log('1');
     projectsApi.initial(function (first) {
-        console.log('reload server');
 
         if(!first) {
-            console.log('kill server');
             service.kill(function () {
-                console.log('killed')
                 $state.go('home');
                 socket.emit('server:getApps', {path: projectsApi.project.path}, function (err, apps) {
                     if(err) return console.log(err);
@@ -24,7 +20,6 @@ angular.module('bs.server', [
         } else {
             socket.emit('server:getApps', {path: projectsApi.project.path}, function (err, apps) {
                 if(err) return console.log(err);
-                console.log(apps);
                 service.apps = apps;
             });
         }

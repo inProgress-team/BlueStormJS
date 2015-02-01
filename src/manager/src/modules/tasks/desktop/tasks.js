@@ -10,7 +10,6 @@ angular.module('bs.tasks', [
         done: 0 
     };
 
-    console.log('2');
     projectsApi.initial(function (first) {
         if(!first) {
             console.log('kill tasks');

@@ -1,10 +1,20 @@
 
-var old = global.location = { protocol: 'http:', hostname: 'localhost'};
 var loc = {};
 var url = require('../lib/url');
 var expect = require('expect.js');
 
 describe('url', function(){
+
+  it('works with undefined', function(){
+    loc.hostname = 'woot.com';
+    loc.protocol = 'https:';
+    loc.port = 4005;
+    loc.host = loc.hostname + ':' + loc.port;
+    var parsed = url(undefined, loc);
+    expect(parsed.host).to.be('woot.com');
+    expect(parsed.protocol).to.be('https');
+    expect(parsed.port).to.be('4005');
+  });
 
   it('works with relative paths', function(){
     loc.hostname = 'woot.com';
@@ -43,7 +53,7 @@ describe('url', function(){
     loc.protocol = 'http:';
     loc.hostname = 'woot.com';
 
-    expect(url('/woot').path).to.be('/woot');
+    expect(url('/woot', loc).path).to.be('/woot');
     expect(url('http://google.com').path).to.be('/');
     expect(url('http://google.com/').path).to.be('/');
   });

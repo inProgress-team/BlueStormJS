@@ -1,0 +1,35 @@
+<div layout="column" class="sidebar-left">
+    <md-toolbar hide-sm class="md-whiteframe-z2 toolbar-left">
+        <h1>Bluestorm</h1>
+    </md-toolbar>
+
+    <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$media('gt-sm')" flex>
+        <md-list>
+            <md-item>
+                <md-item-content>
+                    <md-button href aria-label="Home" ui-sref="home" ui-sref-active="selected">
+                        <i class="fa fa-home"></i>
+                        Home
+                    </md-button>
+                </md-item-content>
+            </md-item>
+            <md-item>
+                <md-item-content>
+                    <md-button href aria-label="Production" ui-sref="production" ui-sref-active="selected">
+                        <i class="fa fa-cloud"></i>
+                        Production
+                    </md-button>
+                </md-item-content>
+            </md-item>
+            <md-item>
+                <md-item-content>
+                    <md-button href aria-label="Quality" ui-sref="quality" ui-sref-active="selected">
+                        <i class="fa fa-check"></i>
+                        <span translate="Quality"></span>
+                    </md-button>
+                </md-item-content>
+            </md-item>
+        </md-list>
+
+    </md-sidenav>
+</div>

@@ -1,31 +1,25 @@
-<div page-title>
-    Projects <i class="fa fa-ellipsis-v"></i>
+<div data-layout-toolbar-right>Projects</div>
+<div layout="row" layout-margin layout-fill layout-padding>
+  <div flex>I'm on the left, and there's an empty area around me.</div>
+  <div flex>I'm on the right, and there's an empty area around me.</div>
 </div>
+<md-content class="md-padding">
+    <h1>Créer un projet</h1>
+    <form name="userForm">
+        <md-input-container flex>
+        <label>Company (Disabled)</label>
+        <input ng-model="user.company" disabled>
+    </md-input-container>
+</form>
+</md-content>
 
-<div class="col-md-4">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Mes projets</h3>
-        </div>
-        <div class="panel-body">
-            <div class="alert alert-info" ng-if="projectsApi.projects.length==0">
-                Vous n'avez pas encore de projets
-            </div>
-            <table class="table table-bordered table-striped">
-                <tr ng-class="{'success': project.active}" ng-repeat="project in projectsApi.projects">
-                    <td>{{project.name}}</td>
-                    <td>{{project.path}}</td>
-                    <td>
-                        <a href class="btn btn-primary btn-xs" ng-click="projectsApi.set($index)"><i class="fa fa-bullseye"></i></a>
-                        <a href class="btn btn-primary btn-xs" ng-click="projectsApi.remove($index)"><i class="fa fa-remove"></i></a>
-                    </td>
-                </tr>
-            </table>
-        </div>
+<div layout="row" layout-margin>
+    <div class="md-whiteframe-z1" flex>
+        <md-content>
+            <h3>Mes projets</h3>
+        </md-content>
     </div>
 </div>
-
-
 
 
 
@@ -33,28 +27,9 @@
 <div class="col-md-4">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h3 class="panel-title">Importer un projet existant</h3>
+            
         </div>
         <div class="panel-body">
-            <form ng-submit="searchProjects()" name="importForm">
-                <div class="input-group">
-                    <input type="text" name="path" class="form-control" ng-model="importProgressPath">
-                <span class="input-group-btn">
-                    <button class="btn btn-primary btn-block" type="submit">Rechercher</button>
-                </span>
-                </div>
-            </form>
-            <br/><br/>
-            <table class="table table-bordered table-striped">
-                <tr ng-repeat="project in importProjects">
-                    <td><input type="checkbox" ng-model="project.active"/></td>
-                    <td>{{project.name}}</td>
-                    <td>{{project.path}}</td>
-                </tr>
-            </table>
-            <div class="text-center" ng-if="importProjects.length!=0">
-                <a href ng-click="import()" class="btn btn-primary">Importer</a>
-            </div>
         </div>
     </div>
 </div>
@@ -62,9 +37,47 @@
 
 
 
-
 <div class="col-md-4">
-    <div class="well">
 
-    </div>
+    <md-content class="md-padding">
+    <h1>Créer un projet</h1>
+    <form name="userForm">
+        <md-input-container flex>
+        <label>Company (Disabled)</label>
+        <input ng-model="user.company" disabled>
+    </md-input-container>
+    <div layout layout-sm="column">
+        <md-input-container flex>
+        <label>First Name</label>
+        <input ng-model="user.firstName" placeholder="Placeholder text">
+    </md-input-container>
+    <md-input-container flex>
+    <label>Last Name</label>
+    <input ng-model="theMax">
+</md-input-container>
+</div>
+<md-input-container flex>
+<label>Address</label>
+<input ng-model="user.address">
+</md-input-container>
+<div layout layout-sm="column">
+    <md-input-container flex>
+    <label>City</label>
+    <input ng-model="user.city">
+</md-input-container>
+<md-input-container flex>
+<label>State</label>
+<input ng-model="user.state">
+</md-input-container>
+<md-input-container flex>
+<label>Postal Code</label>
+<input ng-model="user.postalCode">
+</md-input-container>
+</div>
+<md-input-container flex>
+<label>Biography</label>
+<textarea ng-model="user.biography" columns="1" md-maxlength="150"></textarea>
+</md-input-container>
+</form>
+</md-content>
 </div>

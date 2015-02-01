@@ -5,6 +5,7 @@
         "dialogs",
         "form",
         "moment-angular",
-        "app"
+        "app",
+        "layout"
 	]
 }

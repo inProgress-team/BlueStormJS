@@ -1,88 +1,44 @@
-<div page-title>
-    Projet {{projectsApi.project.name}}
-</div>
+<div data-layout-toolbar-right>Projet {{projectsApi.project.name}} > Home</div>
+
+<div ng-show="(tasksApi.isProcessing && tasksApi.type=='development')|| serverApi.isProcessing">
+
+    <div data-tasks-progress="development"></div>
 
 
-
-<div ng-if="(tasksApi.isProcessing && tasksApi.type=='development')|| serverApi.isProcessing">
-    <div class="container-fluid">
-
-        <div data-tasks-progress="development"></div>
-
-
-
-        <!-- SERVER -->
-        <div class="btn-group btn-group-justified" role="group">
-            <a href ng-disabled="!app.port || app.name=='socket'" ng-href="http://localhost:{{app.port}}" target="_blank" class="btn" ng-class="{'btn-success': app.status=='up', 'btn-danger': app.status=='down'}" ng-repeat="app in serverApi.apps">
-                {{app.name}} <span ng-if="app.port">({{app.port}})</span>
-            </a>
-            <a href class="btn btn-default btn-block" ng-click="tasksApi.kill();serverApi.kill()"><i class="fa fa-remove"></i></a>
-        </div>
-
+    <div layout="column">
+        <md-button flex class="md-raised md-primary" ng-disabled="!app.port || app.name=='socket'" ng-href="http://localhost:{{app.port}}" ng-repeat="app in serverApi.apps" target="_blank">
+            {{app.name}}
+            <span ng-if="app.port">({{app.port}})</span>
+        </md-button>
+        <md-button href class="md-raised" ng-click="tasksApi.kill();serverApi.kill()">
+            <i class="fa fa-remove"></i>
+        </md-button>
     </div>
-
-    
     <br>
-    <div class="col-md-3">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Messages</h3>
-            </div>
-            <div class="panel-body">
-            </div>
+    <div layout="row" layout-margin>
+        <div flex>
+            <h2>Messages</h2>
         </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Messages</h3>
-            </div>
-            <div class="panel-body">
-            </div>
+        <div flex>
+            <h2>Messages</h2>
         </div>
-    </div>
-
-    <div class="col-md-3">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Messages</h3>
-            </div>
-            <div class="panel-body">
-            </div>
+        <div flex>
+            <h2>Messages</h2>
         </div>
-    </div>
-    <div class="col-md-3">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Messages (Tasks)</h3>
-            </div>
-            <div class="panel-body">
-
-            </div>
+        <div flex>
+            <h2>Messages</h2>
         </div>
     </div>
 </div>
 
 
 <div ng-if="!(tasksApi.isProcessing && tasksApi.type=='development') && !serverApi.isProcessing">
-    <div class="col-md-3 col-md-offset-3">
-        <div class="well" style="height:200px;">
-            <br><br><br>
-            <a href class="btn btn-default btn-block" ng-click="tasksApi.development()">Start Frontend</a>
-        </div>
+    <br><br>
+    <div layout="row" layout-margin>
+        <md-button class="md-raised md-primary" flex ng-click="tasksApi.development()">Start Frontend</md-button>
+        <md-button class="md-raised" flex ng-click="serverApi.development.start()">Start Backend</md-button>
     </div>
-    <div class="col-md-3">
-        <div class="well" style="height:200px;">
-            <br><br><br>
-            <a href class="btn btn-default btn-block" ng-click="serverApi.development.start()">Start Backend</a>
-        </div>
-    </div>
-
-    <div class="col-md-12 col-md-offset-3">
-        <div data-frontend-apps-chooser></div>
-    </div>
-
+    <div data-frontend-apps-chooser></div>
 </div>
 
 

@@ -6,26 +6,9 @@
 var songpeek = angular.module('app', [
     'ui.router',
     'pascalprecht.translate',
-    'app.handler',
-    'cfp.hotkeys'
+    'app.actions'
 ])
-    .config(function(hotkeysProvider) {
-        hotkeysProvider.template = '<div class="cfp-hotkeys-container fade" ng-class="{in: helpVisible}" style="display: none;"><div class="cfp-hotkeys">' +
-            '<h4 class="cfp-hotkeys-title">{{ title }}</h4>' +
-            '<table><tbody>' +
-            '<tr ng-repeat="hotkey in hotkeys | filter:{ description: \'!$$undefined$$\' }">' +
-            '<td class="cfp-hotkeys-keys">' +
-            '<span ng-repeat="key in hotkey.format() track by $index" class="cfp-hotkeys-key">{{ key }}</span>' +
-            '</td>' +
-            '<td class="cfp-hotkeys-text">{{ hotkey.description | translate }}</td>' +
-            '</tr>' +
-            '</tbody></table>' +
-            '<div class="cfp-hotkeys-close" ng-click="toggleCheatSheet()">×</div>' +
-            '</div></div>';
-        hotkeysProvider.cheatSheetDescription = 'hotkeys.info'
-    })
 .config(function myAppConfig($urlRouterProvider, $locationProvider, $translateProvider) {
-
     //ROUTES
     $urlRouterProvider.otherwise('/');
     //$locationProvider.hashPrefix('!');

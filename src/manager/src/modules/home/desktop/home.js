@@ -20,7 +20,7 @@ angular.module('bs.home', [
 })
 
 .controller('HomeCtrl', function HomeController($scope, socket, projectsApi, tasksApi, serverApi) {
-
+    console.log('home')
     $scope.tasksApi = tasksApi;
     $scope.serverApi = serverApi;
 

@@ -1,6 +1,3 @@
-<div class="checkbox" ng-repeat="app in frontendAppsApi.apps">
-	<label>
-		<input type="checkbox" value="" ng-model="app.checked" ng-change="frontendAppsApi.appsChange()">
-		{{app.name}}
-	</label>
-</div>
+<md-checkbox ng-model="app.checked" aria-label="{{app.name}}" ng-repeat="app in frontendAppsApi.apps" ng-change="frontendAppsApi.appsChange()">
+    {{app.name}}
+</md-checkbox>
