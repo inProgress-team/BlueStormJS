@@ -98,11 +98,8 @@ $scope.user = {
         $cookieStore.put('project', service.project);
         $cookieStore.put('projects', service.projects);
         
-        console.log(service.changeProjectCallbacks);
         angular.forEach(service.changeProjectCallbacks, function (cb) {
-            console.log('plouf');
             if(service.project) {
-                console.log('a');
                 cb();
             }
         });

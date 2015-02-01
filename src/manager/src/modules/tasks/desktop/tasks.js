@@ -12,7 +12,6 @@ angular.module('bs.tasks', [
 
     projectsApi.initial(function (first) {
         if(!first) {
-            console.log('kill tasks');
             service.kill();
         }
     });
@@ -67,7 +66,6 @@ angular.module('bs.tasks', [
     };
 
     socket.on('message_tasks', function (message) {
-        console.log(message);
         if(message.type=="tasks_executing") {
             service.tasks = {
                 count: message.count,

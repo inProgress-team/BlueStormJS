@@ -19,6 +19,7 @@ angular.module('bs.server', [
             });
         } else {
             socket.emit('server:getApps', {path: projectsApi.project.path}, function (err, apps) {
+
                 if(err) return console.log(err);
                 service.apps = apps;
             });

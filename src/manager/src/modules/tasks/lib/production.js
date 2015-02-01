@@ -7,7 +7,6 @@ server = require(__dirname+'/../../../../../server/server'),
 logger = require(__dirname+'/../../../../../logger/logger'),
 frontendBuild = require(__dirname+'/frontend/build'),
 frontendCompile = require(__dirname+'/frontend/compile'),
-beautifier = require(__dirname+'/old/beautifier'),
 loadTasks = require(__dirname+'/loadTasks');
 
 
