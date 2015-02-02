@@ -1,19 +1,11 @@
 var gulp = require('gulp'),
-livereload = require('gulp-livereload'),
 del = require('del');
 
-var //gulpLogger = require(__dirname+'/oldlogger'),
-server = require(__dirname+'/../../../../../server/server'),
-logger = require(__dirname+'/../../../../../logger/logger'),
-frontendBuild = require(__dirname+'/frontend/build'),
-frontendCompile = require(__dirname+'/frontend/compile'),
-loadTasks = require(__dirname+'/loadTasks');
+var loadTasks = require(__dirname+'/loadTasks'),
+    config = require(__dirname+'/../config');
 
 
-var config = require(__dirname+'/../../../../../config');
-
-
-var frontendApps = config.frontend.list(),
+var frontendApps = config().frontend.list(),
 builds = [],
 compiles = [];
 frontendApps.forEach(function(app) {
@@ -32,14 +24,14 @@ process.on('message',function(data){
 
 
     console.log(data);
-    logger.log('Building ', 'development', ['yellow'], ' files.');
+    console.log('Building development files.');
     loadTasks(data.debug);
 
     gulp.start(builds, function() {
-        logger.log('Building ', 'production', ['yellow'], ' files.');
+        console.log('Building ', 'production', ['yellow'], ' files.');
         gulp.start(compiles, function() {
             del(['dist/build'], function () {
-                logger.log('Building production done. Execute ', 'node cli.js server-prod', ['yellow'], ' to try it.');
+                console.log('Building production done. Execute ', 'node cli.js server-prod', ['yellow'], ' to try it.');
                 process.send({
                     type: 'production_built'
                 });

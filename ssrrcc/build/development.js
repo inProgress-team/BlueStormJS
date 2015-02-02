@@ -1,9 +1,7 @@
 var gulp = require('gulp');
 
-var loadTasks = require(__dirname+'/loadTasks');
-
-
-var config = require(__dirname+'/../config');
+var loadTasks = require(__dirname+'/loadTasks'),
+    config = require(__dirname+'/../config');
 
 
 var async = require('async'),
@@ -15,7 +13,6 @@ process.on('message',function(data){
     var first = true;
     gulp.start('watch', function() {
         if(first) {
-
             process.send({
                 type: 'start_server_request'
             });

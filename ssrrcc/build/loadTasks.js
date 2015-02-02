@@ -5,7 +5,7 @@ del = require('del'),
 async = require('async'),
 slug = require('slug');
 
-var logger = require(__dirname+'/old/logger'),//__dirname+'/../../log/lib/logger'),
+var gulpLogger = require(__dirname+'/gulp-logger'),
 frontendBuild = require(__dirname+'/frontend/build'),
 frontendCompile = require(__dirname+'/frontend/compile');
 
@@ -13,14 +13,14 @@ frontendCompile = require(__dirname+'/frontend/compile');
 var config = require(__dirname+'/../config');
 
 
-var frontendApps = config.frontend.list();
+var frontendApps = config().frontend.list();
 
 
 
 
 module.exports = function(data) {
 
-    logger.gulp(gulp, data.debug);
+    gulpLogger.gulp(gulp, data.debug);
     var apps;
     if(data.apps) {
         apps = data.apps;

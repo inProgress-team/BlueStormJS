@@ -6,7 +6,6 @@ inject = require("gulp-inject"),
 less = require('gulp-less'),
 concat = require('gulp-concat'),
 html2js = require('gulp-html2js'),
-stylish = require('jshint-stylish'),
 jshint = require('gulp-jshint'),
 cache = require('gulp-cached'),
 watch = require('gulp-watch'),
@@ -14,7 +13,6 @@ preprocess = require('gulp-preprocess'),
 gulpFilter = require('gulp-filter');
 var debug = require('gulp-debug');
 var changed = require('gulp-changed');
-var Multistream = require('multistream');
 
 var config = require(__dirname+'/../../config');
 
@@ -110,15 +108,15 @@ module.exports = function(name) {
             }
 
             var appsUrl = "",
-            apps = config.frontend.list();
+            apps = config().frontend.list();
 
             apps.forEach(function (app) {
                 if(env=="production" && envConfig!='local-prod') {
-                    var port = ((config.get(envConfig, 'main')!=80)?(":" + config.get(envConfig, 'main')):'');
-                    appsUrl += ("service.urls."+app+" = window.location.protocol+'//"+config.get(envConfig, app) + port + "';\n");
+                    var port = ((config().get(envConfig, 'main')!=80)?(":" + config().get(envConfig, 'main')):'');
+                    appsUrl += ("service.urls."+app+" = window.location.protocol+'//"+config().get(envConfig, app) + port + "';\n");
 
                 } else if(env=="development" || envConfig=='local-prod') {
-                    appsUrl += "service.urls."+app+" = window.location.protocol+'//" + config.get(envConfig, 'main') + ":" + config.get(envConfig, app) + "';\n";
+                    appsUrl += "service.urls."+app+" = window.location.protocol+'//" + config().get(envConfig, 'main') + ":" + config().get(envConfig, app) + "';\n";
                 }
                 
             });
@@ -128,10 +126,10 @@ module.exports = function(name) {
             .pipe(preprocess({context: {
                 NODE_ENV: env,
                 localProd: process.env.NODE_LOCALPROD || false,
-                socketConf: config.get(envConfig, 'socket'),
-                apiConf: config.get(envConfig, 'api'),
-                mainPort: config.get(envConfig, 'main'),
-                ssl: config.isSsl(),
+                socketConf: config().get(envConfig, 'socket'),
+                apiConf: config().get(envConfig, 'api'),
+                mainPort: config().get(envConfig, 'main'),
+                ssl: config().isSsl(),
                 appsUrl: appsUrl,
                 app: name
             }}))
