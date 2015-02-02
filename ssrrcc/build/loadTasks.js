@@ -6,12 +6,11 @@ async = require('async'),
 slug = require('slug');
 
 var logger = require(__dirname+'/old/logger'),//__dirname+'/../../log/lib/logger'),
-server = require(__dirname+'/../../../../../server/server'),
 frontendBuild = require(__dirname+'/frontend/build'),
 frontendCompile = require(__dirname+'/frontend/compile');
 
 
-var config = require(__dirname+'/../../../../../config');
+var config = require(__dirname+'/../config');
 
 
 var frontendApps = config.frontend.list();

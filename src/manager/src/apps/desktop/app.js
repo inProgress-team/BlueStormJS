@@ -10,7 +10,6 @@ var songpeek = angular.module('bs', [
 	'layout',
 
 	'ui.router',
-	'ui.bootstrap',
 	'pascalprecht.translate',
 
 	'bs.projects',

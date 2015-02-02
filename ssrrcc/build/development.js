@@ -1,22 +1,16 @@
-var gulp = require('gulp'),
-livereload = require('gulp-livereload'),
-del = require('del');
+var gulp = require('gulp');
 
-var logger = require(__dirname+'/../../log/lib/logger'),
-    frontendBuild = require(__dirname+'/frontend/build'),
-    frontendCompile = require(__dirname+'/frontend/compile'),
-    loadTasks = require(__dirname+'/loadTasks');
+var loadTasks = require(__dirname+'/loadTasks');
 
 
-var config = require(__dirname+'/../../../../../config');
+var config = require(__dirname+'/../config');
 
 
 var async = require('async'),
 slug = require('slug');
 
 process.on('message',function(data){
-    console.log(data);
-    logger.log('Starting ', 'development', ['yellow'], ' mode.');
+    console.log('Starting ', 'development', ['yellow'], ' mode.');
     loadTasks(data);
     var first = true;
     gulp.start('watch', function() {

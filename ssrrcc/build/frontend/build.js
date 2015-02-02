@@ -16,7 +16,7 @@ var debug = require('gulp-debug');
 var changed = require('gulp-changed');
 var Multistream = require('multistream');
 
-var config = require(__dirname+'/../../../../../../config');
+var config = require(__dirname+'/../../config');
 
 module.exports = function(name) {
     var dependencies = require(process.cwd()+'/src/apps/'+name+'/dependencies.json');
