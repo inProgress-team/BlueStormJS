@@ -28,28 +28,22 @@ module.exports = {
                 process.exit(1);
             }
 
-            var config = {
+            var transport = {
                 port: mailOptions.port,
                 host: mailOptions.host,
-                secure: true,
                 maxConnections: 5,
                 maxMessages: 10
             };
 
             if (mailOptions.auth) {
-                config.auth = {
+                transport.auth = {
                     user: mailOptions.auth.user,
                     pass: mailOptions.auth.pass
                 };
+                transport.secure = true;
             }
 
-            var transporter = nodemailer.createTransport(smtpTransport({
-                port: mailOptions.port,
-                host: mailOptions.host,
-                secure: true,
-                maxConnections: 5,
-                maxMessages: 10
-            }));
+            var transporter = nodemailer.createTransport(smtpTransport(transport));
         }
 
         var optionsForTransporter = {
