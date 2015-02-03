@@ -28,13 +28,24 @@ module.exports = {
                 process.exit(1);
             }
 
+            var config = {
+                port: mailOptions.port,
+                host: mailOptions.host,
+                secure: true,
+                maxConnections: 5,
+                maxMessages: 10
+            };
+
+            if (mailOptions.auth.user) {
+                config.auth = {
+                    user: mailOptions.auth.user,
+                    pass: mailOptions.auth.pass
+                };
+            }
+
             var transporter = nodemailer.createTransport(smtpTransport({
                 port: mailOptions.port,
                 host: mailOptions.host,
-                auth: {
-                    user: mailOptions.auth.user,
-                    pass: mailOptions.auth.pass
-                },
                 secure: true,
                 maxConnections: 5,
                 maxMessages: 10
@@ -50,10 +61,10 @@ module.exports = {
         };
 
         //if (process.env.NODE_ENV != 'development') {
-            transporter.sendMail(optionsForTransporter, function (err, info) {
-                if (callback)
-                    return callback(err, info);
-            });
+        transporter.sendMail(optionsForTransporter, function (err, info) {
+            if (callback)
+                return callback(err, info);
+        });
         //}
     },
     mail: function(mail, templateName, module, lang, params, callback) {
