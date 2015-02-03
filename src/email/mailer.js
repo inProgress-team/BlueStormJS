@@ -36,7 +36,7 @@ module.exports = {
                 maxMessages: 10
             };
 
-            if (mailOptions.auth.user) {
+            if (mailOptions.auth) {
                 config.auth = {
                     user: mailOptions.auth.user,
                     pass: mailOptions.auth.pass
