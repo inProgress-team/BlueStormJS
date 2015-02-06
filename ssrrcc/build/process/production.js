@@ -2,7 +2,7 @@ var gulp = require('gulp'),
 del = require('del');
 
 var loadTasks = require(__dirname+'/loadTasks'),
-    config = require(__dirname+'/../config');
+    config = require(__dirname+'/../../config');
 
 
 var frontendApps = config().frontend.list(),

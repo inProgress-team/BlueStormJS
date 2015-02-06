@@ -98,13 +98,16 @@
     "password-generator": "^0.2.2",
     "phridge": "^1.0.7",
     "redis": "^0.12.1",
+    "request": "^2.53.0",
     "shell": "^0.3.2",
     "slug": "^0.8.0",
     "socket.io": "^1.2.1",
     "socket.io-redis": "^0.1.3",
     "sticky-session": "^0.1.0",
+    "tiny-lr": "^0.1.5",
     "underscore": "^1.7.0",
     "vhost": "^2.0.0",
+    "watch": "^0.13.0",
     "yargs": "^1.3.1"
   },
   "devDependencies": {

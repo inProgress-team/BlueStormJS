@@ -1,7 +1,7 @@
 var gulp = require('gulp');
 
 var loadTasks = require(__dirname+'/loadTasks'),
-    config = require(__dirname+'/../config');
+    config = require(__dirname+'/../../config');
 
 
 var async = require('async'),

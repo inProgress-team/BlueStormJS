@@ -6,22 +6,28 @@ var express = require('express'),
 	fs = require('fs'),
     async = require('async');
 
+
+
+
 module.exports = {
 	start: function (type) {
 
+        /**
+         * Express
+         */
 		var app = express();
 		app.use(express.static(dir + '/'+type));
 		app.listen(port);
+        console.log('Magic happens on port '+port);
 
-
+        /**
+         * Socket.io
+         */
 		var io = require('socket.io')(12003);
 
 		io.on('connection', function (socket) {
             requireRoutes(socket);
 		});
-        console.log('Magic happens on port '+port);
-
-
 	}
 };
 

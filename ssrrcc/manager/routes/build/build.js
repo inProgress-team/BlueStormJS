@@ -1,5 +1,6 @@
-var childProcess = require('child_process');
 
+
+var build = require(__dirname+'/../../../build/build');
 
 var child,
     type;
@@ -8,72 +9,26 @@ module.exports = function(socket) {
 
     socket.on('tasks:development:build', function(data, callback) {
         if (typeof callback == 'function') {
-            process.env.NODE_ENV = 'development';
-
-            if(child) {
-                child.kill('SIGHUP');
-            }
-            type = 'development';
-            child = childProcess.fork(__dirname+'/../../../build/development', {
-                cwd: data.path
-            });
-            child.on('message', function(message){
+            build.development(data, callback, function(message) {
                 socket.emit('message_tasks', message);
             });
-            child.send({
-                debug: true,
-                apps: data.apps
-            });
-
-            callback();
         }
     });
     socket.on('tasks:production:build', function(data, callback) {
         if (typeof callback == 'function') {
-            process.env.NODE_ENV = 'production';
-
-            if(child) {
-                child.kill('SIGHUP');
-            }
-            type = 'production';
-            child = childProcess.fork(__dirname+'/../../../build/production', {
-                cwd: data.path
-            });
-            child.on('message', function(message){
-                if(message.type=="production_built")  {
-                    child.kill('SIGHUP');
-                    child = null;
-                    console.log('killed');
-                }
+            build.production(data, callback, function(message) {
                 socket.emit('message_tasks', message);
             });
-            child.send({
-                debug: true
-            });
-
-            callback();
         }
     });
     socket.on('tasks:kill', function(req, callback) {
         if (typeof callback == 'function') {
-            if(child) {
-                type = null;
-                child.kill('SIGHUP');
-                child = null;
-            } else {
-                return callback('no_child');
-            }
-
-            callback();
+            build.kill(callback);
         }
     });
     socket.on('tasks:isProcessing', function(req, callback) {
         if (typeof callback == 'function') {
-            if(child) {
-                callback(null, { type: type })
-            } else {
-                callback(null, false)
-            }
+            build.isProcessing(callback)
         }
     });
 };

@@ -5,12 +5,12 @@ del = require('del'),
 async = require('async'),
 slug = require('slug');
 
-var gulpLogger = require(__dirname+'/gulp-logger'),
-frontendBuild = require(__dirname+'/frontend/build'),
-frontendCompile = require(__dirname+'/frontend/compile');
+var gulpLogger = require(__dirname+'/../gulp-logger'),
+frontendBuild = require(__dirname+'/../frontend/build'),
+frontendCompile = require(__dirname+'/../frontend/compile');
 
 
-var config = require(__dirname+'/../config');
+var config = require(__dirname+'/../../config');
 
 
 var frontendApps = config().frontend.list();
