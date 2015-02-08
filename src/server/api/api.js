@@ -227,7 +227,11 @@ module.exports = function(config, cb) {
             app.use(compression());
         }
 
-        app.use(multer());
+        app.use(multer({
+            limits: {
+                fieldSize: '10MB'
+            }
+        }));
         app.use(bodyParser.json());
 
         app.use(function(req, res, next) {
