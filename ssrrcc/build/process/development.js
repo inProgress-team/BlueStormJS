@@ -12,12 +12,7 @@ process.on('message',function(data){
     loadTasks(data);
     var first = true;
     gulp.start('watch', function() {
-        if(first) {
-            process.send({
-                type: 'start_server_request'
-            });
-            first = false;
-        }
+        console.log('watch ready');
     });
 });
 

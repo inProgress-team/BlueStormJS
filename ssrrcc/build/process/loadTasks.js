@@ -21,12 +21,7 @@ var frontendApps = config().frontend.list();
 module.exports = function(data) {
 
     gulpLogger.gulp(gulp, data.debug);
-    var apps;
-    if(data.apps) {
-        apps = data.apps;
-    } else {
-        apps = frontendApps;    
-    }
+    var apps = frontendApps;
 
     var builds = [],
     compiles = [];

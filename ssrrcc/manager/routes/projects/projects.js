@@ -16,7 +16,7 @@ module.exports = function(socket) {
 
     });
 
-    socket.on('projects:getProjectsDir', function(req, callback) {
+    socket.on('projects:getProjectsDirectories', function(req, callback) {
         if (typeof callback == 'function') {
 
             walk(req, function(err, results) {

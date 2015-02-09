@@ -3,48 +3,62 @@ var childProcess = require('child_process');
 module.exports = {
     type: null,
     process: null,
-    development: function(data, cb, msgCb) {
+    development: function(data, progress, done) {
+        var first = true;
+
+        if(done === undefined) {
+            done = progress;
+            progress = null;
+        }
 
         process.env.NODE_ENV = 'development';
 
-        if(this.child) {
-            this.child.kill('SIGHUP');
+        if(this.process) {
+            this.process.kill('SIGHUP');
         }
         this.type = 'development';
-        this.child = childProcess.fork(__dirname+'/development', {
+
+        this.process = childProcess.fork(__dirname+'/process/development', {
             cwd: data.path
         });
-        this.child.on('message', function(message){
-            if(typeof msgCb == 'function')
-                msgCb(message);
+        this.process.on('message', function(message){
+            if(message.type == 'progress') {
+                if(typeof progress == 'function' && first) {
+                    progress(message.progress);
+                }
+            } else if(message.type == 'done' && first) {
+                if(typeof done=='function') {
+                    done();
+                    first = false;
+                }
+            }
         });
 
-        this.child.send({
-            debug: true,
-            apps: data.apps
+        this.process.send({
+            debug: data.debug|true
         });
 
-        cb();
+        done();
     },
     production: function(data, cb, msgCb) {
 
         process.env.NODE_ENV = 'production';
-        if(this.child) {
-            this.child.kill('SIGHUP');
+        if(this.process) {
+            this.process.kill('SIGHUP');
         }
         this.type = 'production';
-        this.child = childProcess.fork(__dirname+'/production', {
+        this.process = childProcess.fork(__dirname+'/process/production', {
             cwd: data.path
         });
-        this.child.on('message', function(message){
+        this.process.on('message', function(message){
             if(message.type=="production_built")  {
-                this.child.kill('SIGHUP');
-                this.child = null;
+                this.process.kill('SIGHUP');
+                this.process = null;
             }
             if(typeof msgCb == 'function')
                 msgCb(message);
         });
-        this.child.send({
+        this.process.send({
             debug: true
         });
 

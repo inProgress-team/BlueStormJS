@@ -1,4 +1,13 @@
 module.exports = {
+    tasksLength: null,
+    doneLength: null,
+    first: true,
+    checkFirst: function(cb) {
+        if(this.first) {
+            this.first = false;
+            cb();
+        }
+    },
     gulp: function(gulp, debug) {
 
         var timer;
@@ -6,43 +15,41 @@ module.exports = {
             timer = new Date;
             var tasks = e.message.split(': ')[1].split(',');
 
+            gulpLogger.tasksLength = tasks.length;
+            gulpLogger.doneLength = 0;
+
             process.send({
-                type:"tasks_executing",
-                count: tasks.length
+                type:"progress",
+                progress: 0
             });
         });
         gulp.on('stop', function (e) {
             var seconds = (new Date - timer)/1000;
 
             process.send({
-                type:"tasks_done",
+                type:"done",
                 seconds: seconds
             });
-
-            //logger.log('Gulp done in ' , ['blue'], seconds, ['yellow'], " seconds.", ['blue']);
         });
 
-
-        gulp.on('err', function (e) {
-            console.error("GULP", e.err, {stack:false});
-        });
-
-
-        gulp.on('task_start', function (e) {
-            //logger.log("Starting '",  e.task, ['green'], "'...");
-        });
         gulp.on('task_stop', function (e) {
+            gulpLogger.doneLength++;
             process.send({
-                type:"task_done"
+                type: "progress",
+                progress: (gulpLogger.doneLength/gulpLogger.tasksLength)*100
             });
-            //logger.log("Finished '", e.task, ['green', 'underline'], "' after ", parseInt(e.duration * 1000, 10), ['yellow'], " ms");
         });
-        gulp.on('task_err', function (e) {
-            console.log(e);
-        });
-        gulp.on('task_recursion', function (e) {
-            console.log(e);
-        });
+
+
+        var err = function (e) {
+            process.send({
+                type: "error",
+                err: e
+            });
+        };
+        gulp.on('err', err);
+        gulp.on('task_err', err);
+        gulp.on('task_recursion', err);
     }
 };
-
+var gulpLogger = module.exports;

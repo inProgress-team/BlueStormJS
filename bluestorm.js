@@ -30,8 +30,8 @@ switch(command) {
         server.start('bin');
         break;
     case 'dev':
-        tasks.start('watch');
         server.start('build');
+        console.log('Please start grunt watch')
         break;
     case 'compile':
         tasks.start('compile');
