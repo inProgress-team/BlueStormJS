@@ -71,8 +71,6 @@ module.exports = function(socket) {
     socket.on('server:getApps', function(req, callback) {
         if (typeof callback == 'function') {
             if(apps) {
-                console.log(req.data.path);
-                console.log('plouf');
                 callback(null, apps);
             } else {
                 apps = [{
