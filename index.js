@@ -5,13 +5,15 @@ var logger = require(__dirname+'/src/logger/logger'),
     server = require(__dirname+'/src/server/server'),
     cli = require(__dirname+'/src/cli'),
     arborescence = require(__dirname+'/src/arborescence'),
-    upload = require(__dirname + '/src/upload/upload');
+    upload = require(__dirname + '/src/upload/upload'),
+    hipchat = require(__dirname + '/ssrrcc/connectors/hipchat/hipchat');
 
 module.exports = {
     cli: cli,
     server: server,
     logger: logger,
     upload: upload,
+    hipchat: hipchat,
     db: function(callback) {
         require(__dirname + '/db')(function(err, res) {
             if (err)
