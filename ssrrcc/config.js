@@ -5,7 +5,8 @@ module.exports = function (path) {
     }
 
     var domains = require(path+'/config/domains.json'),
-        mainConfig = require(path+'/config/main.json');
+        mainConfig = require(path+'/config/main.json'),
+        pkg = require(path+'/package.json');
 
     return {
         frontend: {
@@ -25,6 +26,8 @@ module.exports = function (path) {
             if (mainConfig.ssl) return true;
 
             return false;
-        }
+        },
+        main: mainConfig,
+        pkg: pkg
     };
 };

@@ -20,13 +20,15 @@ var commands = ['dev', 'test', 'prod',
 
 var server = require(__dirname+'/server/server'),
     logger = require(__dirname+'/logger/logger'),
-    gulp = require(__dirname+'/gulp/gulp');
+    gulp = require(__dirname+'/gulp/gulp'),
+    hipchat = require(__dirname+'/../ssrrcc/connectors/hipchat/hipchat');
 
 
 module.exports = {
     command: function(commands) {
         var command = commands._[0],
             debug = commands.debug || false;
+
 
         if(command=="dev") {
             process.env.NODE_ENV = 'development';
@@ -56,6 +58,8 @@ module.exports = {
             process.env.NODE_ENV = 'development';
             server.startDev(debug);
 
+            hipchat.sendBluestormCommand("dev");
+
         } else if(command=="server-test") {
             process.env.NODE_ENV = 'production';
             process.env.NODE_TEST = true;
@@ -78,6 +82,7 @@ module.exports = {
         } else if(command=="logs") {
             logger.getLogs();
         }
+
     },
     argv: function() {
         return argv.argv;
