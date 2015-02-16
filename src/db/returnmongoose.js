@@ -30,8 +30,9 @@ module.exports = function() {
         host = dataBaseConfig.hostProd;
     }
     mongoose.connect(host, function (err) {
-        if (err)
-            return callback(err);
+        if (err) {
+            throw err;
+        }
 
         return mongoose;
     });
