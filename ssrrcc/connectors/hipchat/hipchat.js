@@ -31,7 +31,7 @@ module.exports = {
 				hipchat.send(hipchatConfig, {
 		            "color": "green",
 		            "message": "<strong>"+username+"</strong> a commencé à travailler sur <strong>"+pkg.name+"</strong>",
-		            "notify": true,
+		            "notify": false,
 		            "message_format": "html"
 		        })
 
@@ -39,7 +39,7 @@ module.exports = {
 				    hipchat.send(hipchatConfig, {
 				        "color": "red",
 				        "message": "<strong>"+username+"</strong> a arrêté de travailler sur <strong>"+pkg.name+"</strong>",
-				        "notify": true,
+				        "notify": false,
 				        "message_format": "html"
 				    }, function (err) {
 				    	process.exit();
