@@ -37,7 +37,7 @@ module.exports = {
             "email": String,
             "password": String,
             "role": String,
-            "activated": Boolean
+            "activated": {type: Boolean, default: false}
         };
         if (fields) {
             for (var i in fields) {
