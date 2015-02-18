@@ -13,7 +13,7 @@ angular.module('bluestorm.user', [
 
         $http.defaults.headers.common["X-AUTH-TOKEN"] = token;
 
-        $.cookie('bluestorm_token', token, {expires: 30});
+        $.cookie('bluestorm_token', token, {expires: 30,  path: '/'});
 
         /*var domains = bluestorm.getDomains();
 
