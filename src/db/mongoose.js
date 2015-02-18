@@ -5,8 +5,9 @@ module.exports = function(host, callback) {
     if (firstCall) {
         firstCall = false;
         mongoose.connect(host, function (err) {
-            if (err)
-                return callback(err);
+            if (err) {
+                throw err;
+            }
 
             return callback(null, {"type": "mongoose", "db": mongoose});
         });
