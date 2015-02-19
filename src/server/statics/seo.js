@@ -5,15 +5,25 @@ var htmlcleaner = require(__dirname+'/htmlcleaner');
 
 var client = redis.createClient();
 
+
+var bots = [
+    'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
+    'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
+    'Facebot',
+    'Googlebot'
+];
+
+
 module.exports = {
     middleware: function(req, res, next) {
 
         var fragment = req.query._escaped_fragment_,
             userAgent = req.headers['user-agent'];
 
-        if(userAgent!='facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)'&&userAgent!='facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)'&&userAgent!='Facebot') {
-            if(fragment===undefined||typeof fragment!='string')
+        if(bots.indexOf(userAgent)==-1) {
+            if(fragment===undefined||typeof fragment!='string') {
                 return next();
+            }
         }
 
         if(fragment=='')
