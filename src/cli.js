@@ -17,6 +17,7 @@ var argv = require('yargs')
 var commands = ['dev', 'test', 'prod',
     'local-prod', 'server-dev', 'server-test',
     'server-prod', 'server-prod-apps', 'server-prod-api', 'server-prod-socket',
+    'start-cron',
     'server-local-prod', 'beautify', 'logs'];
 
 var server = require(__dirname+'/server/server'),
