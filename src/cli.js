@@ -16,7 +16,8 @@ var argv = require('yargs')
 
 var commands = ['dev', 'test', 'prod',
     'local-prod', 'server-dev', 'server-test',
-    'server-prod', 'server-local-prod', 'beautify', 'logs'];
+    'server-prod', 'server-prod-apps', 'server-prod-api', 'server-prod-socket',
+    'server-local-prod', 'beautify', 'logs'];
 
 var server = require(__dirname+'/server/server'),
     logger = require(__dirname+'/logger/logger'),
@@ -69,11 +70,25 @@ module.exports = {
             process.env.NODE_ENV = 'production';
             server.startProd(debug);
 
+        } else if(command=="server-prod-apps") {
+            process.env.NODE_ENV = 'production';
+            server.startProdForApps(debug);
+
+        } else if(command=="server-prod-api") {
+            process.env.NODE_ENV = 'production';
+            server.startProdForApi(debug);
+
+        } else if(command=="server-prod-socket") {
+            process.env.NODE_ENV = 'production';
+            server.startProdForSocket(debug);
+
         } else if(command=="server-local-prod") {
             process.env.NODE_ENV = 'development';
             process.env.NODE_LOCALPROD = true;
             server.startDev(debug);
 
+        } else if(command=="start-cron") {
+            server.startCron(debug);
 
         } else if(command=="beautify") {
             gulp.beautify(debug);

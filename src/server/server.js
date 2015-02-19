@@ -1,3 +1,9 @@
+var express = require('express'),
+    forever = require('forever-monitor'),
+    sticky = require('sticky-session'),
+    cluster = require("cluster"),
+    fs = require('fs');
+
 var statics = require(__dirname+'/statics/statics'),
     api = require(__dirname+'/api/api'),
     socket = require(__dirname+'/socket/socket'),
@@ -6,21 +12,11 @@ var statics = require(__dirname+'/statics/statics'),
     db = require(__dirname+'/../db/db'),
     config = require(__dirname+'/../config');
 
-
-var express = require('express'),
-    forever = require('forever-monitor'),
-    vhost = require('vhost'),
-    fs = require('fs');
-
-var sticky = require(__dirname+'/sticky-session');
-
 var frontendApps = config.frontend.list();
-
 
 module.exports = {
     startDev: function(debug) {
         frontendApps.forEach(function(name) {
-
             var app = config.get('development', name);
             statics({
                 port: app,
@@ -31,23 +27,15 @@ module.exports = {
 
         api({ port: config.get('development', 'api'), debug: debug });
         socket({ port: config.get('development', 'socket'), debug: debug });
-        //cron({debug: debug});
         logger.log('Forever started.', ['blue', 'inverse']);
         logger.log('Webapp is online (', 'development', ['yellow'], ').');
         fs.exists('dist/build/livereload.log', function (exists) {
             if(exists)
                 fs.writeFile('dist/build/livereload.log', Math.random()+"");
         });
-        
     },
-    startProd: function(debug, test) {
-        var type = 'production';
-        if(test!==undefined) {
-            type = 'test';
-        }
-
-        frontendApps.forEach(function(name) {
-
+    startProdForApps: function(debug) {
+        frontendApps.forEach(function (name) {
             var app = config.get('development', name);
             statics({
                 port: app,
@@ -55,54 +43,44 @@ module.exports = {
                 debug: debug
             });
         });
+    },
+    startProdForApi: function(debug) {
+        var numCPUs = require('os').cpus().length;
+        var apiPort = config.get('production', 'apiPort');
 
-        api({ port: config.get('development', 'api'), debug: debug });
-        socket({ port: config.get('development', 'socket'), debug: debug });
-        cron({debug: debug});
-
-        /*
-
-        sticky(function() {
-            var server = express();
-
-            frontendApps.forEach(function(name) {
-
-                var app = statics({
-                    name: name,
-                    debug: debug
-                });
-                var urls = config.get(type, name);
-                if(typeof urls == 'object') {
-                    urls.forEach(function (url) {
-                        server.use(vhost(url, app));
-                    });
-                } else {
-                    server.use(vhost(urls, app));
+        if (apiPort) {
+            if (cluster.isMaster) {
+                // Fork workers.
+                for (var i = 0; i < numCPUs; i++) {
+                    cluster.fork();
                 }
-            });
-
-
-            var apiApp = api({ debug: debug }),
-                socketApp = socket({ debug: debug });
-
-            server
-                .use(vhost(config.get(type, 'api'), apiApp))
-                .use(vhost(config.get(type, 'socket'), socketApp));
-
-            if(process.env.NODE_WORKER_ID=='MASTER') {
-                cron({debug: debug});
-            }
-
-            return server.listen(3333);
-
-        }).listen(3334, function() {
-            if(process.env.NODE_WORKER_ID=='MASTER') {
-                logger.log('Master started on ', config.get(type, 'main'), ['red'], ' port');
+                cluster.on('exit', function(worker) {
+                    console.log('worker ' + worker.process.pid + ' died');
+                });
             } else {
-                logger.log('Worker ' + process.env.NODE_WORKER_ID+ ' started');
+                // Workers can share any TCP connection
+                // In this case its a HTTP server
+                api({ port: apiPort, debug: debug });
             }
+        } else {
+            api({ port: config.get('development', 'api'), debug: debug });
+        }
+    },
+    startProdForSocket: function(debug) {
+        var socketPort = config.get('production', 'socketPort');
 
-        });*/
+        if (socketPort) {
+            sticky(function () {
+                return socket({ port: socketPort, debug: debug });
+            }).listen(socketPort, function () {
+                console.log('server started on ' + socketPort + ' port');
+            });
+        } else {
+            socket({ port: config.get('development', 'socket'), debug: debug });
+        }
+    },
+    startCron: function(debug) {
+        cron({debug: debug});
     },
     supervisor: {
         development: function(debug) {
@@ -115,7 +93,7 @@ module.exports = {
                 watch: false,
                 options: options
             });
-            process.on('SIGHUP', function(msg) {
+            process.on('SIGHUP', function() {
                 server.monitor.stop();
             });
         },

@@ -2,7 +2,8 @@ var socket = require('socket.io'),
     domain = require('domain'),
     express = require('express'),
     http = require('http'),
-    fs = require('fs');
+    fs = require('fs'),
+    cluster = require("cluster");
 var redis = require('socket.io-redis');
 var logger = require(__dirname+'/../../logger/logger'),
     arborescence = require(__dirname+'/../../arborescence'),
@@ -106,16 +107,15 @@ var checkAuthentification = function(data, callback) {
 
 
 module.exports = function(config) {
+    if (!config) {
+        config = {};
+    }
     var cacheFiles = null;
 
     var io;
-    if(config.port) {
-        io = socket();
-    } else {
-        var app = express();
-        var server = http.createServer(app);
-        io = socket(server);
-    }
+    var app = express();
+    var server = http.createServer(app);
+    io = socket(server);
     var d = domain.create();
 
     d.on('error', function(err) {
@@ -179,18 +179,17 @@ module.exports = function(config) {
 
         });
     });
-    if(config.port) {
-        if(config.debug) {
-            logger.log('Sockets', ['green'], ' listening on port ', config.port, ['yellow'], '.');
-        }
 
+    if(config.debug && cluster.isMaster) {
+        logger.log('Sockets', ['green'], ' listening on port ', config.port, ['yellow'], '.');
+    }
+
+    if (process.env.NODE_ENV != 'production') {
         io.listen(config.port, function() {
-            if(typeof callback=='function') cb();
+            return server;
         });
     } else {
-        io.listen(8888, function() {
-            if(typeof callback=='function') cb();
-        });
+        io.listen(server);
         return server;
     }
 };

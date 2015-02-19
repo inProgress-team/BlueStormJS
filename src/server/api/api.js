@@ -4,7 +4,9 @@ var express = require('express'),
     fs = require('fs'),
     domain = require('domain'),
     compression = require('compression'),
-    _ = require('underscore');
+    http = require('http'),
+    _ = require('underscore'),
+    cluster = require("cluster");
 
 var logger = require(__dirname+'/../../logger/logger'),
     arborescence = require(__dirname+'/../../arborescence'),
@@ -17,6 +19,8 @@ var rolesConfig;
 
 var app = express(),
     start;
+
+var server = http.createServer(app);
 
 var roleContainsRole = function(activeRole, requiredRole, callback) {
     if (!rolesConfig || rolesConfig.roles.length == 0)
@@ -143,7 +147,10 @@ var checkAuthentificationDelete = function(req, res, next) {
     return checkAuthentification(req, res, next);
 };
 
-module.exports = function(config, cb) {
+module.exports = function(config) {
+    if (!config) {
+        config = {};
+    }
     var d = domain.create();
 
     d.on('error', function(err) {
@@ -289,14 +296,16 @@ module.exports = function(config, cb) {
     /**
      * Set app on port defined in conf
      */
-    if(config.port) {
-        if(config.debug) {
-            logger.log('API', ['green'], ' listening on port ', config.port, ['yellow'], '.');
-        }
+    if(config.debug && cluster.isMaster) {
+        logger.log('API', ['green'], ' listening on port ', config.port, ['yellow'], '.');
+    }
+
+    if (config.port) {
         app.listen(config.port, function() {
-            if(typeof callback=='function') cb();
+           return server;
         });
     } else {
-        return app
+        app.listen();
+        return server;
     }
 };
