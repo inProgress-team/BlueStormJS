@@ -1,6 +1,6 @@
 var express = require('express'),
     forever = require('forever-monitor'),
-    sticky = require('sticky-session'),
+    sticky = require('socketio-sticky-session'),
     cluster = require("cluster"),
     fs = require('fs');
 
@@ -68,16 +68,7 @@ module.exports = {
     },
     startProdForSocket: function(debug) {
         var socketPort = config.get('production', 'socketPort');
-
-        if (socketPort) {
-            sticky(function () {
-                return socket({ port: socketPort, debug: debug });
-            }).listen(socketPort, function () {
-                console.log('server started on ' + socketPort + ' port');
-            });
-        } else {
-            socket({ port: config.get('development', 'socket'), debug: debug });
-        }
+        socket({ port: socketPort, debug: debug });
     },
     startCron: function(debug) {
         cron({debug: debug});

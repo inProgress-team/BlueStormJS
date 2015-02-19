@@ -116,6 +116,13 @@ module.exports = function(config) {
     var app = express();
     var server = http.createServer(app);
     io = socket(server);
+    io.set('transports', [
+        'websocket'
+        , 'flashsocket'
+        , 'htmlfile'
+        , 'xhr-polling'
+        , 'jsonp-polling'
+    ]);
     var d = domain.create();
 
     d.on('error', function(err) {
