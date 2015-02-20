@@ -146,7 +146,7 @@ module.exports.decodeToken = function(token) {
 
 module.exports.signUp = function(user, options, callback) {
     if (!user || !user.email) {
-        return callback('informations_not_received');
+        return callback('data_not_received');
     }
 
     // If no options passed
@@ -166,7 +166,7 @@ module.exports.signUp = function(user, options, callback) {
     }
     else {
         if(!user.password)
-            return callback('informations_not_received');
+            return callback('data_not_received');
         password = user.password;
     }
 
@@ -236,7 +236,7 @@ module.exports.signUp = function(user, options, callback) {
 
 module.exports.signUpConfirm = function(hash, options, callback) {
     if (!hash) {
-        return callback('informations_not_received');
+        return callback('data_not_received');
     }
 
     // If no options passed
@@ -281,47 +281,88 @@ module.exports.signUpConfirm = function(hash, options, callback) {
     });
 };
 
-module.exports.resetPassword = function(data, callback) {
-    if (!data || !data.email || !data.resetPasswordLink) {
-        return callback('informations_not_received');
+module.exports.resetPassword = function(data, options, callback) {
+    if (typeof options == 'function') {
+        callback = options;
+        options = {};
+    }
+
+    if (!data || !data.email) {
+        return callback('data_not_received');
     }
 
     dbConnection(function(db) {
-        db.collection('users').findAndModify({
-                "email": data.email
-            },
-            {},
-            {
-                "$set": {
-                    "hashPassword": generatePassword(8, false, /\w/)
+        if (data.resetPasswordLink) {
+            db.collection('users').findAndModify({
+                    "email": data.email
+                },
+                {},
+                {
+                    "$set": {
+                        "hashPassword": generatePassword(8, false, /\w/)
+                    }
+                },
+                {
+                    "new": true
+                },
+                function (err, res) {
+                    if (err)
+                        return callback(err);
+
+                    if (!res)
+                        return callback('not_found');
+
+                    var arguments = _.clone(res);
+                    delete arguments.password;
+                    if (data.resetPasswordLink.slice(-1) == '/')
+                        data.resetPasswordLink = data.resetPasswordLink.substring(0, data.resetPasswordLink.length - 1);
+                    arguments.url = data.resetPasswordLink + '/' + data.email + '/' + res.hashPassword;
+                    mailer.mail(res.email, 'resetPassword', 'user', 'fr', arguments);
+
+                    return callback();
                 }
-            },
-            {
-                "new": true
-            },
-            function(err, res) {
+            );
+        } else {
+            var password = generatePassword(8, false, /\w/);
+            db.collection('users').findOne({
+                email: data.email
+            }, function(err, res) {
                 if (err)
                     return callback(err);
-
                 if (!res)
-                    return callback('not_found');
+                    return callback('account_not_found');
 
-                var arguments = _.clone(res);
-                delete arguments.password;
-                if (data.resetPasswordLink.slice(-1) == '/')
-                    data.resetPasswordLink = data.resetPasswordLink.substring(0, data.resetPasswordLink.length - 1);
-                arguments.url = data.resetPasswordLink + '/' + data.email + '/' + res.hashPassword;
-                mailer.mail(res.email, 'resetPassword', 'user', 'fr', arguments);
+                bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
+                    if (err)
+                        return callback(err);
 
-                return callback();
-            }
-        );
+                    bcrypt.hash(password, salt, function (err, hash) {
+                        if (err)
+                            return callback(err);
+
+                        res.password = hash;
+                        db.collection('users').save(res, function(err) {
+                            if (err)
+                                return callback(err);
+
+                            var arguments = _.clone(res);
+                            arguments.password = password;
+                            if (options.signinLink)
+                                arguments.signinLink = options.signinLink;
+                            mailer.mail(res.email, 'renewPassword', 'user', 'fr', arguments, function(err) {
+                                return callback(err);
+                            });
+                        });
+                    });
+                });
+            });
+        }
     });
 };
 
 module.exports.resetPasswordConfirm = function(data, callback) {
     if (!data || !data.email || !data.hashPassword ||!data.password) {
-        return callback('informations_not_received');
+        return callback('data_not_received');
     }
 
     bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
@@ -365,7 +406,7 @@ module.exports.resetPasswordConfirm = function(data, callback) {
 
 module.exports.changePassword = function(data, callback) {
     if (!data || !data.email ||!data.password || !data.newPassword) {
-        return callback('informations_not_received');
+        return callback('data_not_received');
     }
 
     dbConnection(function(db) {
@@ -408,7 +449,7 @@ module.exports.changePassword = function(data, callback) {
 
 module.exports.signIn = function(user, callback) {
     if (!user || !user.email || !user.password) {
-        return callback('informations_not_received');
+        return callback('data_not_received');
     }
 
     dbConnection(function(db) {
@@ -437,7 +478,7 @@ module.exports.signIn = function(user, callback) {
 
 module.exports.update = function(user, callback) {
     if (!user || !user.email) {
-        return callback('informations_not_received');
+        return callback('data_not_received');
     }
 
     // If no options passed
