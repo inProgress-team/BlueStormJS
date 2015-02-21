@@ -40,5 +40,5 @@ var getLastPath = function(path) {
 	} else {
 		return aux.substring(aux.lastIndexOf('.')+1, aux.length);
 	}
-}
+};
 
