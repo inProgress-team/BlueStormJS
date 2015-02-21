@@ -1,6 +1,6 @@
 module.exports = {
 	translate: function (str, lang) {
-		var trad = require(process.cwd()+'/src/common/i18n/'+lang+'.json');
+		var trad = require(process.cwd()+'src/common/i18n/'+lang+'.json');
 
 		var hashmap = [];
 		walk(trad, '', hashmap);
@@ -23,10 +23,6 @@ var walk = function (obj, path, res) {
 
     for(var i in obj) {
     	if(typeof obj[i]=="string") {
-    		var p = getLastPath(path);
-    		if(i==p) {
-    			res.push({key: path.substring(0, path.length-1), value: obj[i]});
-    		}
     		res.push({key: path+i, value: obj[i]});
     	} else {
     		walk(obj[i], path+i+".", res);
@@ -45,3 +41,4 @@ var getLastPath = function(path) {
 		return aux.substring(aux.lastIndexOf('.')+1, aux.length);
 	}
 }
+
