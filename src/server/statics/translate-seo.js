@@ -1,6 +1,6 @@
 module.exports = {
 	translate: function (str, lang) {
-		var trad = require(__dirname+'/../../../../songpeek/src/common/i18n/'+lang+'.json');
+		var trad = require('src/common/i18n/'+lang+'.json');
 
 		var hashmap = [];
 		walk(trad, '', hashmap);
