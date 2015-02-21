@@ -14,43 +14,6 @@ module.exports = {
 			if(typeof cb == 'function')
 				cb(err);
 		});
-	},
-	sendBluestormCommand: function (command) {
-		var hipchatConfig = config().main.hipchat,
-			pkg = config().pkg;
-
-
-		if(hipchatConfig && hipchatConfig.token && hipchatConfig.room) {
-
-			var username = os.hostname();
-			gitConfig(function (err, config) {
-				if (!err) {
-					username = config.user.name;
-				}
-
-				hipchat.send(hipchatConfig, {
-		            "color": "green",
-		            "message": "<strong>"+username+"</strong> a commencé à travailler sur <strong>"+pkg.name+"</strong>",
-		            "notify": false,
-		            "message_format": "html"
-		        })
-
-		        process.on('SIGINT', function(msg) {
-				    hipchat.send(hipchatConfig, {
-				        "color": "red",
-				        "message": "<strong>"+username+"</strong> a arrêté de travailler sur <strong>"+pkg.name+"</strong>",
-				        "notify": false,
-				        "message_format": "html"
-				    }, function (err) {
-				    	process.exit();
-				    });
-				    return true;
-				});
-			});
-
-
-			
-		}
 	}
 };
 var hipchat = module.exports;
