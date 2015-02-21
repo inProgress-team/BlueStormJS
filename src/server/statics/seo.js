@@ -57,7 +57,7 @@ module.exports = {
 
                                 //client.set(url, JSON.stringify(html));
                                 res.set('Content-Type', 'text/html');
-                                res.send(translateSeo.translate(html, 'fr'));
+                                res.send(html);//translateSeo.translate(html, 'fr'));
                             });
                         }
                     });/*
