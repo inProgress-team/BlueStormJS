@@ -161,8 +161,10 @@ module.exports.signUp = function(user, options, callback) {
     // If random password
     if (options.randomPassword) {
         password = generatePassword(8, false, /\w/);
-        if (!options.resetPasswordLink)
+        if (!options.resetPasswordLink) {
+            options.sendConfirmation = true;
             options.sendPassword = true;
+        }
     }
     else {
         if(!user.password)
@@ -202,10 +204,10 @@ module.exports.signUp = function(user, options, callback) {
                             return callback(err);
 
                         if (options.sendConfirmation || options.activationLink || options.resetPasswordLink) {
-                            var arguments = {};
+                            var arguments = _.clone(elts[0]);
+                            if (options.signinLink)
+                                arguments.signinLink = options.signinLink;
 
-                            arguments.firstName = user.firstName;
-                            arguments.email = user.email;
                             if (options.sendPassword) {
                                 arguments.password = password;
                             }
