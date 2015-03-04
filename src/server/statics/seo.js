@@ -11,7 +11,19 @@ var bots = [
     'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
     'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
     'Facebot',
-    'Googlebot'
+    'Googlebot',
+    'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
+    'Googlebot/2.1 (+http://www.google.com/bot.html)',
+    'Googlebot-News',
+    'Googlebot-Image/1.0',
+    'Googlebot-Video/1.0',
+    '(compatible; Googlebot-Mobile/2.1; +http://www.google.com/bot.html)',
+    '(compatible; Mediapartners-Google/2.1; +http://www.google.com/bot.html)',
+    'Mediapartners-Google',
+    'AdsBot-Google (+http://www.google.com/adsbot.html)',
+    'Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)',
+    'Mozilla/5.0 (iPhone; CPU iPhone OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)',
+    'Mozilla/5.0 (Windows Phone 8.1; ARM; Trident/7.0; Touch; rv:11.0; IEMobile/11.0; NOKIA; Lumia 530) like Gecko (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)'
 ];
 
 
