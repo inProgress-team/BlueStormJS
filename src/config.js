@@ -23,6 +23,14 @@ module.exports = {
     main: {
         get: function (name) {
             return mainConfig[name];
+        },
+        isSeo: function (name) {
+            var configSeo = this.get('seo');
+            if(typeof configSeo=='object'&& configSeo.length && configSeo.indexOf(name)!=-1) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 };

@@ -2,7 +2,8 @@ var fs = require('fs'),
 express = require('express');
 
 var logger = require(__dirname+'/../../logger/logger'),
-seo = require(__dirname+'/seo');
+    seo = require(__dirname+'/seo'),
+    configApi = require(__dirname+'/../../config');
 
 
 module.exports = function(config) {
@@ -14,7 +15,6 @@ module.exports = function(config) {
 
     var app = express(),
         cacheIndex = null,
-        cacheRobots = null,
         path = 'dist/'+dir+'/'+config.name,
         start;
 
@@ -28,7 +28,34 @@ module.exports = function(config) {
             next();
         });
     }
+    //ROBOTS
+    app.get('/robots.txt', function (req, res) {
+        res.set('Content-Type', 'text/plain');
 
+        if(configApi.main.isSeo(config.name)) {
+            res.send('User-agent: *\nDisallow: /public');
+        } else {
+            res.send('User-agent: *\nDisallow: /');
+        }
+    });
+    //SITEMAP
+    app.get('/sitemap.xml', function (req, res) {
+        if(configApi.main.isSeo(config.name)) {
+            var file = 'sitemap.xml';
+            fs.exists(file, function (exists) {
+                if(!exists)
+                    return res.status(404).send('Not found');
+
+                res.set('Content-Type', 'text/xml');
+                res.send(fs.readFileSync(file));
+            });
+        } else {
+            return res.status(404).send('Not found');
+        }
+        
+    });
+
+    //MAIN HTML
     app.get('*', function(req, res){
         if(req.url.indexOf('/public/')==0 || req.url.indexOf('.tpl.html')!=-1) {
             return res.status(404).send('Not found');
@@ -37,14 +64,6 @@ module.exports = function(config) {
             cacheIndex = fs.readFileSync(path+'/main.html');
         }
 
-        if(req.url=='/robots.txt') {
-            if(!cacheRobots || process.env.NODE_ENV=='development') {
-                cacheRobots = fs.readFileSync(__dirname+'/robots.txt');
-            }
-            res.set('Content-Type', 'text');
-            res.send(cacheRobots);
-            return;
-        }
         res.set('Content-Type', 'text/html');
         res.send(cacheIndex);
     });
