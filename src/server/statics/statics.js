@@ -13,9 +13,10 @@ module.exports = function(config) {
 
 
     var app = express(),
-    cacheIndex = null,
-    path = 'dist/'+dir+'/'+config.name,
-    start;
+        cacheIndex = null,
+        cacheRobots = null,
+        path = 'dist/'+dir+'/'+config.name,
+        start;
 
     app.use(express.static(path));
     app.use(seo.middleware);
@@ -34,6 +35,15 @@ module.exports = function(config) {
         }
         if(!cacheIndex || process.env.NODE_ENV=='development') {
             cacheIndex = fs.readFileSync(path+'/main.html');
+        }
+
+        if(req.url=='/robots.txt') {
+            if(!cacheRobots || process.env.NODE_ENV=='development') {
+                cacheRobots = fs.readFileSync(__dirname+'/robots.txt');
+            }
+            res.set('Content-Type', 'text');
+            res.send(cacheRobots);
+            return;
         }
         res.set('Content-Type', 'text/html');
         res.send(cacheIndex);
