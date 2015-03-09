@@ -67,7 +67,23 @@ var bots = [
     'BaiDuSpider',
     'Baiduspider',
     'Baiduspider-image+(+http://www.baidu.com/search/spider.htm)',
-    'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0; baidu Transcoder;)'
+    'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0; baidu Transcoder;)',
+
+    //YAHOO
+    'Mozilla/5.0 (compatible; Yahoo! Slurp; http://help.yahoo.com/help/us/ysearch/slurp)',
+    'Mozilla/5.0 (compatible; Yahoo! Slurp China; http://misc.yahoo.com.cn/help.html)',
+    'YahooSeeker/1.2 (compatible; Mozilla 4.0; MSIE 5.5; yahooseeker at yahoo-inc dot com ; http://help.yahoo.com/help/us/shop/merchant/)',
+
+    //AOL
+    'Mozilla/5.0 (compatible; MSIE 9.0; AOL 9.7; AOLBuild 4343.19; Windows NT 6.1; WOW64; Trident/5.0; FunWebProducts)',
+
+    //ASK.COM
+    'Mozilla/5.0 (compatible; Ask Jeeves/Teoma; +http://about.ask.com/en/docs/about/webmasters.shtml)',
+
+    //MISC
+    'iaskspider/2.0(+http://iask.com/help/help_index.html)'
+
+
 ];
 
 module.exports = {
