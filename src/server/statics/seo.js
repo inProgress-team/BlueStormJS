@@ -105,6 +105,8 @@ module.exports = {
         var fragment = req.query._escaped_fragment_,
             userAgent = req.headers['user-agent'];
 
+        console.log(userAgent);
+        
         if(bots.indexOf(userAgent)==-1) {
             if(fragment===undefined||typeof fragment!='string') {
                 return next();
