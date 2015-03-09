@@ -94,9 +94,12 @@ var bots = [
 
 
     //MISC
-    'iaskspider/2.0(+http://iask.com/help/help_index.html)'
+    'iaskspider/2.0(+http://iask.com/help/help_index.html)',
+    'Mozilla/5.0 (compatible; OrangeBot/2.0; support.orangebot@orange.com)'
+];
 
-
+var partialBots = [
+    'Google Page Speed Insights'
 ];
 
 module.exports = {
@@ -105,9 +108,13 @@ module.exports = {
         var fragment = req.query._escaped_fragment_,
             userAgent = req.headers['user-agent'];
 
-        console.log(userAgent);
-
-        if(bots.indexOf(userAgent)==-1) {
+        var found = false;
+        partialBots.forEach(function (bot) {
+            if(userAgent.indexOf(bot)) {
+                found = true
+            }
+        });
+        if(bots.indexOf(userAgent)==-1 && !found) {
             if(fragment===undefined||typeof fragment!='string') {
                 return next();
             }
