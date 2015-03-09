@@ -8,9 +8,12 @@ var client = redis.createClient();
 
 
 var bots = [
-    'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
+    //FACEBOOK
+    'facebookexternalhit/1.http (+0://www.facebook.com/externalhit_uatext.php)',
     'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
     'Facebot',
+
+    //GOOGLE
     'Googlebot',
     'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
     'Googlebot/2.1 (+http://www.google.com/bot.html)',
@@ -21,11 +24,51 @@ var bots = [
     '(compatible; Mediapartners-Google/2.1; +http://www.google.com/bot.html)',
     'Mediapartners-Google',
     'AdsBot-Google (+http://www.google.com/adsbot.html)',
+    'Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5376e Safari/8536.25 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
+    'SAMSUNG-SGH-E250/1.0 Profile/MIDP-2.0 Configuration/CLDC-1.1 UP.Browser/6.2.3.3.c.1.101 (GUI) MMP/2.0 (compatible; Googlebot-Mobile/2.1; +http://www.google.com/bot.html)',
+    'DoCoMo/2.0 N905i(c100;TB;W24H16) (compatible; Googlebot-Mobile/2.1; +http://www.google.com/bot.html)',
+
+
+    //BING
     'Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)',
     'Mozilla/5.0 (iPhone; CPU iPhone OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)',
-    'Mozilla/5.0 (Windows Phone 8.1; ARM; Trident/7.0; Touch; rv:11.0; IEMobile/11.0; NOKIA; Lumia 530) like Gecko (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)'
-];
+    'Mozilla/5.0 (Windows Phone 8.1; ARM; Trident/7.0; Touch; rv:11.0; IEMobile/11.0; NOKIA; Lumia 530) like Gecko (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)',
+    'msnbot/2.0b (+http://search.msn.com/msnbot.htm)',
+    'msnbot-media/1.1 (+http://search.msn.com/msnbot.htm)',
+    'adidxbot/1.1 (+http://search.msn.com/msnbot.htm)',
+    'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/534+ (KHTML, like Gecko) BingPreview/1.0b',
+    'Mozilla/5.0 (Windows Phone 8.1; ARM; Trident/7.0; Touch; rv:11.0; IEMobile/11.0; NOKIA; Lumia 530) like Gecko BingPreview/1.0b',
 
+    //YANDEX
+    'Mozilla/5.0 (compatible; YandexBot/3.0; +http://yandex.com/bots)',
+    'Mozilla/5.0 (compatible; YandexImages/3.0; +http://yandex.com/bots)',
+    'Mozilla/5.0 (compatible; YandexVideo/3.0; +http://yandex.com/bots)',
+    'Mozilla/5.0 (compatible; YandexMedia/3.0; +http://yandex.com/bots)',
+    'Mozilla/5.0 (compatible; YandexBlogs/0.99; robot; +http://yandex.com/bots)',
+    'Mozilla/5.0 (compatible; YandexFavicons/1.0; +http://yandex.com/bots)',
+    'Mozilla/5.0 (compatible; YandexWebmaster/2.0; +http://yandex.com/bots)',
+    'Mozilla/5.0 (compatible; YandexPagechecker/1.0; +http://yandex.com/bots)',
+    'Mozilla/5.0 (compatible; YandexImageResizer/2.0; +http://yandex.com/bots)',
+    'Mozilla/5.0 (compatible; YandexDirect/3.0; +http://yandex.com/bots)',
+    'Mozilla/5.0 (compatible; YandexDirect/2.0; Dyatel; +http://yandex.com/bots)'
+    'Mozilla/5.0 (compatible; YandexMetrika/2.0; +http://yandex.com/bots)',
+    'Mozilla/5.0 (compatible; YandexNews/3.0; +http://yandex.com/bots)',
+    'Mozilla/5.0 (compatible; YandexCatalog/3.0; +http://yandex.com/bots)',
+    'Mozilla/5.0 (compatible; YandexAntivirus/2.0; +http://yandex.com/bots)',
+    'Mozilla/5.0 (compatible; YandexZakladki/3.0; +http://yandex.com/bots)',
+    'Mozilla/5.0 (compatible; YandexMarket/1.0; +http://yandex.com/bots'),
+
+    //BAIDU
+    'Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)',
+    'Mozilla/5.0 (Linux;u;Android 2.3.7;zh-cn;) AppleWebKit/533.1 (KHTML,like Gecko) Version/4.0 Mobile Safari/533.1 (compatible; +http://www.baidu.com/search/spider.html)',
+    'Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.2.8;baidu Transcoder) Gecko/20100722 Firefox/3.6.8 ( .NET CLR 3.5.30729)',
+    'Baiduspider+(+http://www.baidu.com/search/spider.htm)',
+    'Baiduspider+(+http://www.baidu.com/search/spider_jp.html)',
+    'BaiDuSpider',
+    'Baiduspider',
+    'Baiduspider-image+(+http://www.baidu.com/search/spider.htm)',
+    'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0; baidu Transcoder;)'
+];
 
 module.exports = {
     middleware: function(req, res, next) {
