@@ -56,7 +56,7 @@ var bots = [
     'Mozilla/5.0 (compatible; YandexCatalog/3.0; +http://yandex.com/bots)',
     'Mozilla/5.0 (compatible; YandexAntivirus/2.0; +http://yandex.com/bots)',
     'Mozilla/5.0 (compatible; YandexZakladki/3.0; +http://yandex.com/bots)',
-    'Mozilla/5.0 (compatible; YandexMarket/1.0; +http://yandex.com/bots'),
+    'Mozilla/5.0 (compatible; YandexMarket/1.0; +http://yandex.com/bots)',
 
     //BAIDU
     'Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)',
