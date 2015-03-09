@@ -80,6 +80,19 @@ var bots = [
     //ASK.COM
     'Mozilla/5.0 (compatible; Ask Jeeves/Teoma; +http://about.ask.com/en/docs/about/webmasters.shtml)',
 
+    //W3C
+    'W3C_Validator/1.3',
+    'Validator.nu/LV',
+    'W3C-checklink',
+    'W3C-mobileOK/DDC-1.0',
+    'W3C_I18n-Checker/1.0',
+    'NING/1.0',
+    'FeedValidator/1.3',
+    'Jigsaw/2.3.0 W3C_CSS_Validator_JFouffa/2.0',
+    'W3C_Unicorn/1.0',
+
+
+
     //MISC
     'iaskspider/2.0(+http://iask.com/help/help_index.html)'
 
