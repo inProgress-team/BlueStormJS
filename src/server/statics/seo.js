@@ -50,7 +50,7 @@ var bots = [
     'Mozilla/5.0 (compatible; YandexPagechecker/1.0; +http://yandex.com/bots)',
     'Mozilla/5.0 (compatible; YandexImageResizer/2.0; +http://yandex.com/bots)',
     'Mozilla/5.0 (compatible; YandexDirect/3.0; +http://yandex.com/bots)',
-    'Mozilla/5.0 (compatible; YandexDirect/2.0; Dyatel; +http://yandex.com/bots)'
+    'Mozilla/5.0 (compatible; YandexDirect/2.0; Dyatel; +http://yandex.com/bots)',
     'Mozilla/5.0 (compatible; YandexMetrika/2.0; +http://yandex.com/bots)',
     'Mozilla/5.0 (compatible; YandexNews/3.0; +http://yandex.com/bots)',
     'Mozilla/5.0 (compatible; YandexCatalog/3.0; +http://yandex.com/bots)',
@@ -106,7 +106,7 @@ module.exports = {
             userAgent = req.headers['user-agent'];
 
         console.log(userAgent);
-        
+
         if(bots.indexOf(userAgent)==-1) {
             if(fragment===undefined||typeof fragment!='string') {
                 return next();
