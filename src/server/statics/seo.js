@@ -3,7 +3,8 @@ var phridge = require('phridge'),
 
 var TTL_CACHE_SEO = 60 * 60 * 24; //1 day
 
-var htmlcleaner = require(__dirname+'/htmlcleaner');//,
+var htmlcleaner = require(__dirname+'/htmlcleaner'),
+    status = require(__dirname+'/status');//,
     //translateSeo = require(__dirname+'/translate-seo');
 
 var client = redis.createClient();
@@ -135,7 +136,10 @@ module.exports = {
                 if (err)
                     return res.send(err);
 
+
+
                 if (result) {
+                    res.status(status.get(result));
                     res.send(JSON.parse(result));
                 }
                 else {
@@ -144,10 +148,14 @@ module.exports = {
                             htmlcleaner.clean(stdout, function(html) {
                                 //html = translateSeo.translate(html, 'fr');
 
+                                
                                 client.set(url, JSON.stringify(html));
                                 client.expire(url, TTL_CACHE_SEO);
+
+                                res.status(status.get(html));
                                 res.set('Content-Type', 'text/html');
                                 res.send(html);
+
                             });
                         }
                     });
