@@ -1,8 +1,8 @@
 var phridge = require('phridge'),
     redis = require("redis");
 
-var htmlcleaner = require(__dirname+'/htmlcleaner'),
-    translateSeo = require(__dirname+'/translate-seo');
+var htmlcleaner = require(__dirname+'/htmlcleaner');//,
+    //translateSeo = require(__dirname+'/translate-seo');
 
 var client = redis.createClient();
 
@@ -140,7 +140,7 @@ module.exports = {
                     exec("phantomjs node_modules/bluestorm/phantom.js "+url, function (error, stdout, stderr) {
                         if(stdout) {
                             htmlcleaner.clean(stdout, function(html) {
-                                html = translateSeo.translate(html, 'fr');
+                                //html = translateSeo.translate(html, 'fr');
 
                                 client.set(url, JSON.stringify(html));
                                 res.set('Content-Type', 'text/html');

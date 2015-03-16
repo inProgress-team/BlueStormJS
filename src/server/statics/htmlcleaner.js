@@ -100,6 +100,8 @@ module.exports = {
 
         $("[class='']").removeAttr('class');
 
+        $('script').remove();
+
         cb($.html());
 
         return;
