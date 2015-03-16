@@ -1,6 +1,8 @@
 var phridge = require('phridge'),
     redis = require("redis");
 
+var TTL_CACHE_SEO = 60 * 60 * 24; //1 day
+
 var htmlcleaner = require(__dirname+'/htmlcleaner');//,
     //translateSeo = require(__dirname+'/translate-seo');
 
@@ -143,6 +145,7 @@ module.exports = {
                                 //html = translateSeo.translate(html, 'fr');
 
                                 client.set(url, JSON.stringify(html));
+                                client.expire(url, TTL_CACHE_SEO);
                                 res.set('Content-Type', 'text/html');
                                 res.send(html);
                             });
