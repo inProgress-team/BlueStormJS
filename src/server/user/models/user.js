@@ -343,6 +343,7 @@ module.exports.resetPassword = function(data, options, callback) {
                             return callback(err);
 
                         res.password = hash;
+                        res.activated = true;
                         db.collection('users').save(res, function(err) {
                             if (err)
                                 return callback(err);
