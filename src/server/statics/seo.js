@@ -24,6 +24,7 @@ var bots = [
 
     //EMBED.LY
     'Mozilla/5.0 (compatible; Embedly/0.2; snap; +http://support.embed.ly/)',
+    'Mozilla/5.0 (compatible; Embedly/0.2; +http://support.embed.ly/)',
 
     //LINKEDIN
     'LinkedInBot/1.0 (compatible; Mozilla/5.0; Jakarta Commons-HttpClient/3.1 +http://www.linkedin.com)',
