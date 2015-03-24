@@ -19,6 +19,12 @@ var bots = [
     //TWITTER
     'Twitterbot/1.0',
 
+    //PINTEREST
+    'Pinterest/0.1 +http://pinterest.com/',
+
+    //EMBED.LY
+    'Mozilla/5.0 (compatible; Embedly/0.2; snap; +http://support.embed.ly/)',
+
     //LINKEDIN
     'LinkedInBot/1.0 (compatible; Mozilla/5.0; Jakarta Commons-HttpClient/3.1 +http://www.linkedin.com)',
 
