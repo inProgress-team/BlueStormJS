@@ -167,9 +167,12 @@ module.exports.signUp = function(user, options, callback) {
         }
     }
     else {
-        if(!user.password)
+        if (!options.noPassword && !user.password)
             return callback('data_not_received');
-        password = user.password;
+        if (user.password)
+            password = user.password;
+        else
+            password = generatePassword(8, false, /\w/);
     }
 
     dbConnection(function(db) {
