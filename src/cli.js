@@ -15,7 +15,10 @@ var commands = [
     'server-dev',
     'server-prod-apps', 'server-prod-api', 'server-prod-socket',
     'server-preprod-apps', 'server-preprod-api', 'server-preprod-socket',
-    'start-cron'];
+    'start-cron',
+
+    'beautify'
+];
 
 var server = require(__dirname+'/server/server'),
     logger = require(__dirname+'/logger/logger'),
@@ -84,7 +87,7 @@ module.exports = {
 
         
         } else if(command=="beautify") {
-            gulp.beautify(debug);
+            gulp.beautify();
 
         } else {
             console.log('Command not defined');

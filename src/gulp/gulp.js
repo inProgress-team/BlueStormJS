@@ -74,6 +74,8 @@ module.exports= {
     },
     beautify: function() {
         beautifier();
-        gulp.start('beautifier');
+        gulp.start('beautifier', function () {
+            console.log('Done beautifying');
+        });
     }
 };
