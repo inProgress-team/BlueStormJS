@@ -81,49 +81,14 @@ module.exports = {
         } else if(command=="start-cron") {
             server.startCron();
 
-        } else {
-            console.log('Command not defined');
-        }
 
-
-
-
-
-        /*
-        } else if(command=="server-prod") {
-            process.env.NODE_ENV = 'production';
-            server.startProd(debug);
-        */
-        /*
-        } else if(command=="server-local-prod") {
-            process.env.NODE_ENV = 'development';
-            process.env.NODE_LOCALPROD = true;
-            server.startDev(debug);
-        */   
-
-        /*
-        } else if(command=="test") {
-            process.env.NODE_ENV = 'production';
-            process.env.NODE_TEST = true;
-            gulp.production(debug);
-        */
-/*
         
         } else if(command=="beautify") {
             gulp.beautify(debug);
 
-
-        } else if(command=="local-prod") {
-            process.env.NODE_ENV = 'development';
-            process.env.NODE_LOCALPROD = true;
-            gulp.production(debug);
-*/
-/*
-        } else if(command=="server-test") {
-            process.env.NODE_ENV = 'production';
-            process.env.NODE_TEST = true;
-            server.startProd(debug, true);
-*/
+        } else {
+            console.log('Command not defined');
+        }
         
 
     },
