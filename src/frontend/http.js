@@ -12,10 +12,10 @@ angular.module('bluestorm.http', [
 
                         var begin;
 
-                        // @if NODE_ENV='production'
+                        // @if envConfig='production'
                         begin = window.location.protocol + '///* @echo apiUrl */';
                         // @endif
-                        // @if NODE_ENV='development'
+                        // @if envConfig='development'
                         begin = window.location.protocol + '//' + window.location.hostname+':/* @echo apiPort */';
                         // @endif
 
