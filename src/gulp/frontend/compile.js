@@ -36,8 +36,8 @@ module.exports = function(name) {
             'dist/build/'+name+'/public/js/**/*.js'
         ])
             .pipe(concat('main.min.js'))
-            //.pipe(ngAnnotate())
-            //.pipe(uglify())
+            .pipe(ngAnnotate())
+            .pipe(uglify())
             .pipe(gulp.dest(publicDir));
     });
 
