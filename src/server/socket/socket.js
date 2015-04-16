@@ -165,7 +165,7 @@ var onConnect = function(socket) {
 module.exports = function(c) {
     config = c || {};
 
-    if (process.env.NODE_ENV == 'production') {
+    if (process.env.NODE_ENV == 'production' || process.env.NODE_ENV == 'preproduction') {
         var express = require('express'),
             cluster = require('cluster'),
             net = require('net'),

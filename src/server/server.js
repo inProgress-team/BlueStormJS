@@ -36,7 +36,7 @@ module.exports = {
     },
     startProdForApps: function(debug) {
         frontendApps.forEach(function (name) {
-            var app = config.get('development', name);
+            var app = config.get(process.env.NODE_ENV, name).port;
             statics({
                 port: app,
                 name: name,
@@ -46,28 +46,24 @@ module.exports = {
     },
     startProdForApi: function(debug) {
         var numCPUs = require('os').cpus().length;
-        var apiPort = config.get('production', 'apiPort');
+        var apiPort = config.get(process.env.NODE_ENV, 'api').port;
 
-        if (apiPort) {
-            if (cluster.isMaster) {
-                // Fork workers.
-                for (var i = 0; i < numCPUs; i++) {
-                    cluster.fork();
-                }
-                cluster.on('exit', function(worker) {
-                    console.log('worker ' + worker.process.pid + ' died');
-                });
-            } else {
-                // Workers can share any TCP connection
-                // In this case its a HTTP server
-                api({ port: apiPort, debug: debug });
+        if (cluster.isMaster) {
+            // Fork workers.
+            for (var i = 0; i < numCPUs; i++) {
+                cluster.fork();
             }
+            cluster.on('exit', function(worker) {
+                console.log('worker ' + worker.process.pid + ' died');
+            });
         } else {
-            api({ port: config.get('development', 'api'), debug: debug });
+            // Workers can share any TCP connection
+            // In this case its a HTTP server
+            api({ port: apiPort, debug: debug });
         }
     },
     startProdForSocket: function(debug) {
-        var socketPort = config.get('production', 'socketPort');
+        var socketPort = config.get(process.env.NODE_ENV, 'socket').port;
         socket({ port: socketPort, debug: debug });
     },
     startCron: function(debug) {
