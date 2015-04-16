@@ -9,7 +9,7 @@ var config = require(__dirname + '/../config');
 module.exports = {
     addPublic: function(file, apps, callback) {
         var basePath;
-        if (process.env.NODE_ENV == 'development' && !process.env.NODE_LOCALPROD)
+        if (process.env.NODE_ENV == 'development')
             basePath = process.cwd()+'/dist/build/';
         else
             basePath = process.cwd()+'/dist/bin/';
@@ -55,7 +55,7 @@ module.exports = {
     },
     removePublic: function(relativePath, apps, callback) {
         var basePath;
-        if (process.env.NODE_ENV == 'development' && !process.env.NODE_LOCALPROD)
+        if (process.env.NODE_ENV == 'development')
             basePath = process.cwd()+'/dist/build/';
         else
             basePath = process.cwd()+'/dist/bin/';

@@ -8,7 +8,7 @@ var logger = require(__dirname+'/../../logger/logger'),
 
 module.exports = function(config) {
     var dir = 'build';
-    if(process.env.NODE_ENV=='production' || process.env.NODE_LOCALPROD=="true") {
+    if(process.env.NODE_ENV=='production' || process.env.NODE_ENV=='preproduction') {
         dir = 'bin';
     }
 
