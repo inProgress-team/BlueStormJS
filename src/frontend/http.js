@@ -13,14 +13,10 @@ angular.module('bluestorm.http', [
                         var begin;
 
                         // @if NODE_ENV='production'
-                        if(/* @echo mainPort */==80) {
-                            begin = window.location.protocol + '///* @echo apiConf */';
-                        } else {
-                            begin = window.location.protocol + '///* @echo apiConf */:/* @echo mainPort */';
-                        }
+                        begin = window.location.protocol + '///* @echo apiUrl */';
                         // @endif
                         // @if NODE_ENV='development'
-                        begin = window.location.protocol + '//' + window.location.hostname+':/* @echo apiConf */';
+                        begin = window.location.protocol + '//' + window.location.hostname+':/* @echo apiPort */';
                         // @endif
 
 

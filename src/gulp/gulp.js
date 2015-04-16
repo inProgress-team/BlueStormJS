@@ -17,6 +17,7 @@ var config = require(__dirname+'/../config');
 var frontendApps = config.frontend.list(),
     builds = ['build@backend'],
     compiles = [];
+
 frontendApps.forEach(function(app) {
     builds.push('build@'+app);
     compiles.push('compile@'+app);
@@ -43,31 +44,22 @@ module.exports= {
             livereload.listen(options);
             gulp.watch('dist/build/**/*', function(file) {
                 livereload.changed(file.path);
-                /*
-                 clearTimeout(timeoutRename);
-                 timeoutRename = setTimeout(function() {
-                 livereload.changed(file.path);
-                 }, 500);
-                 */
-
-
             });
         });
     },
-    development: function(debug) {
+    development: function() {
         logger.log('Starting ', 'development', ['yellow'], ' mode.');
-        this.loadTasks(debug);
+        this.loadTasks();
 
         var first = true;
         gulp.start('watch', function() {
             if(first) {
-                var d = debug || false;
-                server.supervisor.development(d);
+                server.supervisor.development();
             }
             first = false;
         });
     },
-    production: function(debug) {
+    production: function() {
         logger.log('Building ', 'development', ['yellow'], ' files.');
         this.loadTasks();
 
@@ -80,11 +72,8 @@ module.exports= {
             });
         });
     },
-    beautify: function(debug) {
+    beautify: function() {
         beautifier();
         gulp.start('beautifier');
-
     }
 };
-
-//gulp-preprocess -> Environnement <!-- if --> AHAHAH <!--endif -->

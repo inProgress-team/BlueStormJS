@@ -15,16 +15,6 @@ angular.module('bluestorm.user', [
 
         $.cookie('bluestorm_token', token, {expires: 30,  path: '/'});
 
-        /*var domains = bluestorm.getDomains();
-
-        if(domains.length==1&&domains[0]=="localhost") {
-            $.cookie('bluestorm_token', token, {expires: 30});
-
-        } else {
-            angular.forEach(domains, function (domain) {
-                $.cookie('bluestorm_token', token, {expires: 30, domain: domain});
-            });
-        }*/
     };
     service.getUser = function(url, cb) {
         if(!service.token) {

@@ -1,19 +1,17 @@
 var gulp = require('gulp'),
-del = require('del'),
-mainBowerFiles = require('main-bower-files'),
-rename = require("gulp-rename"),
-inject = require("gulp-inject"),
-less = require('gulp-less'),
-concat = require('gulp-concat'),
-html2js = require('gulp-html2js'),
-stylish = require('jshint-stylish'),
-cache = require('gulp-cached'),
-watch = require('gulp-watch'),
-preprocess = require('gulp-preprocess'),
-gulpFilter = require('gulp-filter');
-var debug = require('gulp-debug');
-var changed = require('gulp-changed');
-var Multistream = require('multistream');
+    del = require('del'),
+    mainBowerFiles = require('main-bower-files'),
+    rename = require("gulp-rename"),
+    inject = require("gulp-inject"),
+    less = require('gulp-less'),
+    concat = require('gulp-concat'),
+    html2js = require('gulp-html2js'),
+    stylish = require('jshint-stylish'),
+    cache = require('gulp-cached'),
+    watch = require('gulp-watch'),
+    preprocess = require('gulp-preprocess'),
+    gulpFilter = require('gulp-filter'),
+    changed = require('gulp-changed');
 
 var config = require(__dirname+'/../../config');
 
@@ -100,39 +98,37 @@ module.exports = function(name) {
         },
         frameworkFiles: function(){
             var env = process.env.NODE_ENV,
-            envConfig = env;
-            if(process.env.NODE_TEST!==undefined) {
-                envConfig = 'test';
-            }
-            if(process.env.NODE_LOCALPROD!==undefined) {
-                envConfig = 'local-prod';
+                envConfig = env;
+            if(env=='preproduction') {
+                envConfig = 'production';
             }
 
             var appsUrl = "",
-            apps = config.frontend.list();
+                apps = config.frontend.list();
 
             apps.forEach(function (app) {
-                if(env=="production" && envConfig!='local-prod') {
-                    var port = ((config.get(envConfig, 'main')!=80)?(":" + config.get(envConfig, 'main')):'');
-                    appsUrl += ("service.urls."+app+" = window.location.protocol+'//"+config.get(envConfig, app) + port + "';\n");
+                if(env=="production" || env=='preproduction') {
+                    appsUrl += ("service.urls."+app+" = window.location.protocol+'//"+config.get(env, app).url + "';\n");
 
-                } else if(env=="development" || envConfig=='local-prod') {
-                    appsUrl += "service.urls."+app+" = window.location.protocol+'//" + config.get(envConfig, 'main') + ":" + config.get(envConfig, app) + "';\n";
+                } else if(env=="development") {
+                    appsUrl += "service.urls."+app+" = window.location.protocol+'//127.0.0.1:" + config.get(env, app) + "';\n";
                 }
-                
             });
             
 
             return gulp.src(__dirname+'/../../frontend/*.js')
             .pipe(preprocess({context: {
                 NODE_ENV: env,
-                localProd: process.env.NODE_LOCALPROD || false,
-                socketConf: config.get(envConfig, 'socket'),
-                apiConf: config.get(envConfig, 'api'),
-                mainPort: config.get(envConfig, 'main'),
-                ssl: config.isSsl(),
+                envConfig: envConfig,
                 appsUrl: appsUrl,
-                app: name
+                ssl: config.isSsl(),
+                app: name,
+
+                socketUrl: config.get(envConfig, 'socket').url,
+                apiUrl: config.get(envConfig, 'api').url,
+
+                socketPort: config.get(envConfig, 'socket'),
+                apiPort: config.get(envConfig, 'api')
             }}))
             .pipe(gulp.dest('dist/build/'+name+'/public/js/bluestorm'))
         },

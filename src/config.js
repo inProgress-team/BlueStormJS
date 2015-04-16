@@ -6,7 +6,7 @@ module.exports = {
         list: function() {
             var res = [];
             for (var key in domains['development']) {
-                if(key!='api'&&key!='socket'&&key!='main')
+                if(key!='api'&&key!='socket')
                 res.push(key);
             }
             return res;

@@ -1,5 +1,0 @@
-{
-    "type": "mongoose",
-    "hostDev": "mongodb://localhost:27017/songpeek",
-    "hostProd": "mongodb://localhost:27017/songpeek"
-}

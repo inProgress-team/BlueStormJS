@@ -5,35 +5,21 @@ angular.module('bluestorm', [
     ])
 .service('bluestorm', function(){
     var service = {
-        urls: {}
+        urls: {},
+        ssl: /* @echo ssl */
     };
     /* @echo appsUrl */
 
-        // @if NODE_ENV='production'
-        if(/* @echo mainPort */==80) {
-            service.urls['api'] = window.location.protocol + '///* @echo apiConf */';
-        } else {
-            service.urls['api'] = window.location.protocol + '///* @echo apiConf */:/* @echo mainPort */';
-        }
-        // @endif
-        // @if NODE_ENV='development'
-        service.urls['api'] = window.location.protocol + '//' + window.location.hostname+':/* @echo apiConf */';
+        // @if envConfig='production'
+        service.urls['api'] = window.location.protocol + '///* @echo apiUrl */';
+        service.urls['socket'] = window.location.protocol + '///* @echo socketUrl */';
         // @endif
 
-
-
-        // @if NODE_ENV='production'
-        if(/* @echo mainPort */==80) {
-            service.urls['socket'] = window.location.protocol + '///* @echo socketConf */';
-        } else {
-            service.urls['socket'] = window.location.protocol + '///* @echo socketConf */:/* @echo mainPort */';
-        }
-        // @endif
-        // @if NODE_ENV='development'
-        service.urls['socket'] = window.location.protocol + '//' + window.location.hostname+":/* @echo socketConf */";
+        // @if envConfig='development'
+        service.urls['api'] = window.location.protocol + '//' + window.location.hostname+':/* @echo apiPort */';
+        service.urls['socket'] = window.location.protocol + '//' + window.location.hostname+":/* @echo socketPort */";
         // @endif
 
-        service.ssl = /* @echo ssl */;
 
         service.env = '/* @echo NODE_ENV */';
 

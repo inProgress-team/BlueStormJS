@@ -2,14 +2,6 @@ var clc = require('cli-color'),
     moment = require('moment');
 
 var gutil = require('gulp-util');
-/*
-var dbConnection = require(__dirname+'/../../db'),
-    db = null;
-
-
-dbConnection(function(database) {
-    db = database;
-});*/
 
 
 module.exports = {
@@ -17,10 +9,8 @@ module.exports = {
         console.error(clc.red.bold.underline.inverse('From '+from));
         if(params!==undefined&&!params.stack) {
             console.error(clc.red(error));
-            this.addLog(error);
         } else {
             console.error(clc.red(error.stack));
-            this.addLog(error.stack);
         }
 
 
@@ -65,31 +55,5 @@ module.exports = {
         var message = this.getMessage(arguments);
         //this.addLog(message);
         
-    },
-    addLog: function (message) {
-        //if(process.env.NODE_ENV=='production') {
-            /*if(db) {
-                db.collection('logs').insert({
-                    "log": message,
-                    "releaseDate": new Date
-                }, function(){});    
-            }*/
-            
-        //}
-    },
-    getLogs: function () {
-        setTimeout(function () {
-            if(db) {
-                db.collection('logs').find({}).toArray(function(err, results){
-                    if(err) return console.log(err);
-                    for(var i in results) {
-                        console.log(results[i].log);
-                    }
-                });
-            }
-        }, 500);
-    },
-    dump: function() {
-        console.log(arguments);
     }
 }
