@@ -124,11 +124,11 @@ module.exports = function(name) {
                 ssl: config.isSsl(),
                 app: name,
 
-                socketUrl: config.get(NODE_ENV, 'socket').url,
-                apiUrl: config.get(NODE_ENV, 'api').url,
+                socketUrl: config.get(env, 'socket').url,
+                apiUrl: config.get(env, 'api').url,
 
-                socketPort: config.get(NODE_ENV, 'socket'),
-                apiPort: config.get(NODE_ENV, 'api')
+                socketPort: config.get(env, 'socket'),
+                apiPort: config.get(env, 'api')
             }}))
             .pipe(gulp.dest('dist/build/'+name+'/public/js/bluestorm'))
         },
