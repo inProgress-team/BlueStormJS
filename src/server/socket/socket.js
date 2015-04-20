@@ -125,9 +125,7 @@ var onConnect = function(socket) {
                     data: {}
                 };
             }
-            if (config.debug) {
-                logger.log('SOCKET : ' + url);
-            }
+            logger.log('SOCKET : ' + url);
             user.tokenIsValid(data.token, function (err, user) {
                 if (!err && user)
                     data.user = user;
@@ -225,9 +223,8 @@ module.exports = function(c) {
                 worker.send('sticky-session:connection', connection);
             }).listen(port);
 
-            if(config.debug) {
                 logger.log('Sockets', ['green'], ' listening on port ', config.port, ['yellow'], '.');
-            }
+
         } else {
             // Note we don't use a port here because the master listens on it for us.
             var app = new express();
@@ -278,9 +275,7 @@ module.exports = function(c) {
             io.on('connection', onConnect);
         });
         if(config.port) {
-            if(config.debug) {
                 logger.log('Sockets', ['green'], ' listening on port ', config.port, ['yellow'], '.');
-            }
 
             io.listen(config.port, function() {
                 if(typeof callback=='function') cb();
