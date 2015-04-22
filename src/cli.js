@@ -16,6 +16,7 @@ var commands = [
     'server-prod-apps', 'server-prod-api', 'server-prod-socket',
     'server-preprod-apps', 'server-preprod-api', 'server-preprod-socket',
     'start-cron',
+    'nginxpreprod', 'nginxprod',
 
     'beautify'
 ];
@@ -84,6 +85,14 @@ module.exports = {
         } else if(command=="start-cron") {
             server.startCron();
 
+
+        } else if(command=="nginxpreprod") {
+            process.env.NODE_ENV = 'preproduction';
+            server.generateNginxConfig();
+
+        } else if(command=="nginxprod") {
+            process.env.NODE_ENV = 'production';
+            server.generateNginxConfig();
 
         
         } else if(command=="beautify") {

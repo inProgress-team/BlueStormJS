@@ -7,6 +7,7 @@ var express = require('express'),
 var statics = require(__dirname+'/statics/statics'),
     api = require(__dirname+'/api/api'),
     socket = require(__dirname+'/socket/socket'),
+    nginx = require(__dirname + '/nginx/nginx'),
     logger = require(__dirname+'/../logger/logger'),
     cron = require(__dirname+'/cron/cron'),
     db = require(__dirname+'/../db/db'),
@@ -69,6 +70,9 @@ module.exports = {
     startCron: function(debug) {
         cron({debug: debug});
     },
+    generateNginxConfig: function() {
+        nginx.generateConfig();
+    },
     supervisor: {
         development: function(debug) {
             var options = ['server-dev'];
@@ -111,6 +115,7 @@ module.exports = {
             server.monitor.start();
         },
         monitor: null
-    }
+    },
+
 };
 var server = module.exports;
