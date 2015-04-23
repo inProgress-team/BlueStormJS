@@ -96,6 +96,10 @@ module.exports = function(name) {
             return gulp.src(mainBowerFiles(), { base: 'bower_components' })
             .pipe(gulp.dest('dist/build/'+name+'/public/bower_components'))
         },
+        bowerFilesPack: function() {
+            return gulp.src('bower_components/**/*')
+            .pipe(gulp.dest('dist/build/'+name+'/public/bower'))
+        },
         frameworkFiles: function(){
             var env = process.env.NODE_ENV,
                 envConfig = env;
@@ -151,7 +155,7 @@ module.exports = function(name) {
 
             return gulp.src(htmlFile)
             .pipe(rename(function (path) { path.basename = "main"; }))
-            .pipe(inject(sources, { ignorePath: 'dist/build/'+name }))
+            .pipe(inject(sources, {ignorePath: 'dist/build/'+name }))
             .pipe(gulp.dest('dist/build/'+name));
         },
         assets: function() {
@@ -166,6 +170,7 @@ module.exports = function(name) {
     gulp.task(cleanTask, function(cb) { del(['dist/build/'+name], cb); });
 
     gulp.task('bower-files@'+name, [cleanTask], tasks.bowerFiles);
+    gulp.task('bower-files-pack@'+name, [cleanTask], tasks.bowerFilesPack);
     gulp.task('framework-files@'+name, [cleanTask], tasks.frameworkFiles);
     gulp.task('lib-js-files@'+name, [cleanTask], tasks.libJsFiles);
 
@@ -199,6 +204,7 @@ module.exports = function(name) {
         'common-js-files@'+name,
         'lib-js-files@'+name,
         'bower-files@'+name,
+        'bower-files-pack@'+name,
         'i18n@'+name,
         'less@'+name,
         'html2js@'+name,
