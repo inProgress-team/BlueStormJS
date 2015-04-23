@@ -266,7 +266,7 @@ module.exports = function(config) {
         /**
          * Log everything if debug param is set to true in config
          */
-        if(config.debug) {
+        if(process.env.NODE_ENV == 'development') {
             //LOGGER FOR EVERY API REQUEST
             app.use(function(req, res, next){
                 start = new Date;
@@ -281,7 +281,7 @@ module.exports = function(config) {
             arborescence.loadFiles(files, app);
         });
 
-        if(config.debug) {
+        if(process.env.NODE_ENV == 'development') {
             app.use(function(req, res, next){
                 var ms = new Date - start;
                 next();
@@ -296,7 +296,7 @@ module.exports = function(config) {
     /**
      * Set app on port defined in conf
      */
-    if(config.debug && cluster.isMaster) {
+    if(cluster.isMaster) {
         logger.log('API', ['green'], ' listening on port ', config.port, ['yellow'], '.');
     }
 

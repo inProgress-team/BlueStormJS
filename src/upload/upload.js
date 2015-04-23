@@ -67,9 +67,9 @@ module.exports = {
 
         if (!apps || apps.length == 0)
             apps = config.frontend.list();
-
-        async.parallel(apps, function(app, callback) {
-            var path = basePath + apps[i] + relativePath;
+        
+        async.each(apps, function(app, callback) {
+            var path = basePath + app + relativePath;
             fs.unlink(path, function(err) {
                 return callback(err);
             });
