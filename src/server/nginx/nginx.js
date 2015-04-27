@@ -12,7 +12,7 @@ module.exports = {
         var env = process.env.NODE_ENV;
         var appName = config.main.get('appName') || 'default';
         var pathProd = config.main.get('pathProd');
-        var path = env == 'prod' ? basePath + '/scripts/production/nginx/' + appName : basePath + '/scripts/preproduction/nginx/' + appName;
+        var path = env == 'production' ? basePath + '/scripts/production/nginx/' + appName : basePath + '/scripts/preproduction/nginx/' + appName;
         var apiUrl = config.get(env, 'api')['url'];
         var apiPort = config.get(env, 'api')['port'];
         var socketUrl = config.get(env, 'socket')['url'];
