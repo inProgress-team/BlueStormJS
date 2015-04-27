@@ -125,7 +125,7 @@ var onConnect = function(socket) {
                     data: {}
                 };
             }
-            logger.log('SOCKET : ' + url);
+
             user.tokenIsValid(data.token, function (err, user) {
                 if (!err && user)
                     data.user = user;
