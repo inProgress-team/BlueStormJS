@@ -115,6 +115,7 @@ var onConnect = function(socket) {
     socket.onAux = socket.on;
     socket.on = function (url, options, userCallback) {
         socket.onAux(url, function (data, callback) {
+            console.log('SOCKET : '+url);
             if (typeof data == 'function') {
                 callback = data;
                 data = {
