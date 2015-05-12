@@ -19,6 +19,9 @@ module.exports = function(config) {
         start;
 
     app.use(express.static(path));
+    if(process.env.NODE_ENV=='development') {
+        app.use("/upload", express.static("upload"));
+    }
     app.use(seo.middleware);
 
     if(config.debug) {
