@@ -80,7 +80,13 @@ module.exports = {
             server.startProdForSocket();
 
 
+        } else if(command=="start-cron-prod") {
+            process.env.NODE_ENV = 'production';
+            server.startCron();
 
+        } else if(command=="start-cron-preprod") {
+            process.env.NODE_ENV = 'preproduction';
+            server.startCron();
 
         } else if(command=="start-cron") {
             process.env.NODE_ENV = 'production';
