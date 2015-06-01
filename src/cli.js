@@ -83,6 +83,7 @@ module.exports = {
 
 
         } else if(command=="start-cron") {
+            process.env.NODE_ENV = 'production';
             server.startCron();
 
 
