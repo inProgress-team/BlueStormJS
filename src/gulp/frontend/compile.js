@@ -44,7 +44,7 @@ module.exports = function(name) {
     gulp.task('css-files#compile@'+name, [cleanTask], function(){
         return gulp.src('dist/build/'+name+'/public/css/main.css')
             .pipe(rename(function (path) {path.extname = ".min.css";}))
-            .pipe(minifyCSS())
+            .pipe(minifyCSS({processImport: false}))
             .pipe(gulp.dest(publicDir));
     });
 
