@@ -15,7 +15,7 @@ var commands = [
     'server-dev',
     'server-prod-apps', 'server-prod-api', 'server-prod-socket',
     'server-preprod-apps', 'server-preprod-api', 'server-preprod-socket',
-    'start-cron',
+    'start-cron', 'start-cron-prod', 'start-cron-preprod',
     'nginxpreprod', 'nginxprod',
 
     'beautify'

@@ -23,7 +23,7 @@ module.exports = function(config) {
         });
         */
         arborescence.getRequiredFiles('cron', function (files) {
-            arborescence.loadFiles(files, null, function () {
+            arborescence.loadCrons(files, function () {
                 if (config && config.debug) {
                     logger.log('CRON', ['green'], ' loaded.');
                 }

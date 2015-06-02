@@ -1,5 +1,6 @@
 var fs = require('fs'),
-    async = require('async');
+    async = require('async'),
+    exec = require('child_process').exec;
 
 var basePath = process.cwd()+'/src/modules/',
     childProcess = require('child_process');
@@ -74,7 +75,7 @@ module.exports = {
     },
     loadCrons: function(files, callback) {
         files.forEach(function(file) {
-            childProcess.fork(file);
+            exec("node " + file);
         });
 
         if (callback)
