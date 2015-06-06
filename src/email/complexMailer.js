@@ -9,12 +9,14 @@ var logger = require(__dirname+'/../logger/logger');
 
 var MAIL_CONFIG_FILE_PATH = process.cwd() + '/config/email.json',
     mailOptions;
-    
-var complexMailer = require(__dirname+'/complexMailer');
 
 module.exports = {
-    complex: complexMailer,
-    send: function(to, subject, html, text, callback) {
+    send: function(to, from, subject, html, text, options, callback) {
+        var options;
+        if(typeof callback == 'object') {
+            options = callback;
+            callback = null;
+        }
 
         if (!transporter) {
             // Check if config file for database exists
@@ -49,8 +51,12 @@ module.exports = {
             var transporter = nodemailer.createTransport(smtpTransport(transport));
         }
 
+        if(options.from) {
+            mailOptions.from = options.from;
+        }
+
         var optionsForTransporter = {
-            from: mailOptions.from, // sender address
+            from: from, // sender address
             to: to, // list of receivers
             subject: subject,
             html: html,
@@ -59,12 +65,20 @@ module.exports = {
 
         //if (process.env.NODE_ENV != 'development') {
         transporter.sendMail(optionsForTransporter, function (err, info) {
-            if (callback)
+            if (typeof callback=='function')
                 return callback(err, info);
         });
         //}
     },
-    mail: function(mail, templateName, module, lang, params, callback) {
+    mail: function(mail, from, title, templateName, module, lang, params, callback) {
+
+        var options;
+        if(typeof callback == 'object') {
+            options = callback;
+            callback = null;
+        }
+
+
         var $this = this;
         var pathi18n;
         var pathMailModule;
@@ -75,18 +89,18 @@ module.exports = {
         params.i18n = require(pathi18n);
         emailTemplates(pathMailModule, function (err, template) {
             if (err) {
-                if (callback)
+                if (typeof callback=='function')
                     return callback(err);
                 throw err;
             }
             template(templateName, params, function (err, html, text) {
                 if (err) {
-                    if (callback)
+                    if (typeof callback=='function')
                         return callback(err);
                     throw err;
                 }
-                $this.send(mail, params.i18n[templateName].title, html, text.replace(/&#39;/g, "'"), function (err, info) {
-                    if (callback)
+                $this.send(mail, from, title, html, text.replace(/&#39;/g, "'"), function (err, info) {
+                    if (typeof callback=='function')
                         return callback(err, info);
                 });
             });
