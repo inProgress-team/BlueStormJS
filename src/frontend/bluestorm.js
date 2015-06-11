@@ -44,7 +44,7 @@ angular.module('bluestorm', [
 
         return service;
     })
-.factory('socket', function($rootScope, $cookies, bluestorm) {
+.factory('socket', function($rootScope, bluestorm) {
         var socket = io(bluestorm.urls.socket);
         return {
             on: function(eventName, callback) {

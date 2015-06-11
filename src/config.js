@@ -10,7 +10,8 @@ module.exports = {
                 res.push(key);
             }
             return res;
-        }
+        },
+        angularVersion: mainConfig.angularVersion ? mainConfig.angularVersion :'1.3'
     },
     get: function(env, name) {
         return domains[env][name];

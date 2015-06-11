@@ -72,11 +72,17 @@ module.exports = function(name) {
             .pipe(gulp.dest(dest));
         },
         libJsFiles: function(){
-            return gulp.src([
+            var files = [
                 __dirname+'/../../../bower_components/jquery/dist/jquery.js',
-                __dirname+'/../../../bower_components/angular/angular.js',
                 __dirname+'/../../../bower_components/socket.io-client/socket.io.js'
-                ])
+            ];
+            if(config.frontend.angularVersion=='1.4') {
+                files.push(__dirname+'/../../../angular-1.4/angular.js');
+            } else {
+                files.push(__dirname+'/../../../bower_components/angular/angular.js');
+            }
+
+            return gulp.src(files)
             .pipe(gulp.dest('dist/build/'+name+'/public/lib'));
         },
         html2js: function() {
@@ -118,9 +124,20 @@ module.exports = function(name) {
                     appsUrl += "service.urls."+app+" = window.location.protocol+'//127.0.0.1:" + config.get(env, app) + "';\n";
                 }
             });
+
+            var files = [];
+            if(config.frontend.angularVersion=='1.4') {
+                files.push(__dirname+'/../../frontend/bluestorm-1.4.js');
+                files.push(__dirname+'/../../frontend/http-1.4.js');
+                files.push(__dirname+'/../../frontend/user-1.4.js');
+            } else {
+                files.push(__dirname+'/../../frontend/bluestorm.js');
+                files.push(__dirname+'/../../frontend/http.js');
+                files.push(__dirname+'/../../frontend/user.js');
+            }
             
 
-            return gulp.src(__dirname+'/../../frontend/*.js')
+            return gulp.src(files)
             .pipe(preprocess({context: {
                 NODE_ENV: env,
                 envConfig: envConfig,
