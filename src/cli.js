@@ -12,7 +12,7 @@ var argv = require('yargs')
 
 var commands = [
     'dev', 'prod', 'preprod',
-    'server-dev',
+    'sdev', 'server-dev',
     'server-prod-apps', 'server-prod-api', 'server-prod-socket',
     'server-preprod-apps', 'server-preprod-api', 'server-preprod-socket',
     'start-cron', 'start-cron-prod', 'start-cron-preprod',
@@ -23,7 +23,8 @@ var commands = [
 
 var server = require(__dirname+'/server/server'),
     logger = require(__dirname+'/logger/logger'),
-    gulp = require(__dirname+'/gulp/gulp');
+    gulp = require(__dirname+'/gulp/gulp'),
+    backend = require(__dirname+'/gulp/backend');
 
 
 module.exports = {
@@ -51,6 +52,13 @@ module.exports = {
             process.env.NODE_ENV = 'development';
             server.startDev();
 
+
+        } else if(command=="sdev") {
+            process.env.NODE_ENV = 'development';
+            server.supervisor.development();
+
+            var watch = backend();
+            watch();
 
 
 

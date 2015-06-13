@@ -14,7 +14,10 @@ module.exports = function() {
         'src/modules/**/socket/**/*.js',
         'src/modules/**/api/**/*.js',
         'src/modules/**/models/**/*.js',
-        'src/common/backend/**/*.js'
+        'src/modules/**/dao/**/*.js',
+        'src/modules/**/scripts/**/*.js',
+        'src/common/backend/**/*.js',
+        'package.json'
     ];
 
     
@@ -22,9 +25,15 @@ module.exports = function() {
         server.monitor.restart();
     });
 
+    var watch = function() {
+        gulp.watch(jsFiles, ['server-restart@backend']);
+    };
+
     gulp.task('build@backend', function() {
         if(process.env.NODE_ENV=='development') {
-            gulp.watch(jsFiles, ['server-restart@backend']);
+            watch();
         }
     });
+
+    return watch;
 };

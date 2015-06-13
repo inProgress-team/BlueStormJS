@@ -13,7 +13,8 @@ var gulp = require('gulp'),
     gulpFilter = require('gulp-filter'),
     changed = require('gulp-changed');
 
-var config = require(__dirname+'/../../config');
+var config = require(__dirname+'/../../config'),
+    block = require(__dirname+'/../block');
 
 module.exports = function(name) {
     var dependencies = require(process.cwd()+'/src/apps/'+name+'/dependencies.json');
@@ -100,11 +101,16 @@ module.exports = function(name) {
         },
         bowerFiles: function(){
             return gulp.src(mainBowerFiles(), { base: 'bower_components' })
-            .pipe(gulp.dest('dist/build/'+name+'/public/bower_components'))
+                .pipe(gulp.dest('dist/build/'+name+'/public/bower_components'))
         },
         bowerFilesPack: function() {
             return gulp.src('bower_components/**/*')
-            .pipe(gulp.dest('dist/build/'+name+'/public/bower'))
+                .pipe(gulp.dest('dist/build/'+name+'/public/bower'))
+        },
+        bowerFilesDelete: function(cb){
+            del(['dist/build/'+name+'/public/bower_components', 'dist/build/'+name+'/public/bower'], function() {
+                cb();
+            });
         },
         frameworkFiles: function(){
             var env = process.env.NODE_ENV,
@@ -187,7 +193,15 @@ module.exports = function(name) {
     gulp.task(cleanTask, function(cb) { del(['dist/build/'+name], cb); });
 
     gulp.task('bower-files@'+name, [cleanTask], tasks.bowerFiles);
+    gulp.task('bower-files-watch@'+name, tasks.bowerFiles);
+
     gulp.task('bower-files-pack@'+name, [cleanTask], tasks.bowerFilesPack);
+    gulp.task('bower-files-pack-watch@'+name, tasks.bowerFilesPack);
+
+
+
+
+
     gulp.task('framework-files@'+name, [cleanTask], tasks.frameworkFiles);
     gulp.task('lib-js-files@'+name, [cleanTask], tasks.libJsFiles);
 
@@ -232,66 +246,88 @@ module.exports = function(name) {
 
     gulp.task('build@'+name, ['index.html@'+name,'assets@'+name], function() {
         if(process.env.NODE_ENV=='development') {
+
+
             gulp.watch(jsFiles, function(file) {
-                gulpWatch.jsFiles(file, name);
+                gulpWatch.jsFiles(file);
             });
             gulp.watch(commonJsFilesAll, function(file) {
-                gulpWatch.commonJsFilesAll(file, name);
+                gulpWatch.commonJsFilesAll(file);
             });
             gulp.watch(templatesFiles, function(file) {
                 gulp.start('html2js-watch@'+name);
             });
             gulp.watch(assets, function(file) {
-                gulpWatch.assets(file, name);
+                gulpWatch.assets(file);
             });
+            gulp.watch('bower.json', function(file) {
+                gulpWatch.bower(file);
+            })
             gulp.watch(i18nFiles, ['i18n-watch@'+name]);
             gulp.watch(lessFiles, ['less-watch@'+name]);
             gulp.watch(htmlFile, ['index.html-watch@'+name]);
+
+
+
+
         }
     });
-};
 
-var gulpWatch = {
-    assets: function(file, name) {
-        console.log(file.type);
-        if(file.type=='deleted') {
-            var pathToDelete = file.path.substring(file.path.indexOf('src/common')+11);
-            console.log("dist/build/"+name+"/public/"+pathToDelete);
-            del("dist/build/"+name+"/public/"+pathToDelete);
-        } else {
-            gulp.start('assets-watch@'+name);
-        }
-    },
-    jsFiles: function(file, name) {
-        if(file.type=='changed') {
-            gulp.start(['js-files-watch@'+name]);
-        }
-        if(file.type=='added'||file.type=='renamed') {
-            gulp.start(['js-file-added@'+name]);
-        }
-        if(file.type=='deleted') {
-            var pathToDelete = file.path.substring(file.path.indexOf('src/modules/')+12);
-            del("dist/build/"+name+"/public/js/modules/"+pathToDelete, function(err) {
-                gulp.start('index.html-watch@'+name);
+
+    var gulpWatch = {
+        assets: function(file) {
+            console.log(file.type);
+            if(file.type=='deleted') {
+                var pathToDelete = file.path.substring(file.path.indexOf('src/common')+11);
+                console.log("dist/build/"+name+"/public/"+pathToDelete);
+                del("dist/build/"+name+"/public/"+pathToDelete);
+            } else {
+                gulp.start('assets-watch@'+name);
+            }
+        },
+        jsFiles: function(file) {
+            if(file.type=='changed') {
+                gulp.start(['js-files-watch@'+name]);
+            }
+
+
+            if(file.type=='added'||file.type=='renamed') {
+                gulp.start(['js-file-added@'+name]);
+            }
+            if(file.type=='deleted') {
+                var pathToDelete = file.path.substring(file.path.indexOf('src/modules/')+12);
+                del("dist/build/"+name+"/public/js/modules/"+pathToDelete, function(err) {
+                    gulp.start('index.html-watch@'+name);
+                });
+
+            }
+        },
+        commonJsFilesAll: function(file) {
+            if(file.type=='changed') {
+                gulp.start(['common-js-files-watch@'+name]);
+            }
+            if(file.type=='added'||file.type=='renamed') {
+                gulp.start(['common-js-files-added@'+name]);
+            }
+            if(file.type=='deleted') {
+                var pathToDelete = file.path.substring(file.path.indexOf('src/common/frontend')+20);
+                del("dist/build/"+name+"/public/js/common/"+pathToDelete, function(err) {
+                    if(err) return console.error(err);
+                });
+
+            }
+        },
+        bower: function(file) {
+            console.log(file, name);
+            block.isBlocked = true;
+            tasks.bowerFilesDelete(function() {
+                gulp.start(['bower-files-watch@'+name, 'bower-files-pack-watch@'+name], function() {
+                    block.isBlocked = false;
+                    gulp.start(['index.html-watch@'+name], function() {
+                        console.log();
+                    })
+                });
             });
-
         }
-    },
-    commonJsFilesAll: function(file, name) {
-        if(file.type=='changed') {
-            gulp.start(['common-js-files-watch@'+name]);
-        }
-        if(file.type=='added'||file.type=='renamed') {
-            gulp.start(['common-js-files-added@'+name]);
-        }
-        if(file.type=='deleted') {
-            var pathToDelete = file.path.substring(file.path.indexOf('src/common/frontend')+20);
-            console.log("dist/build/"+name+"/public/js/common/"+pathToDelete);
-            del("dist/build/"+name+"/public/js/common/"+pathToDelete, function(err) {
-                if(err) return console.error(err);
-                gulp.start('index.html-watch@'+name);
-            });
-
-        }
-    },
+    };
 };

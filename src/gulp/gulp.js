@@ -11,7 +11,8 @@ var gulpLogger = require(__dirname+'/logger'),
     beautifier = require(__dirname+'/beautifier');
 
 
-var config = require(__dirname+'/../config');
+var config = require(__dirname+'/../config'),
+    block = require(__dirname+'/block');
 
 
 var frontendApps = config.frontend.list(),
@@ -43,7 +44,9 @@ module.exports= {
             if(!debug) options.silent = true;
             livereload.listen(options);
             gulp.watch('dist/build/**/*', function(file) {
-                livereload.changed(file.path);
+                if(!block.isBlocked) {
+                    livereload.changed(file.path);
+                }
             });
         });
     },
