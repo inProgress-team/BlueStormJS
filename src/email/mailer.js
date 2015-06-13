@@ -9,12 +9,14 @@ var logger = require(__dirname+'/../logger/logger');
 
 var MAIL_CONFIG_FILE_PATH = process.cwd() + '/config/email.json',
     mailOptions;
-    
-var complexMailer = require(__dirname+'/complexMailer');
 
 module.exports = {
-    complex: complexMailer,
-    send: function(to, subject, html, text, callback) {
+    send: function(to, subject, html, text, attachments, callback) {
+
+        if (typeof attachments == 'function') {
+            callback = attachments;
+            attachments = null;
+        }
 
         if (!transporter) {
             // Check if config file for database exists
@@ -54,7 +56,8 @@ module.exports = {
             to: to, // list of receivers
             subject: subject,
             html: html,
-            text: text
+            text: text,
+            attachments: attachments
         };
 
         //if (process.env.NODE_ENV != 'development') {
@@ -64,7 +67,11 @@ module.exports = {
         });
         //}
     },
-    mail: function(mail, templateName, module, lang, params, callback) {
+    mail: function(mail, templateName, module, lang, params, attachments, callback) {
+        if (typeof attachments == 'function') {
+            callback = attachments;
+            attachments = null;
+        }
         var $this = this;
         var pathi18n;
         var pathMailModule;
@@ -85,7 +92,8 @@ module.exports = {
                         return callback(err);
                     throw err;
                 }
-                $this.send(mail, params.i18n[templateName].title, html, text.replace(/&#39;/g, "'"), function (err, info) {
+
+                $this.send(mail, params.i18n[templateName].title, html, text.replace(/&#39;/g, "'"), attachments, function (err, info) {
                     if (callback)
                         return callback(err, info);
                 });
