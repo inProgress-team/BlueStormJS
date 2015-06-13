@@ -31,30 +31,30 @@ module.exports = function(name) {
     });
 
     var templatesFiles = [
-    'src/apps/'+name+'/**/*.tpl.html',
-    'src/common/frontend/**/*.tpl.html',
-    'src/modules/**/'+name+'/**/*.tpl.html'
+        'src/apps/'+name+'/**/*.tpl.html',
+        'src/common/frontend/**/*.tpl.html',
+        'src/modules/**/'+name+'/**/*.tpl.html'
     ],
     htmlFile = 'src/apps/'+name+'/index.html',
     i18nFiles = [
-    'src/common/i18n/*.json'
+        'src/common/i18n/*.json'
     ],
     lessFile = 'src/apps/'+name+'/main.less',
     lessFiles = [
-    'src/apps/'+name+'/**/*.less',
-    'src/common/**/*.less',
-    'src/modules/**/'+name+'/**/*.less'
+        'src/apps/'+name+'/**/*.less',
+        'src/common/**/*.less',
+        'src/modules/**/'+name+'/**/*.less'
     ],
     sourcesIndex = [
 
-    'dist/build/'+name+'/public/lib/jquery.js',
-    'dist/build/'+name+'/public/lib/angular.js',
-    'dist/build/'+name+'/public/lib/socket.io.js',
+        'dist/build/'+name+'/public/lib/jquery.js',
+        'dist/build/'+name+'/public/lib/angular.js',
+        'dist/build/'+name+'/public/lib/socket.io.js',
 
-    'dist/build/'+name+'/public/bower_components/**/*.js',
-    'dist/build/'+name+'/public/js/templates.js',
-    'dist/build/'+name+'/public/js/**/*.js',
-    'dist/build/'+name+'/public/css/main.css'
+        'dist/build/'+name+'/public/bower_components/**/*.js',
+        'dist/build/'+name+'/public/js/templates.js',
+        'dist/build/'+name+'/public/js/**/*.js',
+        'dist/build/'+name+'/public/css/main.css'
     ],
     assets = 'src/common/assets/**/*';
 
@@ -247,24 +247,33 @@ module.exports = function(name) {
     gulp.task('build@'+name, ['index.html@'+name,'assets@'+name], function() {
         if(process.env.NODE_ENV=='development') {
 
-
+            //JS
             gulp.watch(jsFiles, function(file) {
                 gulpWatch.jsFiles(file);
             });
+
+            //COMMON JS
             gulp.watch(commonJsFilesAll, function(file) {
                 gulpWatch.commonJsFilesAll(file);
             });
-            gulp.watch(templatesFiles, function(file) {
-                gulp.start('html2js-watch@'+name);
-            });
+
+            // ASSETS
             gulp.watch(assets, function(file) {
                 gulpWatch.assets(file);
             });
+
+            //BOWER
             gulp.watch('bower.json', function(file) {
                 gulpWatch.bower(file);
-            })
+            });
+
+            //LESS
+            gulp.watch(lessFiles, function(file) {
+                gulpWatch.less(file);
+            });
+
+            gulp.watch(templatesFiles, ['html2js-watch@'+name]);
             gulp.watch(i18nFiles, ['i18n-watch@'+name]);
-            gulp.watch(lessFiles, ['less-watch@'+name]);
             gulp.watch(htmlFile, ['index.html-watch@'+name]);
 
 
@@ -328,6 +337,16 @@ module.exports = function(name) {
                     })
                 });
             });
+        },
+        less: function(file) {
+            gulp.start(['less-watch@'+name]);
+
+            if(file.type=='added'||file.type=='renamed') {
+                console.log(file);
+                gulp.watch(file.path, ['less-watch@'+name]);
+
+            }
+
         }
     };
 };
