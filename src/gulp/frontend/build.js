@@ -11,24 +11,41 @@ var gulp = require('gulp'),
     watch = require('gulp-watch'),
     preprocess = require('gulp-preprocess'),
     gulpFilter = require('gulp-filter'),
-    changed = require('gulp-changed');
+    changed = require('gulp-changed'),
+    fs = require('fs');
 
 var config = require(__dirname+'/../../config'),
     block = require(__dirname+'/../block');
 
+
+
+
 module.exports = function(name) {
+
+    var _initDependencies = function(deps) {
+        if(deps) dependencies = deps;
+
+        commonJsFiles= [];
+        dependencies.common.forEach(function (dep) {
+            commonJsFiles.push(dep+'/**/*.js')
+        });
+    };
+
+
+
     var dependencies = require(process.cwd()+'/src/apps/'+name+'/dependencies.json');
 
     var cleanTask = 'clean@'+name,
+        bowerFile = 'bower.json',
+        dependenciesFile = 'src/apps/'+name+'/dependencies.json',
     jsFiles = [
-    'src/apps/'+name+'/**/*.js',
-    'src/modules/**/'+name+'/**/*.js'
+        'src/apps/'+name+'/**/*.js',
+        'src/modules/**/'+name+'/**/*.js'
     ],
-    commonJsFiles= [],
+    commonJsFiles,
     commonJsFilesAll = ['src/common/frontend/**/*.js'];
-    dependencies.common.forEach(function (dep) {
-        commonJsFiles.push(dep+'/**/*.js')
-    });
+
+    _initDependencies();
 
     var templatesFiles = [
         'src/apps/'+name+'/**/*.tpl.html',
@@ -39,7 +56,7 @@ module.exports = function(name) {
     i18nFiles = [
         'src/common/i18n/*.json'
     ],
-    lessFile = 'src/apps/'+name+'/main.less',
+        lessFile = 'src/apps/'+name+'/main.less',
     lessFiles = [
         'src/apps/'+name+'/**/*.less',
         'src/common/**/*.less',
@@ -71,6 +88,11 @@ module.exports = function(name) {
             .pipe(gulpFilter(commonJsFiles))
             .pipe(changed(dest))
             .pipe(gulp.dest(dest));
+        },
+        commonJsFilesDelete: function(cb){
+            del('dist/build/'+name+'/public/js/common', function() {
+                cb();
+            });
         },
         libJsFiles: function(){
             var files = [
@@ -263,8 +285,13 @@ module.exports = function(name) {
             });
 
             //BOWER
-            gulp.watch('bower.json', function(file) {
+            gulp.watch(bowerFile, function(file) {
                 gulpWatch.bower(file);
+            });
+
+            //DEPENDENCIES.JSON
+            gulp.watch(dependenciesFile, function(file) {
+                gulpWatch.dependencies(file);
             });
 
             //LESS
@@ -284,69 +311,84 @@ module.exports = function(name) {
 
 
     var gulpWatch = {
-        assets: function(file) {
+        assets: function (file) {
             console.log(file.type);
-            if(file.type=='deleted') {
-                var pathToDelete = file.path.substring(file.path.indexOf('src/common')+11);
-                console.log("dist/build/"+name+"/public/"+pathToDelete);
-                del("dist/build/"+name+"/public/"+pathToDelete);
+            if (file.type == 'deleted') {
+                var pathToDelete = file.path.substring(file.path.indexOf('src/common') + 11);
+                console.log("dist/build/" + name + "/public/" + pathToDelete);
+                del("dist/build/" + name + "/public/" + pathToDelete);
             } else {
-                gulp.start('assets-watch@'+name);
+                gulp.start('assets-watch@' + name);
             }
         },
-        jsFiles: function(file) {
-            if(file.type=='changed') {
-                gulp.start(['js-files-watch@'+name]);
+        jsFiles: function (file) {
+            if (file.type == 'changed') {
+                gulp.start(['js-files-watch@' + name]);
             }
 
 
-            if(file.type=='added'||file.type=='renamed') {
-                gulp.start(['js-file-added@'+name]);
+            if (file.type == 'added' || file.type == 'renamed') {
+                gulp.start(['js-file-added@' + name]);
             }
-            if(file.type=='deleted') {
-                var pathToDelete = file.path.substring(file.path.indexOf('src/modules/')+12);
-                del("dist/build/"+name+"/public/js/modules/"+pathToDelete, function(err) {
-                    gulp.start('index.html-watch@'+name);
+            if (file.type == 'deleted') {
+                var pathToDelete = file.path.substring(file.path.indexOf('src/modules/') + 12);
+                del("dist/build/" + name + "/public/js/modules/" + pathToDelete, function (err) {
+                    gulp.start('index.html-watch@' + name);
                 });
 
             }
         },
-        commonJsFilesAll: function(file) {
-            if(file.type=='changed') {
-                gulp.start(['common-js-files-watch@'+name]);
+        commonJsFilesAll: function (file) {
+            if (file.type == 'changed') {
+                gulp.start(['common-js-files-watch@' + name]);
             }
-            if(file.type=='added'||file.type=='renamed') {
-                gulp.start(['common-js-files-added@'+name]);
+            if (file.type == 'added' || file.type == 'renamed') {
+                gulp.start(['common-js-files-added@' + name]);
             }
-            if(file.type=='deleted') {
-                var pathToDelete = file.path.substring(file.path.indexOf('src/common/frontend')+20);
-                del("dist/build/"+name+"/public/js/common/"+pathToDelete, function(err) {
-                    if(err) return console.error(err);
+            if (file.type == 'deleted') {
+                var pathToDelete = file.path.substring(file.path.indexOf('src/common/frontend') + 20);
+                del("dist/build/" + name + "/public/js/common/" + pathToDelete, function (err) {
+                    if (err) return console.error(err);
                 });
 
             }
         },
-        bower: function(file) {
-            console.log(file, name);
+        bower: function (file) {
             block.isBlocked = true;
-            tasks.bowerFilesDelete(function() {
-                gulp.start(['bower-files-watch@'+name, 'bower-files-pack-watch@'+name], function() {
-                    block.isBlocked = false;
-                    gulp.start(['index.html-watch@'+name], function() {
-                        console.log();
+            tasks.bowerFilesDelete(function () {
+                gulp.start(['bower-files-watch@' + name, 'bower-files-pack-watch@' + name], function () {
+                    gulp.start(['index.html-watch@' + name], function () {
+                        block.isBlocked = false;
                     })
                 });
             });
         },
-        less: function(file) {
-            gulp.start(['less-watch@'+name]);
+        dependencies: function (file) {
+            var deps = JSON.parse(fs.readFileSync(file.path));
+            _initDependencies(deps);
 
-            if(file.type=='added'||file.type=='renamed') {
-                console.log(file);
-                gulp.watch(file.path, ['less-watch@'+name]);
 
-            }
+            block.isBlocked = true;
+            tasks.commonJsFilesDelete(function () {
+                gulp.start(['common-js-files-watch@' + name], function () {
+                    gulp.start(['index.html-watch@' + name], function () {
+                        block.isBlocked = false;
+                    })
+                });
+            });
+            /*
+             gulp.watch(commonJsFilesAll, function(file) {
+             gulpWatch.commonJsFilesAll(file);
+             });
+             */
+        },
+        less: function (file) {
+
+            gulp.start(['less-watch@' + name]);
+
+            if (file.type == 'added' || file.type == 'renamed')
+                gulp.watch(file.path, ['less-watch@' + name]);
 
         }
-    };
+    }
 };
