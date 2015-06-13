@@ -2,8 +2,6 @@
 
 
 var gulp = require('gulp'),
-stylish = require('jshint-stylish'),
-cache = require('gulp-cached'),
 watch = require('gulp-watch');
 
 var server = require(__dirname+'/../server/server');
