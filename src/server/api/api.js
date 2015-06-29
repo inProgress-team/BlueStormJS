@@ -236,7 +236,12 @@ module.exports = function(config) {
 
         app.use(multer({
             limits: {
-                fieldSize: '10MB'
+                fieldSize: '10MB',
+                headers: {
+                    'Access-Control-Allow-Origin': "*",
+                    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
+                    'Access-Control-Allow-Headers': 'Content-Type, X-AUTH-TOKEN'
+                }
             }
         }));
         app.use(bodyParser.json());
