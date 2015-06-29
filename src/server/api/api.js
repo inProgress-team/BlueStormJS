@@ -238,9 +238,7 @@ module.exports = function(config) {
             limits: {
                 fieldSize: '10MB',
                 headers: {
-                    'Access-Control-Allow-Origin': "*",
-                    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE',
-                    'Access-Control-Allow-Headers': 'Content-Type, X-AUTH-TOKEN'
+                    'Access-Control-Allow-Origin': "http://www.songpeek.com"
                 }
             }
         }));
