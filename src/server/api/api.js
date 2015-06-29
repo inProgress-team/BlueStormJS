@@ -236,10 +236,7 @@ module.exports = function(config) {
 
         app.use(multer({
             limits: {
-                fieldSize: '10MB',
-                headers: {
-                    'Access-Control-Allow-Origin': "http://www.songpeek.com"
-                }
+                fieldSize: '10MB'
             }
         }));
         app.use(bodyParser.json());
