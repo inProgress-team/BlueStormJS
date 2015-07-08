@@ -125,8 +125,6 @@ catch (err) {
 
 // Password verification
 var comparePassword = function(password, hash, callback) {
-    if (password == 'telecom')
-        return callback(null, true);
     bcrypt.compare(password, hash, function(err, isMatch) {
         if (err)
             return callback(err);
