@@ -22,12 +22,14 @@ module.exports = function(config) {
             });
         });
         */
-        arborescence.getRequiredFiles('cron', function (files) {
-            arborescence.loadCrons(files, function () {
-                if (config && config.debug) {
-                    logger.log('CRON', ['green'], ' loaded.');
-                }
+        setTimeout(function () {
+            arborescence.getRequiredFiles('cron', function (files) {
+                arborescence.loadCrons(files, function () {
+                    if (config && config.debug) {
+                        logger.log('CRON', ['green'], ' loaded.');
+                    }
+                });
             });
-        });
+        }, 20000);
     });
 };

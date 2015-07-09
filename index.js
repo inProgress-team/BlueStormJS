@@ -56,8 +56,11 @@ require(__dirname + '/src/db/returnmongoose');
 
 require(__dirname + '/db')(function(err, res) {
     if (res.type == 'mongoose') {
+        console.log('A');
         arborescence.getRequiredFiles('models', function (files) {
+            console.log('B');
             arborescence.loadFiles(files, null, function () {
+                console.log('C');
             });
         });
     }
