@@ -38,12 +38,10 @@ module.exports = {
 
 
         } else if(command=="preprod") {
-            process.env.NODE_ENV = 'preproduction';
             gulp.production();
 
 
         } else if(command=="prod") {
-            process.env.NODE_ENV = 'production';
             gulp.production();
             
 
@@ -63,50 +61,39 @@ module.exports = {
 
 
         } else if(command=="server-prod-apps") {
-            process.env.NODE_ENV = 'production';
             server.startProdForApps();
 
         } else if(command=="server-prod-api") {
-            process.env.NODE_ENV = 'production';
             server.startProdForApi();
 
         } else if(command=="server-prod-socket") {
-            process.env.NODE_ENV = 'production';
             server.startProdForSocket();
 
 
         } else if(command=="server-preprod-apps") {
-            process.env.NODE_ENV = 'preproduction';
             server.startProdForApps();
 
         } else if(command=="server-preprod-api") {
-            process.env.NODE_ENV = 'preproduction';
             server.startProdForApi();
 
         } else if(command=="server-preprod-socket") {
-            process.env.NODE_ENV = 'preproduction';
             server.startProdForSocket();
 
 
         } else if(command=="start-cron-prod") {
-            process.env.NODE_ENV = 'production';
             server.startCron();
 
         } else if(command=="start-cron-preprod") {
-            process.env.NODE_ENV = 'preproduction';
             server.startCron();
 
         } else if(command=="start-cron") {
-            process.env.NODE_ENV = 'production';
             server.startCron();
 
 
         } else if(command=="nginxpreprod") {
-            process.env.NODE_ENV = 'preproduction';
             server.generateNginxConfig();
 
         } else if(command=="nginxprod") {
-            process.env.NODE_ENV = 'production';
             server.generateNginxConfig();
 
         
