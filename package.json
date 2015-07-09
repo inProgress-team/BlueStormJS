@@ -25,7 +25,7 @@
   "dependencies": {
     "async": "^1.2.1",
     "bcrypt": "^0.8.0",
-    "body-parser": "^1.9.0",
+    "body-parser": "^1.13.2",
     "cheerio": "^0.19.0",
     "cli-color": "^1.0.0",
     "coffeelint": "^1.8.1",
