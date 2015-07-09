@@ -30,6 +30,6 @@ module.exports = function(config) {
                     }
                 });
             });
-        }, 20000);
+        }, 5000);
     });
 };
