@@ -56,6 +56,7 @@ module.exports = {
             }
             cluster.on('exit', function(worker) {
                 console.log('worker ' + worker.process.pid + ' died');
+                worker.fork();
             });
         } else {
             // Workers can share any TCP connection
