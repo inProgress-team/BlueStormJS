@@ -38,10 +38,12 @@ module.exports = {
 
 
         } else if(command=="preprod") {
+            process.env.NODE_ENV = 'preproduction';
             gulp.production();
 
 
         } else if(command=="prod") {
+            process.env.NODE_ENV = 'production';
             gulp.production();
             
 
