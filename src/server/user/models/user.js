@@ -135,6 +135,9 @@ var comparePassword = function(password, hash, callback) {
 
 module.exports.encodeToken = function(user) {
     for (var i=0; i<FIELDS_TO_EXCLUDE_FROM_TOKEN.length; i++) {
+        console.log(i);
+        console.log(FIELDS_TO_EXCLUDE_FROM_TOKEN[i]);
+        console.log(user);
         delete(user[FIELDS_TO_EXCLUDE_FROM_TOKEN[i]]);
     }
     var expires = moment().add(tokenExpiration, 'days').valueOf();
@@ -213,7 +216,7 @@ module.exports.signUp = function(user, options, callback) {
                             return callback(err);
 
                         if (options.sendConfirmation || options.activationLink || options.resetPasswordLink) {
-                            var arguments = _.clone(elts[0]);
+                            var arguments = _.clone(user);
                             if (options.signinLink)
                                 arguments.signinLink = options.signinLink;
 
@@ -237,7 +240,9 @@ module.exports.signUp = function(user, options, callback) {
                         }
 
                         delete user.password;
-                        return callback(null, elts[0], module.exports.encodeToken(elts[0]));
+                        console.log('A');
+                        console.log(elts);
+                        return callback(null, user, module.exports.encodeToken(user));
                     });
                 });
             });
