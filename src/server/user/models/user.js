@@ -135,9 +135,6 @@ var comparePassword = function(password, hash, callback) {
 
 module.exports.encodeToken = function(user) {
     for (var i=0; i<FIELDS_TO_EXCLUDE_FROM_TOKEN.length; i++) {
-        console.log(i);
-        console.log(FIELDS_TO_EXCLUDE_FROM_TOKEN[i]);
-        console.log(user);
         delete(user[FIELDS_TO_EXCLUDE_FROM_TOKEN[i]]);
     }
     var expires = moment().add(tokenExpiration, 'days').valueOf();
@@ -240,8 +237,6 @@ module.exports.signUp = function(user, options, callback) {
                         }
 
                         delete user.password;
-                        console.log('A');
-                        console.log(elts);
                         return callback(null, user, module.exports.encodeToken(user));
                     });
                 });
