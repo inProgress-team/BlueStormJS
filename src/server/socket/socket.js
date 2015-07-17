@@ -148,8 +148,7 @@ var onConnect = function(socket) {
                     });
                 }
                 else {
-                    if (url != 'end' && url != '_socketEnd' && typeof options == 'function')
-                        return options(data, callback);
+                    return options(data, callback);
                 }
             });
         });
@@ -203,7 +202,7 @@ module.exports = function(c) {
             io.on('connection', onConnect);
         });
         if(config.port) {
-                logger.log('Sockets', ['green'], ' listening on port ', config.port, ['yellow'], '.');
+            logger.log('Sockets', ['green'], ' listening on port ', config.port, ['yellow'], '.');
 
             io.listen(config.port, function() {
                 if(typeof callback=='function') cb();
