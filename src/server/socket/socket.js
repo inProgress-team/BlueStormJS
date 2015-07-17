@@ -177,20 +177,21 @@ module.exports = function(c) {
 
         var port = config.port;
 
-        sticky(options, function() {
+        var server = sticky(options, function() {
             // This code will be executed only in slave workers
 
             var http = require('http'),
                 io = require('socket.io');
 
             var server = http.createServer(function(req, res) {});
-            io.on('connection', onConnect);
             io.listen(server);
 
             return server;
         }).listen(port, function() {
             console.log('socket started on ' + port + ' port');
         });
+
+        server.on('connection', onConnect);
     } else {
         var io;
         if(config.port) {
