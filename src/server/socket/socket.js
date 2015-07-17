@@ -148,7 +148,7 @@ var onConnect = function(socket) {
                     });
                 }
                 else {
-                    if (url != 'end' && typeof options == 'function')
+                    if (url != 'end' && url != '_socketEnd' && typeof options == 'function')
                         return options(data, callback);
                 }
             });
