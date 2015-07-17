@@ -186,13 +186,14 @@ module.exports = function(c) {
 
             var server = http.createServer(function(req, res) {});
             io.listen(server);
+            io.on('connection', onConnect);
 
             return server;
         }).listen(port, function() {
             console.log('socket started on ' + port + ' port');
         });
 
-        server.on('connection', onConnect);
+
     } else {
         var io;
         if(config.port) {
