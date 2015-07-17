@@ -174,14 +174,10 @@ module.exports = function(c) {
         sticky(function() {
             // This code will be executed only in slave workers
 
-            var http = require('http'),
-                io = require('socket.io');
+            var app = require('http').createServer();
+            var io = require('socket.io')(app);
 
-            var server = http.createServer(function(req, res) {
-                // ....
-            });
-            io.listen(server);
-            io.sockets.on('connection', onConnect);
+            io.on('connection', onConnect);
 
             return server;
         }).listen(config.port, function() {
