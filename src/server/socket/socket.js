@@ -185,7 +185,7 @@ module.exports = function(c) {
 
             return server;
         }).listen(config.port, function() {
-            console.log('server started on ' + port + 'port');
+            console.log('server started on ' + config.port + 'port');
         });
     } else {
         var io;
