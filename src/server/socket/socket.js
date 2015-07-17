@@ -169,6 +169,27 @@ module.exports = function(c) {
     config = c || {};
 
     if (process.env.NODE_ENV == 'production' || process.env.NODE_ENV == 'preproduction') {
+        var sticky = require('sticky-session');
+
+        sticky(function() {
+            // This code will be executed only in slave workers
+
+            var http = require('http'),
+                io = require('socket.io');
+
+            var server = http.createServer(function(req, res) {
+                // ....
+            });
+            io.listen(server);
+            io.sockets.on('connection', onConnect);
+
+            return server;
+        }).listen(config.port, function() {
+            console.log('server started on ' + port + 'port');
+        });
+
+
+
         var express = require('express'),
             cluster = require('cluster'),
             net = require('net'),
