@@ -114,6 +114,10 @@ var onConnect = function(socket) {
      */
     socket.onAux = socket.on;
     socket.on = function (url, options, userCallback) {
+        console.log('A');
+        console.log(url);
+        console.log('B');
+        console.log(options);
         socket.onAux(url, function (data, callback) {
             if (process.env.NODE_ENV == 'development') {
                 console.log('SOCKET : '+url);
