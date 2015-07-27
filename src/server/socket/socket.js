@@ -112,10 +112,18 @@ var onConnect = function(socket) {
     /**
      * Override socket.on
      */
+    if (process.env.NODE_ENV == 'development' || process.env.DEBUG)
+        console.log('SOCKET CONNECTED');
+
+    socket.on('disconnect', function() {
+        if (process.env.NODE_ENV == 'development' || process.env.DEBUG)
+            console.log('SOCKET DISCONNECTED');
+    });
+
     socket.onAux = socket.on;
     socket.on = function (url, options, userCallback) {
         socket.onAux(url, function (data, callback) {
-            if (process.env.NODE_ENV == 'development') {
+            if (process.env.NODE_ENV == 'development' || process.env.DEBUG) {
                 console.log('SOCKET : '+url);
             }
 
