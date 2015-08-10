@@ -2,8 +2,7 @@ var socket = require('socket.io'),
     domain = require('domain'),
     express = require('express'),
     http = require('http'),
-    fs = require('fs'),
-    cluster = require("cluster");
+    fs = require('fs');
 var redis = require('socket.io-redis');
 var logger = require(__dirname+'/../../logger/logger'),
     arborescence = require(__dirname+'/../../arborescence'),
@@ -180,15 +179,22 @@ module.exports = function(c) {
 
         sticky(function() {
             // This code will be executed only in slave workers
+            var d = domain.create();
 
-            var server = require('http').createServer();
-            var io = require('socket.io')(server);
+            d.on('error', function(err) {
+                logger.error(err, 'Socket.io'+':'+config.port);
+            });
 
-            io.on('connect', onConnect);
+            d.run(function() {
+                var server = require('http').createServer();
+                var io = require('socket.io')(server);
 
-            return server;
+                io.on('connect', onConnect);
+
+                return server;
+            });
         }).listen(config.port, function() {
-            console.log('Socket started on ' + config.port + 'port');
+            console.log('Socket started on ' + config.port + ' port');
         });
     } else {
         var io;
