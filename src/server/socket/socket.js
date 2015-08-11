@@ -182,8 +182,15 @@ module.exports = function(c) {
 
             var server = require('http').createServer();
             var io = require('socket.io')(server);
+            var d = domain.create();
 
-            io.on('connect', onConnect);
+            d.on('error', function(err) {
+                logger.error(err, 'Socket.io'+':'+config.port);
+            });
+
+            d.run(function() {
+                io.on('connect', onConnect);
+            });
 
             return server;
         }).listen(config.port, function() {
