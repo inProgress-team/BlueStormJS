@@ -28,8 +28,15 @@ module.exports = function(callback) {
             return callback(null, res);
         });
     }
-    else {
+    else if (env == 'production') {
         require(__dirname + '/' + dataBaseConfig.type)(dataBaseConfig.hostProd, function (err, res) {
+            if (err)
+                return callback(err);
+
+            return callback(null, res);
+        });
+    } else if (env == 'preproduction') {
+        require(__dirname + '/' + dataBaseConfig.type)(dataBaseConfig.hostPreProd, function (err, res) {
             if (err)
                 return callback(err);
 
