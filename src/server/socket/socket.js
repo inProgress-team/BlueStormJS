@@ -174,13 +174,7 @@ var onConnect = function(socket) {
 module.exports = function(c) {
     config = c || {};
 
-    console.log('A');
-    console.log(process.env.NODE_ENV);
-    console.log('B');
-    console.log(config.port);
-    
     if (process.env.NODE_ENV == 'production' || process.env.NODE_ENV == 'preproduction') {
-        /*
         var sticky = require('sticky-session');
 
         sticky(function() {
@@ -202,37 +196,6 @@ module.exports = function(c) {
         }).listen(config.port, function() {
             console.log('Socket started on ' + config.port + ' port');
         });
-        */
-
-        var io;
-        if(config.port) {
-            io = socket();
-        } else {
-            var app = express();
-            var server = http.createServer(app);
-            io = socket(server);
-        }
-        var d = domain.create();
-
-        d.on('error', function(err) {
-            logger.error(err, 'Socket.io'+':'+config.port);
-        });
-
-        d.run(function() {
-            io.on('connection', onConnect);
-        });
-        if(config.port) {
-            logger.log('Sockets', ['green'], ' listening on port ', config.port, ['yellow'], '.');
-
-            io.listen(config.port, function() {
-                if(typeof callback=='function') cb();
-            });
-        } else {
-            io.listen(8888, function() {
-                if(typeof callback=='function') cb();
-            });
-            return server;
-        }
     } else {
         var io;
         if(config.port) {
