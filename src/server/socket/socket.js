@@ -179,20 +179,13 @@ module.exports = function(c) {
 
         sticky(function() {
             // This code will be executed only in slave workers
-            var d = domain.create();
 
-            d.on('error', function(err) {
-                logger.error(err, 'Socket.io'+':'+config.port);
-            });
+            var server = require('http').createServer();
+            var io = require('socket.io')(server);
 
-            d.run(function() {
-                var server = require('http').createServer();
-                var io = require('socket.io')(server);
+            io.on('connect', onConnect);
 
-                io.on('connect', onConnect);
-
-                return server;
-            });
+            return server;
         }).listen(config.port, function() {
             console.log('Socket started on ' + config.port + ' port');
         });
