@@ -175,7 +175,7 @@ module.exports = function(c) {
     config = c || {};
 
     if (process.env.NODE_ENV == 'production' || process.env.NODE_ENV == 'preproduction') {
-        var sticky = require('sticky-session');
+        var sticky = require('socketio-sticky-session');
 
         sticky(function() {
             // This code will be executed only in slave workers
