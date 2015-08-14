@@ -28,8 +28,16 @@ module.exports = function(callback) {
             return callback(res.db);
         });
     }
-    else {
+    else if (env == 'production') {
         require(__dirname + '/src/db/mongo')(dataBaseConfig.hostProd, function (err, res) {
+            if (err)
+                return callback(err);
+
+            mongo = res.db;
+            return callback(res.db);
+        });
+    } else if (env == 'preproduction') {
+        require(__dirname + '/src/db/mongo')(dataBaseConfig.hostPreProd, function (err, res) {
             if (err)
                 return callback(err);
 
