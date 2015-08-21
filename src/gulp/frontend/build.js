@@ -25,7 +25,7 @@ module.exports = function(name) {
 
         commonJsFiles= [];
         dependencies.common.forEach(function (dep) {
-            commonJsFiles.push(dep+'/**/*.js')
+            commonJsFiles.push(dep+'/**/*.js');
         });
     };
 
@@ -121,11 +121,11 @@ module.exports = function(name) {
         },
         bowerFiles: function(){
             return gulp.src(mainBowerFiles(), { base: 'bower_components' })
-                .pipe(gulp.dest('dist/build/'+name+'/public/bower_components'))
+                .pipe(gulp.dest('dist/build/'+name+'/public/bower_components'));
         },
         bowerFilesPack: function() {
             return gulp.src('bower_components/**/*')
-                .pipe(gulp.dest('dist/build/'+name+'/public/bower'))
+                .pipe(gulp.dest('dist/build/'+name+'/public/bower'));
         },
         bowerFilesDelete: function(cb){
             del(['dist/build/'+name+'/public/bower_components', 'dist/build/'+name+'/public/bower'], function() {
@@ -161,7 +161,7 @@ module.exports = function(name) {
                 files.push(__dirname+'/../../frontend/http.js');
                 files.push(__dirname+'/../../frontend/user.js');
             }
-            
+
 
             return gulp.src(files)
             .pipe(preprocess({context: {
@@ -177,7 +177,7 @@ module.exports = function(name) {
                 socketPort: config.get(env, 'socket'),
                 apiPort: config.get(env, 'api')
             }}))
-            .pipe(gulp.dest('dist/build/'+name+'/public/js/bluestorm'))
+            .pipe(gulp.dest('dist/build/'+name+'/public/js/bluestorm'));
         },
         less: function(){
             var l = less({});
@@ -188,8 +188,6 @@ module.exports = function(name) {
             return gulp.src(lessFile)
             .pipe(l)
             .pipe(gulp.dest('./dist/build/'+name+'/public/css'));
-
-            return less;
         },
         indexHtml: function(){
             var sources = gulp.src(sourcesIndex, {
@@ -205,7 +203,7 @@ module.exports = function(name) {
             var dest = 'dist/build/'+name+'/public/assets';
             return gulp.src(assets)
             .pipe(changed(dest))
-            .pipe(gulp.dest(dest))
+            .pipe(gulp.dest(dest));
         }
     };
 
@@ -357,7 +355,7 @@ module.exports = function(name) {
                 gulp.start(['bower-files-watch@' + name, 'bower-files-pack-watch@' + name], function () {
                     gulp.start(['index.html-watch@' + name], function () {
                         block.isBlocked = false;
-                    })
+                    });
                 });
             });
         },
@@ -371,7 +369,7 @@ module.exports = function(name) {
                 gulp.start(['common-js-files-watch@' + name], function () {
                     gulp.start(['index.html-watch@' + name], function () {
                         block.isBlocked = false;
-                    })
+                    });
                 });
             });
             /*
@@ -388,5 +386,5 @@ module.exports = function(name) {
                 gulp.watch(file.path, ['less-watch@' + name]);
 
         }
-    }
+    };
 };
