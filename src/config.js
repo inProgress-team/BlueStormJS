@@ -1,5 +1,8 @@
 var domains = require(process.cwd()+'/config/domains.json'),
-    mainConfig = require(process.cwd()+'/config/main.json');
+    mainConfig = require(process.cwd()+'/config/main.json'),
+    dbConfig = require(process.cwd() + '/config/database.json');
+
+
 
 module.exports = {
     frontend: {
@@ -33,5 +36,15 @@ module.exports = {
                 return false;
             }
         }
+    },
+    redis: {
+      getConfig: function () {
+        var host = dbConfig.redis && dbConfig.redis.host ? dbConfig.redis.host : 'localhost',
+            port = dbConfig.redis && dbConfig.redis.port ? dbConfig.redis.port : 6379;
+        return {
+          host: host,
+          port: port
+        }
+      }
     }
 };

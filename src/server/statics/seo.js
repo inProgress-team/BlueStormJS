@@ -4,11 +4,14 @@ var phridge = require('phridge'),
 var TTL_CACHE_SEO = 60 * 60 * 24; //1 day
 
 var htmlcleaner = require(__dirname+'/htmlcleaner'),
-    status = require(__dirname+'/status');//,
+    status = require(__dirname+'/status'),
+    appConfig = require(__dirname+'/../../config');//,
     //translateSeo = require(__dirname+'/translate-seo');
 
-var client = redis.createClient();
-
+var client = redis.createClient(appConfig.redis.getConfig().port, appConfig.redis.getConfig().host);
+client.on("error", function (err) {
+    console.error("Error connecting redis ("+appConfig.redis.getConfig().host+" port "+appConfig.redis.getConfig().port+")");
+});
 
 var bots = [
     //FACEBOOK
@@ -158,7 +161,7 @@ module.exports = {
                             htmlcleaner.clean(stdout, function(html) {
                                 //html = translateSeo.translate(html, 'fr');
 
-                                
+
                                 client.set(url, JSON.stringify(html));
                                 client.expire(url, TTL_CACHE_SEO);
 

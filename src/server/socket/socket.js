@@ -6,9 +6,11 @@ var socket = require('socket.io'),
 var redis = require('socket.io-redis');
 var logger = require(__dirname+'/../../logger/logger'),
     arborescence = require(__dirname+'/../../arborescence'),
-    user = require(__dirname + '/../user/models/user');
+    user = require(__dirname + '/../user/models/user'),
+    appConfig = require(__dirname+'/../../config');
 
 var ROLES_CONFIG_FILE_PATH = process.cwd() + '/config/roles.json';
+
 var rolesConfig;
 
 var cacheFiles;
@@ -212,7 +214,7 @@ module.exports = function(c) {
         });
 
         d.run(function() {
-            io.adapter(redis({ host: 'localhost', port: 6379 }));
+            io.adapter(redis({ host: appConfig.redis.getConfig().host, port: appConfig.redis.getConfig().port }));
             io.on('connection', onConnect);
         });
         if(config.port) {
