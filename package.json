@@ -1,6 +1,6 @@
 {
   "name": "bluestorm",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Node framework with angular",
   "main": "index.js",
   "scripts": {
