@@ -19,6 +19,11 @@ var bots = [
     'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
     'Facebot',
 
+    //SLACK
+    'Slackbot-LinkExpanding 1.0 (+https://api.slack.com/robots)',
+    'Slack-ImgProxy 0.19 (+https://api.slack.com/robots)',
+    'Slackbot 1.0(+https://api.slack.com/robots)',
+
     //TWITTER
     'Twitterbot/1.0',
 
