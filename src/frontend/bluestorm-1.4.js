@@ -42,14 +42,17 @@ angular.module('bluestorm', [
             return domains;
         };
 
-        if(service.env=='development') {
+
+
+        return service;
+    })
+    .run(function (bluestorm) {
+        if(bluestorm.env=='development') {
             var script = document.createElement('script');
             script.type = 'text/javascript';
             script.src = 'http://'+($window.location.hostname||'localhost')+':35729/livereload.js?snipver=1';
             document.body.appendChild(script);
         }
-
-        return service;
     })
     .factory('socket', function($rootScope, bluestorm, $cookies) {
         var socket = io(bluestorm.urls.socket);
