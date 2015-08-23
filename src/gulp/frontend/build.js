@@ -201,9 +201,9 @@ module.exports = function(name) {
             return gulp.src(htmlFile)
                 .pipe(rename(function (path) { path.basename = "main"; }))
                 .pipe(inject(sources, {ignorePath: 'dist/build/'+name}))
-                .pipe(process.env.NODE_ENV == 'development' ? injectReload({
+                /*.pipe(process.env.NODE_ENV == 'development' ? injectReload({
                     host: 'http://0.0.0.0'
-                }):noop())
+                }):noop())*/
                 .pipe(gulp.dest('dist/build/'+name));
 
         },
