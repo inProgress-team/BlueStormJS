@@ -202,7 +202,7 @@ module.exports = function(name) {
                 .pipe(rename(function (path) { path.basename = "main"; }))
                 .pipe(inject(sources, {ignorePath: 'dist/build/'+name}))
                 .pipe(process.env.NODE_ENV == 'development' ? injectReload({
-                    host: 'http://'+getIp()
+                    host: 'http://0.0.0.0'
                 }):noop())
                 .pipe(gulp.dest('dist/build/'+name));
 
