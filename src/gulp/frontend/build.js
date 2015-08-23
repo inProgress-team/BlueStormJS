@@ -10,7 +10,8 @@ var gulp = require('gulp'),
     preprocess = require('gulp-preprocess'),
     gulpFilter = require('gulp-filter'),
     changed = require('gulp-changed'),
-    fs = require('fs');
+    fs = require('fs'),
+    injectReload = require('gulp-inject-reload');
 
 var config = require(__dirname+'/../../config'),
     block = require(__dirname+'/../block');
@@ -197,23 +198,13 @@ module.exports = function(name) {
             });
 
 
-            if(process.env.NODE_ENV == 'development') {
-
-                return gulp.src(htmlFile)
-                    .pipe(rename(function (path) { path.basename = "main"; }))
-                    .pipe(inject(sources, {ignorePath: 'dist/build/'+name}))
-                    .pipe(injectReload({
-                        host: 'http://'+getIp()
-                    }))
-                    .pipe(gulp.dest('dist/build/'+name));
-
-            } else {
-                return gulp.src(htmlFile)
-                    .pipe(rename(function (path) { path.basename = "main"; }))
-                    .pipe(inject(sources, {ignorePath: 'dist/build/'+name}))
-                    .pipe(gulp.dest('dist/build/'+name));
-
-            }
+            return gulp.src(htmlFile)
+                .pipe(rename(function (path) { path.basename = "main"; }))
+                .pipe(inject(sources, {ignorePath: 'dist/build/'+name}))
+                .pipe(process.env.NODE_ENV == 'development' ? injectReload({
+                    host: 'http://'+getIp()
+                }):noop())
+                .pipe(gulp.dest('dist/build/'+name));
 
         },
         assets: function() {
