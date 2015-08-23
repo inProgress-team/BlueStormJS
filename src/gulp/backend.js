@@ -18,9 +18,10 @@ module.exports = function() {
         'package.json'
     ];
 
-    
+
     gulp.task('server-restart@backend', function() {
-        server.monitor.restart();
+        if(server.monitor)
+            server.monitor.restart();
     });
 
     var watch = function() {
