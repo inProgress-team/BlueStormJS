@@ -3,7 +3,7 @@ angular.module('bluestorm', [
     'bluestorm.http',
     'bluestorm.user'
     ])
-.service('bluestorm', function($window){
+.service('bluestorm', function(){
     var service = {
         urls: {},
         ssl: /* @echo ssl */
@@ -45,7 +45,7 @@ angular.module('bluestorm', [
         return service;
     })
 
-    .run(function (bluestorm) {
+    .run(function (bluestorm, $window) {
         if(bluestorm.env=='development') {
             var script = document.createElement('script');
             script.type = 'text/javascript';
