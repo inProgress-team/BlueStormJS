@@ -3,7 +3,7 @@ angular.module('bluestorm', [
     'bluestorm.http',
     'bluestorm.user'
 ])
-    .service('bluestorm', function(){
+    .service('bluestorm', function($window){
         var service = {
             urls: {},
             ssl: /* @echo ssl */
@@ -41,6 +41,13 @@ angular.module('bluestorm', [
             }
             return domains;
         };
+
+        if(service.env=='development') {
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = 'http://'+($window.location.hostname||'localhost')+':35729/livereload.js?snipver=1';
+            document.body.appendChild(script);
+        }
 
         return service;
     })
