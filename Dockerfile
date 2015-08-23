@@ -1,7 +1,7 @@
 FROM node:0.12.7
 MAINTAINER inProgress SARL <contact@in-progress.io>
 
-RUN git clone https://github.com/inProgress-team/BlueStormJS /bluestorm #REDO
+RUN git clone https://github.com/inProgress-team/BlueStormJS /bluestorm #REDOOOOOOOOOOOOOO
 
 RUN cd /bluestorm && npm install
 RUN cd /bluestorm && npm link
