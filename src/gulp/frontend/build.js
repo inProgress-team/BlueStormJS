@@ -17,6 +17,8 @@ var config = require(__dirname+'/../../config'),
 
 
 
+var os = require('os');
+
 
 module.exports = function(name) {
 
@@ -194,10 +196,25 @@ module.exports = function(name) {
                 read: false
             });
 
-            return gulp.src(htmlFile)
-            .pipe(rename(function (path) { path.basename = "main"; }))
-            .pipe(inject(sources, {ignorePath: 'dist/build/'+name }))
-            .pipe(gulp.dest('dist/build/'+name));
+
+            if(process.env.NODE_ENV == 'development') {
+
+                return gulp.src(htmlFile)
+                    .pipe(rename(function (path) { path.basename = "main"; }))
+                    .pipe(inject(sources, {ignorePath: 'dist/build/'+name}))
+                    .pipe(injectReload({
+                        host: 'http://'+getIp()
+                    }))
+                    .pipe(gulp.dest('dist/build/'+name));
+
+            } else {
+                return gulp.src(htmlFile)
+                    .pipe(rename(function (path) { path.basename = "main"; }))
+                    .pipe(inject(sources, {ignorePath: 'dist/build/'+name}))
+                    .pipe(gulp.dest('dist/build/'+name));
+
+            }
+
         },
         assets: function() {
             var dest = 'dist/build/'+name+'/public/assets';
@@ -206,6 +223,28 @@ module.exports = function(name) {
             .pipe(gulp.dest(dest));
         }
     };
+
+
+
+    var getIp = function () {
+        var interfaces = os.networkInterfaces();
+
+        var res = null;
+        for(var i in interfaces) {
+            var int = interfaces[i];
+
+            for (var j in int) {
+                var item = int[j];
+                if(item.address.indexOf('192.168')!=-1)
+                    res = item.address;
+            }
+        }
+        if(res===null) res ='127.0.0.1';
+
+        return res;
+
+    };
+
 
 
     gulp.task(cleanTask, function(cb) { del(['dist/build/'+name], cb); });
