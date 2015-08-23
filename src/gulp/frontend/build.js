@@ -226,6 +226,10 @@ module.exports = function(name) {
 
             for (var j in int) {
                 var item = int[j];
+                console.log(item);
+                for(var i in item) {
+                    console.log(i+':'+item[i])
+                }
                 if(item.address.indexOf('192.168')!=-1)
                     res = item.address;
             }
