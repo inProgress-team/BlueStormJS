@@ -214,7 +214,10 @@ module.exports = function(c) {
         });
 
         d.run(function() {
-            io.adapter(redis({ host: appConfig.redis.getConfig().host, port: appConfig.redis.getConfig().port }));
+            if(process.env.NODE_ENV!='development') {
+                io.adapter(redis({ host: appConfig.redis.getConfig().host, port: appConfig.redis.getConfig().port }));
+            }
+
             io.on('connection', onConnect);
         });
         if(config.port) {
