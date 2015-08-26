@@ -177,27 +177,32 @@ module.exports = function(c) {
     config = c || {};
 
     if (process.env.NODE_ENV == 'production' || process.env.NODE_ENV == 'preproduction') {
-        var sticky = require('socketio-sticky-session');
+        var io;
+        if(config.port) {
+            io = socket();
+        } else {
+            var app = express();
+            var server = http.createServer(app);
+            io = socket(server);
+        }
+        var d = domain.create();
 
-        sticky(function() {
-            // This code will be executed only in slave workers
-
-            var server = require('http').createServer();
-            var io = require('socket.io')(server);
-            var d = domain.create();
-
-            d.on('error', function(err) {
-                logger.error(err, 'Socket.io'+':'+config.port);
-            });
-
-            d.run(function() {
-                io.on('connect', onConnect);
-            });
-
-            return server;
-        }).listen(config.port, function() {
-            console.log('Socket started on ' + config.port + ' port');
+        d.on('error', function(err) {
+            logger.error(err, 'Socket.io'+':'+config.port);
         });
+
+        d.run(function() {
+            io.adapter(redis({ host: appConfig.redis.getConfig().host, port: appConfig.redis.getConfig().port }));
+            io.on('connection', onConnect);
+        });
+        if(config.port) {
+            logger.log('Sockets', ['green'], ' listening on port ', config.port, ['yellow'], '.');
+
+            io.listen(config.port);
+        } else {
+            io.listen(8888);
+            return server;
+        }
     } else {
         var io;
         if(config.port) {
