@@ -125,7 +125,7 @@ var onConnect = function(socket) {
     socket.on = function (url, options, userCallback) {
         socket.onAux(url, function (data, callback) {
             if (process.env.NODE_ENV == 'development' || process.env.DEBUG) {
-                console.log('SOCKET : '+url);
+                console.log('SOCKET : ' + url);
             }
 
             if (typeof data == 'function') {

@@ -266,7 +266,7 @@ module.exports = function(config) {
         /**
          * Log everything if debug param is set to true in config
          */
-        if(process.env.NODE_ENV == 'development') {
+        if(process.env.NODE_ENV == 'development' || process.env.DEBUG) {
             //LOGGER FOR EVERY API REQUEST
             app.use(function(req, res, next){
                 start = new Date;
@@ -281,7 +281,7 @@ module.exports = function(config) {
             arborescence.loadFiles(files, app);
         });
 
-        if(process.env.NODE_ENV == 'development') {
+        if(process.env.NODE_ENV == 'development' || process.env.DEBUG) {
             app.use(function(req, res, next){
                 var ms = new Date - start;
                 next();
