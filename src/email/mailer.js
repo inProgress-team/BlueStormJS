@@ -10,7 +10,10 @@ var logger = require(__dirname+'/../logger/logger');
 var MAIL_CONFIG_FILE_PATH = process.cwd() + '/config/email.json',
     mailOptions;
 
+var complexMailer = require(__dirname+'/complexMailer');
+
 module.exports = {
+    complex: complexMailer,
     send: function(to, subject, html, text, attachments, callback) {
 
         if (typeof attachments == 'function') {
