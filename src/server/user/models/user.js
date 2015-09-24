@@ -232,6 +232,7 @@ module.exports.signUp = function(user, options, callback) {
                                 if (options.resetPasswordLink.slice(-1) == '/')
                                     options.resetPasswordLink = options.resetPasswordLink.substring(0, options.resetPasswordLink.length - 1);
                                 arguments.url = options.resetPasswordLink + '/' + user.email + '/' + user.hashPassword;
+                                console.log('0');
                                 mailer.mail(user.email, 'signupAndResetPassword', 'user', 'fr', arguments);
                             }
                         }
@@ -281,7 +282,7 @@ module.exports.signUpConfirm = function(hash, options, callback) {
 
                 if (options.sendConfirmation) {
                     var arguments = {};
-                    arguments.firstName = res.firstName;
+                    arguments.firstName = res.value.firstName;
                     mailer.mail(res.email, 'signupComplete', 'user', 'fr', arguments);
                 }
 
@@ -323,12 +324,12 @@ module.exports.resetPassword = function(data, options, callback) {
                     if (!res)
                         return callback('not_found');
 
-                    var arguments = _.clone(res);
+                    var arguments = _.clone(res.value);
                     delete arguments.password;
                     if (data.resetPasswordLink.slice(-1) == '/')
                         data.resetPasswordLink = data.resetPasswordLink.substring(0, data.resetPasswordLink.length - 1);
-                    arguments.url = data.resetPasswordLink + '/' + data.email + '/' + res.hashPassword;
-                    mailer.mail(res.email, 'resetPassword', 'user', 'fr', arguments);
+                    arguments.url = data.resetPasswordLink + '/' + data.email + '/' + arguments.hashPassword;
+                    mailer.mail(arguments.email, 'resetPassword', 'user', 'fr', arguments);
 
                     return callback();
                 }
