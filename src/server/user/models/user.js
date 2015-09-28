@@ -208,7 +208,7 @@ module.exports.signUp = function(user, options, callback) {
                     } else {
                         user.activated = true;
                     }
-                    db.collection('users').insert(user, function(err, elts) {
+                    db.collection('users').insert(user, function(err) {
                         if (err)
                             return callback(err);
 
@@ -277,17 +277,17 @@ module.exports.signUpConfirm = function(hash, options, callback) {
                 if (err)
                     return callback(err);
 
-                if (!res)
+                if (!res || !res.value)
                     return callback('not_found');
 
                 if (options.sendConfirmation) {
                     var arguments = {};
                     arguments.firstName = res.value.firstName;
-                    mailer.mail(res.email, 'signupComplete', 'user', 'fr', arguments);
+                    mailer.mail(res.value.email, 'signupComplete', 'user', 'fr', arguments);
                 }
 
-                delete res.password;
-                return callback(null, res, module.exports.encodeToken(res));
+                delete res.value.password;
+                return callback(null, res.value, module.exports.encodeToken(res.value));
             }
         );
     });
@@ -321,7 +321,7 @@ module.exports.resetPassword = function(data, options, callback) {
                     if (err)
                         return callback(err);
 
-                    if (!res)
+                    if (!res || !res.value)
                         return callback('not_found');
 
                     var arguments = _.clone(res.value);
@@ -405,11 +405,11 @@ module.exports.resetPasswordConfirm = function(data, callback) {
                         if (err)
                             return callback(err);
 
-                        if (!res)
+                        if (!res || !res.value)
                             return callback('not_found');
 
-                        delete res.password;
-                        return callback(null, res, module.exports.encodeToken(res));
+                        delete res.value.password;
+                        return callback(null, res.value, module.exports.encodeToken(res.value));
                     }
                 );
             });
@@ -528,6 +528,9 @@ module.exports.update = function(user, callback) {
             if (err)
                 return callback(err);
 
+            if (!res || !res.value)
+                return callback();
+
             if (options.sendConfirmation) {
                 var arguments = {};
 
@@ -539,7 +542,7 @@ module.exports.update = function(user, callback) {
             }
 
             delete user.password;
-            return callback(null, res, module.exports.encodeToken(res));
+            return callback(null, res.value, module.exports.encodeToken(res.value));
         }
     );
 };
