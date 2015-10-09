@@ -1,10 +1,6 @@
 FROM node:0.12.7
 MAINTAINER inProgress SARL <contact@in-progress.io>
 
-RUN git clone https://github.com/inProgress-team/BlueStormJS /bluestorm #REDOOOOOOOOOOOOOOOOOO
-
-RUN cd /bluestorm && npm install
-RUN cd /bluestorm && npm link
-
-# INSTALL BOWER
-RUN npm install -g bower
+RUN git clone https://github.com/inProgress-team/BlueStormJS --depth 1 /bluestorm && \
+    cd /bluestorm && npm install && npm link && \
+    npm install -g bower
