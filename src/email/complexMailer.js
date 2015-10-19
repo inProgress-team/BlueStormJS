@@ -12,10 +12,9 @@ var MAIL_CONFIG_FILE_PATH = process.cwd() + '/config/email.json',
 
 module.exports = {
     send: function(to, from, subject, html, text, options, callback) {
-        var options;
-        if(typeof callback == 'object') {
-            options = callback;
-            callback = null;
+        if (typeof options == 'function') {
+            callback = options;
+            options = {};
         }
 
         if (!transporter) {
