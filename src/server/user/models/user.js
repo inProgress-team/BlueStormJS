@@ -134,13 +134,14 @@ var comparePassword = function(password, hash, callback) {
 };
 
 module.exports.encodeToken = function(user) {
+    var userAux = JSON.parse(JSON.stringify(user));
     for (var i=0; i<FIELDS_TO_EXCLUDE_FROM_TOKEN.length; i++) {
-        delete(user[FIELDS_TO_EXCLUDE_FROM_TOKEN[i]]);
+        delete(userAux[FIELDS_TO_EXCLUDE_FROM_TOKEN[i]]);
     }
     var expires = moment().add(tokenExpiration, 'days').valueOf();
     return jwt.encode(
         {
-            user: user,
+            user: userAux,
             expires: expires
         },
         SECRET_TOKEN);
