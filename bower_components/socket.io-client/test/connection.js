@@ -2,11 +2,12 @@ var expect = require('expect.js');
 var io = require('../');
 var hasCORS = require('has-cors');
 var textBlobBuilder = require('text-blob-builder');
+var env = require('./support/env');
 
 describe('connection', function() {
   this.timeout(70000);
 
-  it('should connect to localhost', function(done) {
+  it('should connect to localhost', function(done){
     var socket = io({ forceNew: true });
     socket.emit('hi');
     socket.on('hi', function(data){
@@ -19,6 +20,24 @@ describe('connection', function() {
     var socket = io({ forceNew: true, autoConnect: false });
     expect(socket.io.engine).to.not.be.ok();
     socket.disconnect();
+  });
+
+  it('should start two connections with same path', function(){
+    var s1 = io('/');
+    var s2 = io('/');
+
+    expect(s1.io).to.not.be(s2.io);
+    s1.disconnect();
+    s2.disconnect();
+  });
+
+  it('should start two connections with same path and different querystrings', function(){
+    var s1 = io('/?woot');
+    var s2 = io('/');
+
+    expect(s1.io).to.not.be(s2.io);
+    s1.disconnect();
+    s2.disconnect();
   });
 
   it('should work with acks', function(done){
@@ -165,7 +184,7 @@ describe('connection', function() {
   });
 
   it('reconnect delay should increase every time', function(done){
-    var manager = io.Manager({ reconnection: true, timeout: 0, reconnectionAttempts: 5, reconnectionDelay: 10, randomizationFactor: 0.2 });
+    var manager = io.Manager({ reconnection: true, timeout: 0, reconnectionAttempts: 3, reconnectionDelay: 100, randomizationFactor: 0.2 });
     var socket = manager.socket('/timeout');
     var reconnects = 0, increasingDelay = true, startTime, prevDelay = 0;
     
@@ -183,7 +202,7 @@ describe('connection', function() {
     });
 
     socket.on('reconnect_failed', function failed() {
-      expect(reconnects).to.be(5);
+      expect(reconnects).to.be(3);
       expect(increasingDelay).to.be.ok();
       socket.close();
       manager.close();
@@ -229,6 +248,18 @@ describe('connection', function() {
       setTimeout(function() {
         done();
       }, 500);
+    });
+  });
+
+  it('should reconnect after stopping reconnection', function(done){
+    var socket = io('/invalid', { forceNew: true, timeout: 0, reconnectionDelay: 10 });
+    socket.once('reconnect_attempt', function() {
+      socket.on('reconnect_attempt', function() {
+        socket.disconnect();
+        done();
+      });
+      socket.disconnect();
+      socket.connect();
     });
   });
 
@@ -349,6 +380,16 @@ describe('connection', function() {
     });
   });
 
+  it('should connect while disconnecting another socket', function(done) {
+    var manager = io.Manager();
+    var socket1 = manager.socket('/foo');
+    socket1.on('connect', function() {
+      var socket2 = manager.socket('/asd');
+      socket2.on('connect', done);
+      socket1.disconnect();
+    });
+  });
+
   // Ignore incorrect connection test for old IE due to no support for
   // `script.onerror` (see: http://requirejs.org/docs/api.html#ieloadfail)
   if (!global.document || hasCORS) {
@@ -430,6 +471,9 @@ describe('connection', function() {
 
     it('should get binary data (as an ArrayBuffer)', function(done){
       var socket = io({ forceNew: true });
+      if (env.node) {
+        socket.io.engine.binaryType = 'arraybuffer';
+      }
       socket.emit('doge');
       socket.on('doge', function(buffer){
         expect(buffer instanceof ArrayBuffer).to.be(true);
