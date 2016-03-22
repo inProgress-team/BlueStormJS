@@ -222,19 +222,34 @@ module.exports.signUp = function(user, options, callback) {
                                 arguments.password = password;
                             }
 
-                            if (options.sendConfirmation)
+                            if (options.sendConfirmation) {
                                 mailer.mail(user.email, 'signupComplete', 'user', 'fr', arguments);
+                                if (options.ccEmails && options.ccEmails.length) {
+                                    for (var i=0; i<options.ccEmails.length; i++) {
+                                        mailer.mail(options.ccEmails[i], 'signupComplete', 'user', 'fr', arguments);
+                                    }
+                                }
+                            }
                             else if (options.activationLink) {
                                 if (options.activationLink.slice(-1) == '/')
                                     options.activationLink = options.activationLink.substring(0, options.activationLink.length - 1);
                                 arguments.url = options.activationLink + '/' + user.hash;
                                 mailer.mail(user.email, 'signupConfirm', 'user', 'fr', arguments);
+                                if (options.ccEmails && options.ccEmails.length) {
+                                    for (var i=0; i<options.ccEmails.length; i++) {
+                                        mailer.mail(options.ccEmails[i], 'signupComplete', 'user', 'fr', arguments);
+                                    }
+                                }
                             } else if (options.resetPasswordLink) {
                                 if (options.resetPasswordLink.slice(-1) == '/')
                                     options.resetPasswordLink = options.resetPasswordLink.substring(0, options.resetPasswordLink.length - 1);
                                 arguments.url = options.resetPasswordLink + '/' + user.email + '/' + user.hashPassword;
-                                console.log('0');
                                 mailer.mail(user.email, 'signupAndResetPassword', 'user', 'fr', arguments);
+                                if (options.ccEmails && options.ccEmails.length) {
+                                    for (var i=0; i<options.ccEmails.length; i++) {
+                                        mailer.mail(options.ccEmails[i], 'signupComplete', 'user', 'fr', arguments);
+                                    }
+                                }
                             }
                         }
 
