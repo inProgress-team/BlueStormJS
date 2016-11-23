@@ -1,7 +1,7 @@
 var fs = require('fs'),
     fse = require('fs.extra'),
     async = require('async'),
-    uuid = require('node-uuid'),
+    uuid = require('uuid'),
     slug = require('slug');
 
 var config = require(__dirname + '/../config');

@@ -9,7 +9,7 @@ var bcrypt = require('bcrypt'),
     jwt = require('jwt-simple'),
     generatePassword = require('password-generator'),
     async = require('async'),
-    uuid = require('node-uuid'),
+    uuid = require('uuid'),
     fs = require('fs'),
     _ = require('underscore');
 
